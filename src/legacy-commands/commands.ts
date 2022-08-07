@@ -1,9 +1,11 @@
-const PREFIX = process.env.PREFIX;
+import { Message, Client } from 'discord.js';
 
-const legacyCommands = require('./commandsList');
-const infoMessageEmbed = require('../globalUtils/infoMessageEmbed');
+const PREFIX: any = process.env.PREFIX;
 
-const commands = (message, client) => {
+import legacyCommands from './commandsList';
+import infoMessageEmbed from '../globalUtils/infoMessageEmbed';
+
+const commands = (message: Message, client: Client) => {
 	if (!message.author.bot && message.content.startsWith(PREFIX)) {
 		const [CMD_NAME, ...args] = message.content
 			.trim()
@@ -20,4 +22,4 @@ const commands = (message, client) => {
 	}
 };
 
-module.exports = commands;
+export default commands;

@@ -1,7 +1,7 @@
 require('dotenv').config();
-const { Client, Intents, Constants } = require('discord.js');
+import { Client, Intents, Constants, Message } from 'discord.js';
 
-const commandHandler = require('./legacy-commands/commands');
+import commandHandler from './legacy-commands/commands';
 
 const client = new Client({
 	partials: ['MESSAGE', 'REACTION'],
@@ -18,7 +18,9 @@ client.on('ready', () => {
 	console.log(`${client.user.tag} has logged in BEEP BEEP 🤖`);
 });
 
-client.on('messageCreate', (message) => commandHandler(message, client));
+client.on('messageCreate', (message: Message) =>
+	commandHandler(message, client),
+);
 
 client.login(process.env.DISCORDJS_BOT_TOKEN);
 

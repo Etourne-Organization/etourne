@@ -1,19 +1,25 @@
-const Discord = require('discord.js');
-const PREFIX = process.env.PREFIX;
+import Discord, { Message, Client, MessageEmbed } from 'discord.js';
 
-const botInfo = (message, CMD_NAME, args, client) => {
+const PREFIX: any = process.env.PREFIX;
+
+const botInfo = (
+	message: Message,
+	CMD_NAME: string,
+	args: [],
+	client: Client,
+) => {
 	const { user, guilds } = client;
 
-	const botInfoEmbed = new Discord.MessageEmbed()
+	const botInfoEmbed = new MessageEmbed()
 		.setColor('#3A9CE2')
-		.setThumbnail(user.displayAvatarURL())
+		.setThumbnail(user!.displayAvatarURL())
 		.setAuthor({
-			name: `${user.username}`,
-			iconURL: `${user.displayAvatarURL()}`,
+			name: `${user!.username}`,
+			iconURL: `${user!.displayAvatarURL()}`,
 		})
 		.addFields(
 			// { name: '\u200B', value: '\u200B' },
-			{ name: 'Bot Tag', value: `${user.tag}` },
+			{ name: 'Bot Tag', value: `${user!.tag}` },
 			{ name: 'Bot version', value: `1.0.0-beta` },
 			{ name: 'Bot command prefix', value: `${PREFIX}` },
 
@@ -42,4 +48,4 @@ const botInfo = (message, CMD_NAME, args, client) => {
 	}
 };
 
-module.exports = botInfo;
+export default botInfo;

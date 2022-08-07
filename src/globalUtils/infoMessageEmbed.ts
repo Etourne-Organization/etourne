@@ -1,6 +1,6 @@
-const { MessageEmbed } = require('discord.js');
+import { MessageEmbed, Message } from 'discord.js';
 
-const infoMessageEmbed = (message, status) => {
+const infoMessageEmbed = (message: string, status?: string) => {
 	const infoEmbed = new MessageEmbed().setTitle(message).setTimestamp();
 
 	switch (status) {
@@ -17,4 +17,4 @@ const infoMessageEmbed = (message, status) => {
 	return infoEmbed;
 };
 
-module.exports = infoMessageEmbed;
+export default infoMessageEmbed;
