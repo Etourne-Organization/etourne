@@ -10,7 +10,7 @@ const hello: Command = {
 
 		await interaction.reply({
 			content: content,
-			ephemeral: true,
+			ephemeral: false,
 		});
 	},
 };

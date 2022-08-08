@@ -1,6 +1,6 @@
 import { Command } from './CommandStructure';
 import hello from './commands/hello';
 
-const Commands: Command[] = [hello];
+const allSlashCommands: Command[] = [hello];
 
-export default Commands;
+export default allSlashCommands;
