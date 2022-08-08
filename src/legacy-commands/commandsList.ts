@@ -1,4 +1,5 @@
 import { Client, Message } from 'discord.js';
+
 import botInfo from './commands/botInfo';
 
 export interface legacyCommands {
