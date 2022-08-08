@@ -15,7 +15,7 @@ const client = new Client({
 });
 
 client.on('ready', () => {
-	console.log(`${client.user.tag} has logged in BEEP BEEP 🤖`);
+	console.log(`${client.user!.tag} has logged in BEEP BEEP 🤖`);
 });
 
 client.on('messageCreate', (message: Message) =>

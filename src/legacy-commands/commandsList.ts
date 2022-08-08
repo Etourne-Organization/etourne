@@ -1,5 +1,9 @@
 import botInfo from './commands/botInfo';
 
-const legacyCommands = { botinfo: botInfo };
+export interface legacyCommands {
+	botinfo: Function;
+}
+
+const legacyCommands: legacyCommands = { botinfo: botInfo };
 
 export default legacyCommands;

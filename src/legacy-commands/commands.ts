@@ -2,7 +2,9 @@ import { Message, Client } from 'discord.js';
 
 const PREFIX: any = process.env.PREFIX;
 
-import legacyCommands from './commandsList';
+import legacyCommands, {
+	legacyCommands as legacyCommandsInterface,
+} from './commandsList';
 import infoMessageEmbed from '../globalUtils/infoMessageEmbed';
 
 const commands = (message: Message, client: Client) => {
@@ -13,7 +15,12 @@ const commands = (message: Message, client: Client) => {
 			.split(/\s+/); //this is a regular expression which eliminates multiple whitespaces in the command
 
 		if (CMD_NAME in legacyCommands) {
-			legacyCommands[CMD_NAME](message, CMD_NAME, args, client);
+			legacyCommands[CMD_NAME as keyof legacyCommandsInterface](
+				message,
+				CMD_NAME,
+				args,
+				client,
+			);
 		} else {
 			message.channel.send({
 				embeds: [infoMessageEmbed(':x: Wrong Command :x:')],
