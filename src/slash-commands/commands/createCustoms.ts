@@ -4,6 +4,8 @@ import {
 	Constants,
 	MessageEmbed,
 	MessageAttachment,
+	MessageActionRow,
+	MessageButton,
 } from 'discord.js';
 
 import { Command } from '../CommandStructure';
