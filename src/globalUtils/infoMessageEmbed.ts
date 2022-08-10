@@ -1,4 +1,4 @@
-import { MessageEmbed, Message } from 'discord.js';
+import { MessageEmbed } from 'discord.js';
 
 const infoMessageEmbed = (message: string, status?: string) => {
 	const infoEmbed = new MessageEmbed().setTitle(message).setTimestamp();

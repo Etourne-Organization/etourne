@@ -3,6 +3,7 @@ import {
 	Client,
 	Constants,
 	MessageEmbed,
+	MessageAttachment,
 } from 'discord.js';
 
 import { Command } from '../CommandStructure';
@@ -37,11 +38,29 @@ const createCustoms: Command = {
 		try {
 			const { options } = interaction;
 
-			// const eventName: string | any = options.get('eventname')?.value;
+			const eventName: string | any = options.get('eventname')?.value;
+			const gameName: string | any = options.get('gamename')?.value;
+			const description: string | any = options.get('description')?.value;
 
-			// console.log(eventName);
+			const attachment = new MessageAttachment(
+				'../../gameImages/fall-guys-image.jpg',
+				'fall-guys',
+			);
 
-			interaction.reply({ content: 'event' });
+			const eventEmbed = new MessageEmbed()
+				.setColor('#3a9ce2')
+				.setTitle(eventName)
+				// .setAuthor({
+				// 	name: interaction.user.tag,
+				// 	iconURL: interaction.user.displayAvatarURL(),
+				// })
+				.setDescription(`Hosted by: ${interaction.user.tag}`)
+				.addField('Event date', '24/03/2022', true)
+				.addField('Game name', gameName, true)
+				.addField('Event description', description)
+				.addField('Registered players', '>>> Hello \n Bye \n tes');
+
+			interaction.reply({ embeds: [eventEmbed] });
 		} catch (err) {
 			console.log({
 				actualError: err,
