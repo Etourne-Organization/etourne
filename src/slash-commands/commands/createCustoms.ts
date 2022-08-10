@@ -42,6 +42,15 @@ const createCustoms: Command = {
 			const gameName: string | any = options.get('gamename')?.value;
 			const description: string | any = options.get('description')?.value;
 
+			const playerNames: String[] = ['Adam', 'Farhaan', 'mz10ah', 'Rehan'];
+
+			let registeredPlayerNames: string = '>>>';
+
+			playerNames.forEach((player) => {
+				registeredPlayerNames = registeredPlayerNames + player + '\n';
+			});
+
+			/* *** have a look into adding game logo as thumbnails from local machine afterwards *** */
 			const attachment = new MessageAttachment(
 				'../../gameImages/fall-guys-image.jpg',
 				'fall-guys',
@@ -58,7 +67,7 @@ const createCustoms: Command = {
 				.addField('Event date', '24/03/2022', true)
 				.addField('Game name', gameName, true)
 				.addField('Event description', description)
-				.addField('Registered players', '>>> Hello \n Bye \n tes');
+				.addField('Registered players', `${registeredPlayerNames}`);
 
 			interaction.reply({ embeds: [eventEmbed] });
 		} catch (err) {
