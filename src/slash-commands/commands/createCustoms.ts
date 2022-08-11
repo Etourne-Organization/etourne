@@ -6,6 +6,8 @@ import {
 	MessageAttachment,
 	MessageActionRow,
 	MessageButton,
+	Modal,
+	TextInputComponent,
 } from 'discord.js';
 
 import { Command } from '../CommandStructure';
@@ -46,7 +48,7 @@ const createCustoms: Command = {
 
 			const playerNames: String[] = ['Adam', 'Farhaan', 'mz10ah', 'Rehan'];
 
-			let registeredPlayerNames: string = '>>>';
+			let registeredPlayerNames: string = '>>> ';
 
 			playerNames.forEach((player) => {
 				registeredPlayerNames = registeredPlayerNames + player + '\n';
@@ -65,10 +67,10 @@ const createCustoms: Command = {
 				// 	name: interaction.user.tag,
 				// 	iconURL: interaction.user.displayAvatarURL(),
 				// })
-				.setDescription(`Hosted by: ${interaction.user.tag}`)
+				.setDescription(`Hosted by: **${interaction.user.tag}**`)
 				.addField('Event date', '24/03/2022', true)
 				.addField('Game name', gameName, true)
-				.addField('Event description', description)
+				.addField('Event description', `\`\`\`${description}\`\`\``)
 				.addField('Registered players', `${registeredPlayerNames}`);
 
 			interaction.reply({ embeds: [eventEmbed] });
