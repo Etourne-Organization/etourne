@@ -97,7 +97,7 @@ const createCustoms: Command = {
 						.addField('Hosted by', `mz10ah#0054`)
 						.addField('Registered players', `${registeredPlayerNames}`);
 
-					await interaction.reply({
+					return interaction.reply({
 						embeds: [eventEmbed],
 					});
 				}

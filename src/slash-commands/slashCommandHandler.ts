@@ -1,4 +1,4 @@
-import { BaseCommandInteraction, Client, Interaction } from 'discord.js';
+import { BaseCommandInteraction, Client } from 'discord.js';
 
 import allSlashCommands from './allSlashCommands';
 
