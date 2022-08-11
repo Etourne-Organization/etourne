@@ -8,6 +8,7 @@ import {
 	MessageButton,
 	Modal,
 	TextInputComponent,
+	ModalActionRowComponent,
 } from 'discord.js';
 
 import { Command } from '../CommandStructure';
@@ -17,63 +18,90 @@ const createCustoms: Command = {
 	name: 'createcustoms',
 	description: 'Create customs event',
 	type: 'CHAT_INPUT',
-	options: [
-		{
-			name: 'eventname',
-			description: 'Name of the event',
-			required: true,
-			type: Constants.ApplicationCommandOptionTypes.STRING,
-		},
-
-		{
-			name: 'gamename',
-			description: 'Name of the game that is going to be played',
-			required: true,
-			type: Constants.ApplicationCommandOptionTypes.STRING,
-		},
-		{
-			name: 'description',
-			description: 'Description of the event',
-			required: true,
-			type: Constants.ApplicationCommandOptionTypes.STRING,
-		},
-	],
 	run: async (client: Client, interaction: BaseCommandInteraction) => {
 		try {
-			const { options } = interaction;
+			const modal = new Modal()
+				.setCustomId('myModal')
+				.setTitle('Create Customs event');
 
-			const eventName: string | any = options.get('eventname')?.value;
-			const gameName: string | any = options.get('gamename')?.value;
-			const description: string | any = options.get('description')?.value;
+			const eventNameInput = new TextInputComponent()
+				.setCustomId('eventName')
+				.setLabel('Event name')
+				.setStyle('SHORT');
 
-			const playerNames: String[] = ['Adam', 'Farhaan', 'mz10ah', 'Rehan'];
+			const gameNameInput = new TextInputComponent()
+				.setCustomId('gameName')
+				.setLabel('Game name')
+				.setStyle('SHORT');
 
-			let registeredPlayerNames: string = '>>> ';
+			const eventDescriptionInput = new TextInputComponent()
+				.setCustomId('eventDescription')
+				.setLabel('Event description')
+				.setStyle('PARAGRAPH');
 
-			playerNames.forEach((player) => {
-				registeredPlayerNames = registeredPlayerNames + player + '\n';
-			});
+			const eventNameActionRow =
+				new MessageActionRow<ModalActionRowComponent>().addComponents(
+					eventNameInput,
+				);
 
-			/* *** have a look into adding game logo as thumbnails from local machine afterwards *** */
-			const attachment = new MessageAttachment(
-				'../../gameImages/fall-guys-image.jpg',
-				'fall-guys',
+			const gameNameActionRow =
+				new MessageActionRow<ModalActionRowComponent>().addComponents(
+					gameNameInput,
+				);
+
+			const eventDescriptionActionRow =
+				new MessageActionRow<ModalActionRowComponent>().addComponents(
+					eventDescriptionInput,
+				);
+
+			modal.addComponents(
+				eventNameActionRow,
+				gameNameActionRow,
+				eventDescriptionActionRow,
 			);
 
-			const eventEmbed = new MessageEmbed()
-				.setColor('#3a9ce2')
-				.setTitle(eventName)
-				// .setAuthor({
-				// 	name: interaction.user.tag,
-				// 	iconURL: interaction.user.displayAvatarURL(),
-				// })
-				.setDescription(`Hosted by: **${interaction.user.tag}**`)
-				.addField('Event date', '24/03/2022', true)
-				.addField('Game name', gameName, true)
-				.addField('Event description', `\`\`\`${description}\`\`\``)
-				.addField('Registered players', `${registeredPlayerNames}`);
+			await interaction.showModal(modal);
 
-			interaction.reply({ embeds: [eventEmbed] });
+			client.on('interactionCreate', async (interaction) => {
+				if (!interaction.isModalSubmit()) return;
+
+				if (interaction.customId === 'myModal') {
+					const eventName: string | any =
+						interaction.fields.getTextInputValue('eventName');
+					const gameName: string | any =
+						interaction.fields.getTextInputValue('gameName');
+					const description: string | any =
+						interaction.fields.getTextInputValue('eventDescription');
+
+					const playerNames: String[] = [
+						'Adam',
+						'Farhaan',
+						'mz10ah',
+						'Rehan',
+					];
+
+					let registeredPlayerNames: string = '>>> ';
+
+					playerNames.forEach((player) => {
+						registeredPlayerNames = registeredPlayerNames + player + '\n';
+					});
+
+					const eventEmbed = new MessageEmbed()
+						.setColor('#3a9ce2')
+						.setTitle(eventName)
+						.setDescription(
+							`**----------------------------------------** \n **Event description:** \n \n >>> ${description}  \n \n`,
+						)
+						.addField('Event time & date', '`24/03/2022`', true)
+						.addField('Game name', gameName, true)
+						.addField('Hosted by', `mz10ah#0054`)
+						.addField('Registered players', `${registeredPlayerNames}`);
+
+					await interaction.reply({
+						embeds: [eventEmbed],
+					});
+				}
+			});
 		} catch (err) {
 			console.log({
 				actualError: err,

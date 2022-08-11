@@ -12,7 +12,7 @@ export default async (
 		);
 
 		if (!slashCommand) {
-			interaction.reply({ content: 'An error has occured' });
+			await interaction.reply({ content: 'An error has occured' });
 
 			return;
 		}
