@@ -24,6 +24,7 @@ const createCustoms: Command = {
 			const registerBtnId: string = `registerBtn-${interaction.id}`;
 			const unregisterBtnId: string = `unregisterBtn-${interaction.id}`;
 
+			/* modal */
 			const modal = new Modal()
 				.setCustomId(modalId)
 				.setTitle('Create Customs event');
@@ -64,12 +65,34 @@ const createCustoms: Command = {
 				eventDescriptionActionRow,
 			);
 
+			/* buttons */
+			const buttons = new MessageActionRow().addComponents(
+				new MessageButton()
+					.setCustomId(registerBtnId)
+					.setLabel('Register')
+					.setStyle('PRIMARY'),
+				new MessageButton()
+					.setCustomId(unregisterBtnId)
+					.setLabel('Unregister')
+					.setStyle('DANGER'),
+			);
+
 			await interaction.showModal(modal);
 
 			client.on('interactionCreate', async (interaction) => {
-				if (!interaction.isModalSubmit()) return;
+				const playerNames: String[] = [
+					'Adam',
+					'Farhaan',
+					'mz10ah',
+					'Rehan',
+				];
+				let registeredPlayerNames: string = '>>> ';
+				let eventEmbed = new MessageEmbed();
 
-				if (interaction.customId === modalId) {
+				if (
+					interaction.isModalSubmit() &&
+					interaction.customId === modalId
+				) {
 					const eventName: string | any =
 						interaction.fields.getTextInputValue('eventName');
 					const gameName: string | any =
@@ -77,20 +100,11 @@ const createCustoms: Command = {
 					const description: string | any =
 						interaction.fields.getTextInputValue('eventDescription');
 
-					const playerNames: String[] = [
-						'Adam',
-						'Farhaan',
-						'mz10ah',
-						'Rehan',
-					];
-
-					let registeredPlayerNames: string = '>>> ';
-
 					playerNames.forEach((player) => {
 						registeredPlayerNames = registeredPlayerNames + player + '\n';
 					});
 
-					const eventEmbed = new MessageEmbed()
+					eventEmbed
 						.setColor('#3a9ce2')
 						.setTitle(eventName)
 						.setDescription(
@@ -103,7 +117,29 @@ const createCustoms: Command = {
 
 					return interaction.reply({
 						embeds: [eventEmbed],
+						components: [buttons],
 					});
+				} else if (interaction.isButton()) {
+					if (interaction.customId === registerBtnId) {
+						console.log(registerBtnId);
+
+						registeredPlayerNames =
+							registeredPlayerNames + interaction.user.tag + '\n';
+
+						interaction.reply({
+							content: registerBtnId,
+							ephemeral: true,
+						});
+					}
+
+					if (interaction.customId === unregisterBtnId) {
+						console.log(unregisterBtnId);
+
+						interaction.reply({
+							content: unregisterBtnId,
+							ephemeral: true,
+						});
+					}
 				}
 			});
 		} catch (err) {
