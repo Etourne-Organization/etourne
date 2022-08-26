@@ -20,8 +20,10 @@ const createCustoms: Command = {
 	type: 'CHAT_INPUT',
 	run: async (client: Client, interaction: BaseCommandInteraction) => {
 		try {
+			const modalId = `myModal-${interaction.id}`;
+
 			const modal = new Modal()
-				.setCustomId('myModal')
+				.setCustomId(modalId)
 				.setTitle('Create Customs event');
 
 			const eventNameInput = new TextInputComponent()
@@ -65,7 +67,7 @@ const createCustoms: Command = {
 			client.on('interactionCreate', async (interaction) => {
 				if (!interaction.isModalSubmit()) return;
 
-				if (interaction.customId === 'myModal') {
+				if (interaction.customId === modalId) {
 					const eventName: string | any =
 						interaction.fields.getTextInputValue('eventName');
 					const gameName: string | any =
