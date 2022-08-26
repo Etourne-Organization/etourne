@@ -20,7 +20,9 @@ const createCustoms: Command = {
 	type: 'CHAT_INPUT',
 	run: async (client: Client, interaction: BaseCommandInteraction) => {
 		try {
-			const modalId = `myModal-${interaction.id}`;
+			const modalId: string = `myModal-${interaction.id}`;
+			const registerBtnId: string = `registerBtn-${interaction.id}`;
+			const unregisterBtnId: string = `unregisterBtn-${interaction.id}`;
 
 			const modal = new Modal()
 				.setCustomId(modalId)
