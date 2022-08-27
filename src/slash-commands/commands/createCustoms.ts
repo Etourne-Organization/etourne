@@ -27,6 +27,13 @@ const createCustoms: Command = {
 
 			let message: Message;
 
+			let eventName: string | any;
+			let gameName: string | any;
+			let description: string | any;
+
+			let registeredPlayerNames: string = '>>>  ';
+			let eventEmbed = new MessageEmbed();
+
 			/* modal */
 			const modal = new Modal()
 				.setCustomId(modalId)
@@ -89,20 +96,15 @@ const createCustoms: Command = {
 					'mz10ah',
 					'Rehan',
 				];
-				let registeredPlayerNames: string = '>>> ';
-				let eventEmbed = new MessageEmbed();
 
 				if (i.isModalSubmit() && i.customId === modalId) {
-					const eventName: string | any =
-						i.fields.getTextInputValue('eventName');
-					const gameName: string | any =
-						i.fields.getTextInputValue('gameName');
-					const description: string | any =
-						i.fields.getTextInputValue('eventDescription');
+					eventName = i.fields.getTextInputValue('eventName');
+					gameName = i.fields.getTextInputValue('gameName');
+					description = i.fields.getTextInputValue('eventDescription');
 
-					playerNames.forEach((player) => {
-						registeredPlayerNames = registeredPlayerNames + player + '\n';
-					});
+					// playerNames.forEach((player) => {
+					// 	registeredPlayerNames = registeredPlayerNames + player + '\n';
+					// });
 
 					eventEmbed
 						.setColor('#3a9ce2')
@@ -112,7 +114,7 @@ const createCustoms: Command = {
 						)
 						.addField('Event time & date', '`24/03/2022`', true)
 						.addField('Game name', gameName, true)
-						.addField('Hosted by', `mz10ah#0054`)
+						.addField('Hosted by', `${interaction.user.tag}`)
 						.addField('Registered players', `${registeredPlayerNames}`);
 
 					if (!i.inCachedGuild()) return;
@@ -127,11 +129,13 @@ const createCustoms: Command = {
 						registeredPlayerNames =
 							registeredPlayerNames + interaction.user.tag + '\n';
 
-						await message.edit(registerBtnId);
+						eventEmbed.fields[3].value = registeredPlayerNames;
+
+						await message.edit({ embeds: [eventEmbed] });
 
 						i.reply({
-							content: registerBtnId,
-							// ephemeral: true,
+							content: `You have been registered for the ${eventName}`,
+							ephemeral: true,
 						});
 					}
 
