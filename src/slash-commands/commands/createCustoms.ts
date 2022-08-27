@@ -9,6 +9,7 @@ import {
 	Modal,
 	TextInputComponent,
 	ModalActionRowComponent,
+	Message,
 } from 'discord.js';
 
 import { Command } from '../CommandStructure';
@@ -23,6 +24,8 @@ const createCustoms: Command = {
 			const modalId: string = `myModal-${interaction.id}`;
 			const registerBtnId: string = `registerBtn-${interaction.id}`;
 			const unregisterBtnId: string = `unregisterBtn-${interaction.id}`;
+
+			let message: Message;
 
 			/* modal */
 			const modal = new Modal()
@@ -79,7 +82,7 @@ const createCustoms: Command = {
 
 			await interaction.showModal(modal);
 
-			client.on('interactionCreate', async (interaction) => {
+			client.on('interactionCreate', async (i) => {
 				const playerNames: String[] = [
 					'Adam',
 					'Farhaan',
@@ -89,16 +92,13 @@ const createCustoms: Command = {
 				let registeredPlayerNames: string = '>>> ';
 				let eventEmbed = new MessageEmbed();
 
-				if (
-					interaction.isModalSubmit() &&
-					interaction.customId === modalId
-				) {
+				if (i.isModalSubmit() && i.customId === modalId) {
 					const eventName: string | any =
-						interaction.fields.getTextInputValue('eventName');
+						i.fields.getTextInputValue('eventName');
 					const gameName: string | any =
-						interaction.fields.getTextInputValue('gameName');
+						i.fields.getTextInputValue('gameName');
 					const description: string | any =
-						interaction.fields.getTextInputValue('eventDescription');
+						i.fields.getTextInputValue('eventDescription');
 
 					playerNames.forEach((player) => {
 						registeredPlayerNames = registeredPlayerNames + player + '\n';
@@ -115,27 +115,28 @@ const createCustoms: Command = {
 						.addField('Hosted by', `mz10ah#0054`)
 						.addField('Registered players', `${registeredPlayerNames}`);
 
-					return interaction.reply({
+					if (!i.inCachedGuild()) return;
+
+					message = await i.reply({
 						embeds: [eventEmbed],
 						components: [buttons],
+						fetchReply: true,
 					});
-				} else if (interaction.isButton()) {
-					if (interaction.customId === registerBtnId) {
-						console.log(registerBtnId);
-
+				} else if (i.isButton()) {
+					if (i.customId === registerBtnId) {
 						registeredPlayerNames =
 							registeredPlayerNames + interaction.user.tag + '\n';
 
-						interaction.reply({
+						await message.edit(registerBtnId);
+
+						i.reply({
 							content: registerBtnId,
-							ephemeral: true,
+							// ephemeral: true,
 						});
 					}
 
-					if (interaction.customId === unregisterBtnId) {
-						console.log(unregisterBtnId);
-
-						interaction.reply({
+					if (i.customId === unregisterBtnId) {
+						i.reply({
 							content: unregisterBtnId,
 							ephemeral: true,
 						});
