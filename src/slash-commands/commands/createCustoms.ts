@@ -31,6 +31,7 @@ const createCustoms: Command = {
 			let gameName: string | any;
 			let description: string | any;
 
+			let registeredPlayerNamesList: string[] = [];
 			let registeredPlayerNames: string = '>>>  ';
 			let eventEmbed = new MessageEmbed();
 
@@ -102,9 +103,10 @@ const createCustoms: Command = {
 					gameName = i.fields.getTextInputValue('gameName');
 					description = i.fields.getTextInputValue('eventDescription');
 
-					// playerNames.forEach((player) => {
-					// 	registeredPlayerNames = registeredPlayerNames + player + '\n';
-					// });
+					registeredPlayerNamesList.forEach((player) => {
+						registeredPlayerNames =
+							registeredPlayerNames + i.user.tag + '\n';
+					});
 
 					eventEmbed
 						.setColor('#3a9ce2')
@@ -126,15 +128,33 @@ const createCustoms: Command = {
 					});
 				} else if (i.isButton()) {
 					if (i.customId === registerBtnId) {
-						registeredPlayerNames =
-							registeredPlayerNames + i.user.tag + '\n';
+						// registeredPlayerNames =
+						// 	registeredPlayerNames + i.user.tag + '\n';
+
+						// check whether if the user is already in the list/registered
+						if (registeredPlayerNamesList.includes(i.user.tag)) {
+							i.reply({
+								content: 'You are already registered!',
+								ephemeral: true,
+							});
+
+							return;
+						}
+
+						registeredPlayerNamesList.push(i.user.tag);
+
+						registeredPlayerNames = '>>>  ';
+						registeredPlayerNamesList.forEach((player) => {
+							registeredPlayerNames =
+								registeredPlayerNames + player + '\n';
+						});
 
 						eventEmbed.fields[3].value = registeredPlayerNames;
 
 						await message.edit({ embeds: [eventEmbed] });
 
 						i.reply({
-							content: `You have been registered for the ${eventName}`,
+							content: `You have been registered for the event \`${eventName}\``,
 							ephemeral: true,
 						});
 					}
