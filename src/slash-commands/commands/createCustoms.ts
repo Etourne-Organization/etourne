@@ -127,7 +127,7 @@ const createCustoms: Command = {
 				} else if (i.isButton()) {
 					if (i.customId === registerBtnId) {
 						registeredPlayerNames =
-							registeredPlayerNames + interaction.user.tag + '\n';
+							registeredPlayerNames + i.user.tag + '\n';
 
 						eventEmbed.fields[3].value = registeredPlayerNames;
 
