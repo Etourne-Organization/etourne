@@ -131,7 +131,7 @@ const createCustoms: Command = {
 						// registeredPlayerNames =
 						// 	registeredPlayerNames + i.user.tag + '\n';
 
-						// check whether if the user is already in the list/registered
+						// check whether if the user is registed/already in the list
 						if (registeredPlayerNamesList.includes(i.user.tag)) {
 							i.reply({
 								content: 'You are already registered!',
@@ -160,8 +160,36 @@ const createCustoms: Command = {
 					}
 
 					if (i.customId === unregisterBtnId) {
+						// check whether if the user is registered/in the list
+						if (!registeredPlayerNamesList.includes(i.user.tag)) {
+							i.reply({
+								content: 'You are not registered!',
+								ephemeral: true,
+							});
+
+							return;
+						}
+
+						const userIndex: number = registeredPlayerNamesList.indexOf(
+							i.user.tag,
+						);
+
+						if (userIndex > -1) {
+							registeredPlayerNamesList.splice(userIndex, 1);
+						}
+
+						registeredPlayerNames = '>>>  ';
+						registeredPlayerNamesList.forEach((player) => {
+							registeredPlayerNames =
+								registeredPlayerNames + player + '\n';
+						});
+
+						eventEmbed.fields[3].value = registeredPlayerNames;
+
+						await message.edit({ embeds: [eventEmbed] });
+
 						i.reply({
-							content: unregisterBtnId,
+							content: `You have been unregistered from the event \`${eventName}\``,
 							ephemeral: true,
 						});
 					}
