@@ -13,6 +13,7 @@ import {
 } from 'discord.js';
 
 import { Command } from '../CommandStructure';
+import timezone from '../../resources/timezone';
 import botConfig from '../../botConfig/botConfig.json';
 
 const createCustoms: Command = {
