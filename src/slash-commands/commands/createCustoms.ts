@@ -11,10 +11,11 @@ import {
 	ModalActionRowComponent,
 	Message,
 } from 'discord.js';
+import moment from 'moment';
 
 import { Command } from '../CommandStructure';
-import timezone from '../../resources/timezone';
-import botConfig from '../../botConfig/botConfig.json';
+// import timezone from '../../resources/timezone';
+// import botConfig from '../../botConfig/botConfig.json';
 
 const createCustoms: Command = {
 	name: 'createcustoms',
@@ -30,6 +31,7 @@ const createCustoms: Command = {
 
 			let eventName: string | any;
 			let gameName: string | any;
+			let eventDateTime: string | any;
 			let description: string | any;
 
 			let registeredPlayerNamesList: string[] = [];
@@ -51,6 +53,11 @@ const createCustoms: Command = {
 				.setLabel('Game name')
 				.setStyle('SHORT');
 
+			const eventDateTimeInput = new TextInputComponent()
+				.setCustomId('date')
+				.setLabel('Date (format: DD/MM/YYYY hour:minute)')
+				.setStyle('SHORT');
+
 			const eventDescriptionInput = new TextInputComponent()
 				.setCustomId('eventDescription')
 				.setLabel('Event description')
@@ -66,6 +73,11 @@ const createCustoms: Command = {
 					gameNameInput,
 				);
 
+			const eventDateTimeActionRow =
+				new MessageActionRow<ModalActionRowComponent>().addComponents(
+					eventDateTimeInput,
+				);
+
 			const eventDescriptionActionRow =
 				new MessageActionRow<ModalActionRowComponent>().addComponents(
 					eventDescriptionInput,
@@ -74,6 +86,7 @@ const createCustoms: Command = {
 			modal.addComponents(
 				eventNameActionRow,
 				gameNameActionRow,
+				eventDateTimeActionRow,
 				eventDescriptionActionRow,
 			);
 
@@ -102,6 +115,7 @@ const createCustoms: Command = {
 				if (i.isModalSubmit() && i.customId === modalId) {
 					eventName = i.fields.getTextInputValue('eventName');
 					gameName = i.fields.getTextInputValue('gameName');
+					eventDateTime = i.fields.getTextInputValue('date');
 					description = i.fields.getTextInputValue('eventDescription');
 
 					registeredPlayerNamesList.forEach((player) => {
@@ -115,7 +129,14 @@ const createCustoms: Command = {
 						.setDescription(
 							`**----------------------------------------** \n **Event description:** \n \n >>> ${description}  \n \n`,
 						)
-						.addField('Event time & date', '`24/03/2022`', true)
+						.addField(
+							'Event date & time',
+							`<t:${moment(
+								eventDateTime,
+								'DD/MM/YYYY hh:mm',
+							).unix()}:F>`,
+							true,
+						)
 						.addField('Game name', gameName, true)
 						.addField('Hosted by', `${interaction.user.tag}`)
 						.addField('Registered players', `${registeredPlayerNames}`);

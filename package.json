@@ -15,6 +15,7 @@
 		"discord-api-types": "^0.34.0",
 		"discord.js": "^13.8.0",
 		"dotenv": "^16.0.1",
+		"moment": "^2.29.4",
 		"moment-timezone": "^0.5.37",
 		"nodemon": "^2.0.16"
 	},

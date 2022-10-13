@@ -1,5 +1,7 @@
 require('dotenv').config();
 import { Client, Intents, Constants, Message } from 'discord.js';
+// import moment from 'moment-timezone';
+import moment from 'moment';
 
 import commandHandler from './legacy-commands/commands';
 import interactionCreate from './slash-commands/listener/interactionCreate';
@@ -15,6 +17,9 @@ const client = new Client({
 		Intents.FLAGS.GUILD_MESSAGE_TYPING,
 	],
 });
+
+// console.log(moment.tz.countries());
+// console.log(moment('15/10/2022 15:00', 'DD/MM/YYYY hh:mm').unix());
 
 client.on('ready', async () => {
 	if (!client.user || !client.application) {
