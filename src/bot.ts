@@ -1,7 +1,7 @@
+import fs from 'fs';
+
 require('dotenv').config();
 import { Client, Intents, Constants, Message } from 'discord.js';
-// import moment from 'moment-timezone';
-import moment from 'moment';
 
 import commandHandler from './legacy-commands/commands';
 import interactionCreate from './slash-commands/listener/interactionCreate';
@@ -39,6 +39,18 @@ client.on('ready', async () => {
 	await commands.set(allSlashCommands);
 
 	console.log(`${client.user!.tag} has logged in BEEP BEEP 🤖`);
+
+	try {
+		fs.appendFile(
+			'logs/restart.txt',
+			`${new Date()} : Bot restarted \n`,
+			(err) => {
+				if (err) throw err;
+			},
+		);
+	} catch (err) {
+		console.log('Logging failed');
+	}
 });
 
 client.on('messageCreate', (message: Message) =>

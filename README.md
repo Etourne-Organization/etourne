@@ -1,3 +1,5 @@
-# Tourney App
+# Etourne
 
-The name will be decided soon.
+## Before you start
+
+-  Make sure you create `logs` folder in root directory as well as `restart.txt` inside it.
