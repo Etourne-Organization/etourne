@@ -34,6 +34,7 @@ const createCustoms: Command = {
 
 			let eventName: string | any;
 			let gameName: string | any;
+			let timezone: string | any;
 			let eventDateTime: string | any;
 			let description: string | any;
 
@@ -49,22 +50,32 @@ const createCustoms: Command = {
 			const eventNameInput = new TextInputComponent()
 				.setCustomId('eventName')
 				.setLabel('Event name')
-				.setStyle('SHORT');
+				.setStyle('SHORT')
+				.setPlaceholder('Event name');
 
 			const gameNameInput = new TextInputComponent()
 				.setCustomId('gameName')
 				.setLabel('Game name')
-				.setStyle('SHORT');
+				.setStyle('SHORT')
+				.setPlaceholder('Game name');
 
 			const eventDateTimeInput = new TextInputComponent()
 				.setCustomId('date')
 				.setLabel('Date (format: DD/MM/YYYY hour:minute)')
-				.setStyle('SHORT');
+				.setStyle('SHORT')
+				.setPlaceholder('Event date');
+
+			const eventTimezoneInput = new TextInputComponent()
+				.setCustomId('timezone')
+				.setLabel('Your timezone: etourne-timezones.vercel.app')
+				.setStyle('SHORT')
+				.setPlaceholder('Your timezone');
 
 			const eventDescriptionInput = new TextInputComponent()
 				.setCustomId('eventDescription')
 				.setLabel('Event description')
-				.setStyle('PARAGRAPH');
+				.setStyle('PARAGRAPH')
+				.setPlaceholder('Event description');
 
 			const eventNameActionRow =
 				new MessageActionRow<ModalActionRowComponent>().addComponents(
@@ -74,6 +85,11 @@ const createCustoms: Command = {
 			const gameNameActionRow =
 				new MessageActionRow<ModalActionRowComponent>().addComponents(
 					gameNameInput,
+				);
+
+			const eventTimezoneActionRow =
+				new MessageActionRow<ModalActionRowComponent>().addComponents(
+					eventTimezoneInput,
 				);
 
 			const eventDateTimeActionRow =
@@ -89,6 +105,7 @@ const createCustoms: Command = {
 			modal.addComponents(
 				eventNameActionRow,
 				gameNameActionRow,
+				eventTimezoneActionRow,
 				eventDateTimeActionRow,
 				eventDescriptionActionRow,
 			);
@@ -111,6 +128,7 @@ const createCustoms: Command = {
 				if (i.isModalSubmit() && i.customId === modalId) {
 					eventName = i.fields.getTextInputValue('eventName');
 					gameName = i.fields.getTextInputValue('gameName');
+					timezone = i.fields.getTextInputValue('timezone');
 					eventDateTime = i.fields.getTextInputValue('date');
 					description = i.fields.getTextInputValue('eventDescription');
 
@@ -136,11 +154,7 @@ const createCustoms: Command = {
 						.addField(
 							'Event date & time',
 							`<t:${momentTimzone
-								.tz(
-									eventDateTime,
-									'DD/MM/YYYY hh:mm',
-									'America/Toronto',
-								)
+								.tz(eventDateTime, 'DD/MM/YYYY hh:mm', timezone)
 								.unix()}:F>`,
 							true,
 						)
