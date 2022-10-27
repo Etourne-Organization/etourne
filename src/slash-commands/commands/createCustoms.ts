@@ -3,6 +3,7 @@ import {
 	Client,
 	Constants,
 	MessageEmbed,
+	MessageSelectMenu,
 	MessageAttachment,
 	MessageActionRow,
 	MessageButton,
@@ -12,6 +13,7 @@ import {
 	Message,
 } from 'discord.js';
 import moment from 'moment';
+import momentTimzone from 'moment-timezone';
 // import dayjs from 'dayjs';
 
 import { Command } from '../CommandStructure';
@@ -106,13 +108,6 @@ const createCustoms: Command = {
 			await interaction.showModal(modal);
 
 			client.on('interactionCreate', async (i) => {
-				const playerNames: String[] = [
-					'Adam',
-					'Farhaan',
-					'mz10ah',
-					'Rehan',
-				];
-
 				if (i.isModalSubmit() && i.customId === modalId) {
 					eventName = i.fields.getTextInputValue('eventName');
 					gameName = i.fields.getTextInputValue('gameName');
@@ -130,12 +125,23 @@ const createCustoms: Command = {
 						.setDescription(
 							`**----------------------------------------** \n **Event description:** \n \n >>> ${description}  \n \n`,
 						)
+						// .addField(
+						// 	'Event date & time',
+						// 	`<t:${moment(
+						// 		eventDateTime,
+						// 		'DD/MM/YYYY hh:mm',
+						// 	).unix()}:F>`,
+						// 	true,
+						// )
 						.addField(
 							'Event date & time',
-							`<t:${moment(
-								eventDateTime,
-								'DD/MM/YYYY hh:mm',
-							).unix()}:F>`,
+							`<t:${momentTimzone
+								.tz(
+									eventDateTime,
+									'DD/MM/YYYY hh:mm',
+									'America/Toronto',
+								)
+								.unix()}:F>`,
 							true,
 						)
 						.addField('Game name', gameName, true)
