@@ -1,3 +1,5 @@
+import fs from 'fs';
+
 import {
 	BaseCommandInteraction,
 	Client,
@@ -239,10 +241,17 @@ const createEvent: Command = {
 				}
 			});
 		} catch (err) {
-			console.log({
-				actualError: err,
-				message: 'Something went wrong in createCustoms.ts',
-			});
+			try {
+				fs.appendFile(
+					'logs/crash_logs.txt',
+					`${new Date()} : Something went wrong in slashcommands/createEvent.ts \n Actual error: ${err} \n \n`,
+					(err) => {
+						if (err) throw err;
+					},
+				);
+			} catch (err) {
+				console.log('Error logging failed');
+			}
 		}
 	},
 };

@@ -27,13 +27,20 @@ const help: Command = {
 								? `</createevent:${testCommandIDs.CREATE_EVENT}>`
 								: `</verify:${originalCommandIDs.CREATE_EVENT}>`,
 					},
+					{
+						name: ':information_source:  Bot Info',
+						value:
+							process.env.BOT_IDS === 'TEST_BOT_IDS'
+								? `</botinfo:${testCommandIDs.BOT_INFO}>`
+								: `</botinfo:${originalCommandIDs.BOT_INFO}>`,
+					},
 
 					// { name: '\u200B', value: '\u200B' },
 				)
 				.setTimestamp()
 				.setFooter({ text: `Requested by: ${member}` });
 
-			interaction.reply({
+			await interaction.reply({
 				embeds: [helpEmbed],
 			});
 		} catch (err) {
