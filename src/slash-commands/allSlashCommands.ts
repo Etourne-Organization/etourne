@@ -1,9 +1,10 @@
 import { Command } from './CommandStructure';
 
 import hello from './commands/hello';
-import createCustoms from './commands/createCustoms';
+import createEvent from './commands/createEvent';
 import selectTimezone from './commands/selectTimezone';
+import help from './commands/help';
 
-const allSlashCommands: Command[] = [hello, createCustoms, selectTimezone];
+const allSlashCommands: Command[] = [hello, createEvent, selectTimezone, help];
 
 export default allSlashCommands;

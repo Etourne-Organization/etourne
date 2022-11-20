@@ -20,8 +20,8 @@ import { Command } from '../CommandStructure';
 // import timezone from '../../resources/timezone';
 // import botConfig from '../../botConfig/botConfig.json';
 
-const createCustoms: Command = {
-	name: 'createcustoms',
+const createEvent: Command = {
+	name: 'createevent',
 	description: 'Create customs event',
 	type: 'CHAT_INPUT',
 	run: async (client: Client, interaction: BaseCommandInteraction) => {
@@ -67,7 +67,7 @@ const createCustoms: Command = {
 
 			const eventTimezoneInput = new TextInputComponent()
 				.setCustomId('timezone')
-				.setLabel('Your timezone: etourne-timezones.vercel.app')
+				.setLabel('Your timezone: et-timezones.vercel.app')
 				.setStyle('SHORT')
 				.setPlaceholder('Your timezone');
 
@@ -247,4 +247,4 @@ const createCustoms: Command = {
 	},
 };
 
-export default createCustoms;
+export default createEvent;
