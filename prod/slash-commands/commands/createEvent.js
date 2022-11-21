@@ -111,7 +111,9 @@ const createEvent = {
 						.addField('Game name', gameName, true)
 						.addField('Hosted by', `${interaction.user.tag}`)
 						.addField('Registered players', `${registeredPlayerNames}`);
+					console.log('im here');
 					if (!i.inCachedGuild()) return;
+					console.log('im here2');
 					message = await i.reply({
 						embeds: [eventEmbed],
 						components: [buttons],
