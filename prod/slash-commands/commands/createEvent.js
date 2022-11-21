@@ -119,7 +119,6 @@ const createEvent = {
 						components: [buttons],
 						fetchReply: true,
 					});
-					console.log(message);
 				} else if (i.isButton()) {
 					if (i.customId === registerBtnId) {
 						if (registeredPlayerNamesList.includes(i.user.tag)) {
@@ -136,6 +135,7 @@ const createEvent = {
 								registeredPlayerNames + player + '\n';
 						});
 						eventEmbed.fields[3].value = registeredPlayerNames;
+						console.log(message);
 						await message.edit({ embeds: [eventEmbed] });
 						i.reply({
 							content: `You have been registered for the event \`${eventName}\``,
