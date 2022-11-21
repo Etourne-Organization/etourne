@@ -51,6 +51,11 @@ client.on('ready', async () => {
 	} catch (err) {
 		console.log('Logging failed');
 	}
+
+	// set bot status
+	client.user.setPresence({
+		activities: [{ name: `/help` }],
+	});
 });
 
 client.on('messageCreate', (message: Message) =>

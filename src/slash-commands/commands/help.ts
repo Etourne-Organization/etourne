@@ -25,7 +25,7 @@ const help: Command = {
 						value:
 							process.env.BOT_IDS === 'TEST_BOT_IDS'
 								? `</createevent:${testCommandIDs.CREATE_EVENT}>`
-								: `</verify:${originalCommandIDs.CREATE_EVENT}>`,
+								: `</createvent:${originalCommandIDs.CREATE_EVENT}>`,
 					},
 					{
 						name: ':information_source:  Bot Info',

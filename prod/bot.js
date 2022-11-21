@@ -41,6 +41,9 @@ client.on('ready', async () => {
     catch (err) {
         console.log('Logging failed');
     }
+    client.user.setPresence({
+        activities: [{ name: `/help` }],
+    });
 });
 client.on('messageCreate', (message) => (0, commands_1.default)(message, client));
 (0, interactionCreate_1.default)(client);

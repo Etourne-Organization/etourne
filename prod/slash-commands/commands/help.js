@@ -21,7 +21,7 @@ const help = {
                 name: ':calendar_spiral:  Create event',
                 value: process.env.BOT_IDS === 'TEST_BOT_IDS'
                     ? `</createevent:${commandIDs_json_1.default.CREATE_EVENT}>`
-                    : `</verify:${commandIDs_json_2.default.CREATE_EVENT}>`,
+                    : `</createvent:${commandIDs_json_2.default.CREATE_EVENT}>`,
             }, {
                 name: ':information_source:  Bot Info',
                 value: process.env.BOT_IDS === 'TEST_BOT_IDS'
