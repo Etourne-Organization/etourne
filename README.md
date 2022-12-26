@@ -18,7 +18,7 @@
    ```
 
 1. Make sure to have [NodeJS](https://nodejs.org/en/) (v16.6.0 and above) and [nodemon](https://www.npmjs.com/package/nodemon) installed.
-1. To start the bot, run: `nodemon bot.js` (make sure to be in the directory).
+1. To start the bot, run: `nodemon src/bot.ts` (make sure to be in the directory).
 
 ## Instruction to setup the bot in production
 
