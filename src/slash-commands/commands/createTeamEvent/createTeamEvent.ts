@@ -160,11 +160,13 @@ const createTeamEvent: Command = {
 						.addField('Game name', gameName, true)
 						.addField(
 							'Num of team limit',
-							numTeamLimit ? numTeamLimit : 'Unlimited',
+							numTeamLimit ? `${numTeamLimit.value}` : 'Unlimited',
 						)
 						.addField(
 							'Num of team member limit',
-							numTeamMemberLimit ? numTeamMemberLimit : 'Unlimited',
+							numTeamMemberLimit
+								? `${numTeamMemberLimit.value}`
+								: 'Unlimited',
 						)
 						.addField('Hosted by', `${interaction.user.tag}`);
 
