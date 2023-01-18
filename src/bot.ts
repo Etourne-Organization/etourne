@@ -57,12 +57,12 @@ client.on('ready', async () => {
 		activities: [{ name: `/help` }],
 	});
 
-	// run every 12 hours again to make sure it stays visible
+	// run every 6 hours again to make sure it stays visible
 	setInterval(() => {
 		client.user?.setPresence({
 			activities: [{ name: `/help` }],
 		});
-	}, 1000 * 60 * 720);
+	}, 1000 * 60 * 360);
 });
 
 client.on('messageCreate', (message: Message) =>
