@@ -23,9 +23,6 @@ const botInfo = {
                 name: 'Server Count',
                 value: `${client.guilds.cache.size}`,
             }, {
-                name: 'Currently being hosted on',
-                value: `https://crvt.co/b`,
-            }, {
                 name: 'Status of the app/bot',
                 value: `Work in progress`,
             }, {

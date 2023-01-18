@@ -48,7 +48,7 @@ client.on('ready', async () => {
         client.user?.setPresence({
             activities: [{ name: `/help` }],
         });
-    }, 1000 * 60 * 720);
+    }, 1000 * 60 * 360);
 });
 client.on('messageCreate', (message) => (0, commands_1.default)(message, client));
 (0, interactionCreate_1.default)(client);
