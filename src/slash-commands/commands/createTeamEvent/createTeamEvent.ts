@@ -83,7 +83,7 @@ const createTeamEvent: Command = {
 
 			const eventTimezoneInput = new TextInputComponent()
 				.setCustomId('timezone')
-				.setLabel('Your timezone: et-timezones.vercel.app')
+				.setLabel('Your timezone: timezones.etourne.xyz')
 				.setStyle('SHORT')
 				.setPlaceholder('Your timezone');
 
@@ -137,6 +137,8 @@ const createTeamEvent: Command = {
 			await interaction.showModal(modal);
 
 			client.on('interactionCreate', async (i) => {
+				const teamModalId = `createTeam-${i.id}`;
+
 				if (i.isModalSubmit() && i.customId === modalId) {
 					eventName = i.fields.getTextInputValue('eventName');
 					gameName = i.fields.getTextInputValue('gameName');
@@ -185,6 +187,38 @@ const createTeamEvent: Command = {
 						],
 						ephemeral: true,
 					});
+				}
+
+				if (i.isButton()) {
+					if (i.customId === createTeamBtnId) {
+						const teamFormModal = new Modal()
+							.setCustomId(teamModalId)
+							.setTitle('Create Team');
+
+						const teamNameInput = new TextInputComponent()
+							.setCustomId('teamName')
+							.setLabel('Team Name')
+							.setStyle('SHORT')
+							.setPlaceholder('Team name');
+
+						const teamNameActionRow =
+							new MessageActionRow<ModalActionRowComponent>().addComponents(
+								teamNameInput,
+							);
+
+						teamFormModal.addComponents(teamNameActionRow);
+
+						await i.showModal(teamFormModal);
+
+						client.on('interactionCreate', async (i) => {
+							if (i.isModalSubmit() && i.customId === teamModalId) {
+								i.reply({
+									embeds: [infoMessageEmbed('Team created')],
+									ephemeral: true,
+								});
+							}
+						});
+					}
 				}
 			});
 		} catch (err) {

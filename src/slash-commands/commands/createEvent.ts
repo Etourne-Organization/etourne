@@ -69,7 +69,7 @@ const createEvent: Command = {
 
 			const eventTimezoneInput = new TextInputComponent()
 				.setCustomId('timezone')
-				.setLabel('Your timezone: et-timezones.vercel.app')
+				.setLabel('Your timezone: timezones.etourne.xyz')
 				.setStyle('SHORT')
 				.setPlaceholder('Your timezone');
 
