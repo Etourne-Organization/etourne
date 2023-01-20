@@ -18,6 +18,7 @@ import momentTimzone from 'moment-timezone';
 
 import { Command } from '../../CommandStructure';
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
+import createTeamInteractionCreate from './createTeamInteractionCreate';
 
 const createTeamEvent: Command = {
 	name: 'createteamevent',
@@ -210,14 +211,7 @@ const createTeamEvent: Command = {
 
 						await i.showModal(teamFormModal);
 
-						client.on('interactionCreate', async (i) => {
-							if (i.isModalSubmit() && i.customId === teamModalId) {
-								i.reply({
-									embeds: [infoMessageEmbed('Team created')],
-									ephemeral: true,
-								});
-							}
-						});
+						createTeamInteractionCreate(client, teamModalId);
 					}
 				}
 			});
