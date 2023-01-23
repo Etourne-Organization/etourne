@@ -15,10 +15,14 @@ export default (
 	teamModalId: string,
 	eventName: string,
 	eventDateTime: string | number,
+	createTeamBtnId: string,
 ): void => {
 	let teamName: string | any;
 	let teamShortDescription: string | any;
 	let message: Message | any;
+
+	let registeredPlayerNamesList: string[] = [];
+	let registeredPlayerNames: string = '>>>  ';
 
 	client.on('interactionCreate', async (i: Interaction) => {
 		try {
@@ -61,22 +65,22 @@ export default (
 					embeds: [infoMessageEmbed('Team created')],
 					ephemeral: true,
 				});
-			} else if (i.isButton()) {
-				console.log('im here');
-				console.log(i.customId);
-				console.log('registerBtnId', registerBtnId);
-				console.log('unRegisterBtnId', unregisterBtnId);
-
-				if (i.customId === registerBtnId) {
-					console.log(`register: ${i.customId}`);
-					i.reply({ content: `register: ${i.customId}` });
-				}
-
-				if (i.customId === unregisterBtnId) {
-					console.log(`unregister: ${i.customId}`);
-					i.reply({ content: `unregister: ${i.customId}` });
-				}
 			}
+			// else if (i.isButton()) {
+			// 	console.log('im here');
+			// 	console.log(i.customId);
+			// 	console.log('createTeamBtnId', createTeamBtnId);
+
+			// 	if (i.customId.includes('register')) {
+			// 		console.log(`register: ${i.customId}`);
+			// 		i.reply({ content: `register: ${createTeamBtnId}` });
+			// 	}
+
+			// 	if (i.customId.includes('unregister')) {
+			// 		console.log(`unregister: ${i.customId}`);
+			// 		i.reply({ content: `unregister: ${createTeamBtnId}` });
+			// 	}
+			// }
 		} catch (err) {
 			try {
 				fs.appendFile(

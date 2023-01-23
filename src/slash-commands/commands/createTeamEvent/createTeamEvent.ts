@@ -191,6 +191,7 @@ const createTeamEvent: Command = {
 				}
 
 				if (i.isButton()) {
+					console.log('am i here');
 					if (i.customId === createTeamBtnId) {
 						const teamFormModal = new Modal()
 							.setCustomId(teamModalId)
@@ -232,7 +233,18 @@ const createTeamEvent: Command = {
 							momentTimzone
 								.tz(eventDateTime, 'DD/MM/YYYY hh:mm', timezone)
 								.unix(),
+							createTeamBtnId,
 						);
+					}
+
+					if (i.customId.includes('register')) {
+						console.log(`register: ${i.customId}`);
+						i.reply({ content: `register: ${createTeamBtnId}` });
+					}
+
+					if (i.customId.includes('unregister')) {
+						console.log(`unregister: ${i.customId}`);
+						i.reply({ content: `unregister: ${createTeamBtnId}` });
 					}
 				}
 			});
