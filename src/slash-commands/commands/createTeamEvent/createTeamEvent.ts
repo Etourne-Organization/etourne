@@ -200,18 +200,39 @@ const createTeamEvent: Command = {
 							.setCustomId('teamName')
 							.setLabel('Team Name')
 							.setStyle('SHORT')
-							.setPlaceholder('Team name');
+							.setPlaceholder('Enter team name');
+
+						const teamSmallDescriptionInput = new TextInputComponent()
+							.setCustomId('teamShortDescription')
+							.setLabel('Team Short Description')
+							.setStyle('SHORT')
+							.setPlaceholder('Enter short team description');
 
 						const teamNameActionRow =
 							new MessageActionRow<ModalActionRowComponent>().addComponents(
 								teamNameInput,
 							);
 
-						teamFormModal.addComponents(teamNameActionRow);
+						const teamSmallDescriptionActionRow =
+							new MessageActionRow<ModalActionRowComponent>().addComponents(
+								teamSmallDescriptionInput,
+							);
+
+						teamFormModal.addComponents(
+							teamNameActionRow,
+							teamSmallDescriptionActionRow,
+						);
 
 						await i.showModal(teamFormModal);
 
-						createTeamInteractionCreate(client, teamModalId);
+						createTeamInteractionCreate(
+							client,
+							teamModalId,
+							eventName,
+							momentTimzone
+								.tz(eventDateTime, 'DD/MM/YYYY hh:mm', timezone)
+								.unix(),
+						);
 					}
 				}
 			});
