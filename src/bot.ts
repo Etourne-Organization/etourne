@@ -4,7 +4,7 @@ require('dotenv').config();
 import { Client, Intents, Constants, Message } from 'discord.js';
 
 import commandHandler from './legacy-commands/commands';
-import interactionCreate from './slash-commands/listener/interactionCreate';
+import interactionCreate from './listener/interactionCreate';
 import allSlashCommands from './slash-commands/allSlashCommands';
 
 const client = new Client({

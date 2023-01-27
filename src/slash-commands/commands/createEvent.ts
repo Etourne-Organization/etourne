@@ -122,6 +122,10 @@ const createEvent: Command = {
 					.setCustomId(unregisterBtnId)
 					.setLabel('Unregister')
 					.setStyle('DANGER'),
+				new MessageButton()
+					.setCustomId('testbutton')
+					.setLabel('Test')
+					.setStyle('PRIMARY'),
 			);
 
 			await interaction.showModal(modal);

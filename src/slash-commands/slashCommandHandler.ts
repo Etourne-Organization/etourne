@@ -1,3 +1,5 @@
+import fs from 'fs';
+
 import { BaseCommandInteraction, Client } from 'discord.js';
 
 import allSlashCommands from './allSlashCommands';
@@ -19,9 +21,16 @@ export default async (
 
 		slashCommand.run(client, interaction);
 	} catch (err) {
-		console.log({
-			actualError: err,
-			message: 'Something went wrong in slashCommandHandler.ts',
-		});
+		try {
+			fs.appendFile(
+				'logs/crash_logs.txt',
+				`${new Date()} : Something went wrong in slashCommandHandler.ts \n Actual error: ${err} \n \n`,
+				(err) => {
+					if (err) throw err;
+				},
+			);
+		} catch (err) {
+			console.log('Error logging failed');
+		}
 	}
 };
