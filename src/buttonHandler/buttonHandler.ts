@@ -14,7 +14,7 @@ export default async (
 		const buttonFunction = buttonList.find((b) => b.customId === customId);
 
 		if (!buttonFunction) {
-			await interaction.reply({ content: 'An error has occured' });
+			// await interaction.reply({ content: 'An error has occured [buttons]' });
 
 			return;
 		}

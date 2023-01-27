@@ -41,7 +41,7 @@ const createEvent: Command = {
 			let description: string | any;
 
 			let registeredPlayerNamesList: string[] = [];
-			let registeredPlayerNames: string = '>>>  ';
+			let registeredPlayerNames: string = '';
 			let eventEmbed = new MessageEmbed();
 
 			/* modal */
@@ -123,8 +123,8 @@ const createEvent: Command = {
 					.setLabel('Unregister')
 					.setStyle('DANGER'),
 				new MessageButton()
-					.setCustomId('testbutton')
-					.setLabel('Test')
+					.setCustomId('testregister')
+					.setLabel('Test Register')
 					.setStyle('PRIMARY'),
 			);
 
@@ -158,7 +158,7 @@ const createEvent: Command = {
 						)
 						.addField('Game name', gameName, true)
 						.addField('Hosted by', `${interaction.user.tag}`)
-						.addField('Registered players', `${registeredPlayerNames}`);
+						.addField('Registered players', ` ${registeredPlayerNames}`);
 
 					if (!i.inCachedGuild()) return;
 
@@ -184,13 +184,13 @@ const createEvent: Command = {
 
 						registeredPlayerNamesList.push(i.user.tag);
 
-						registeredPlayerNames = '>>>  ';
+						registeredPlayerNames = '';
 						registeredPlayerNamesList.forEach((player) => {
 							registeredPlayerNames =
 								registeredPlayerNames + player + '\n';
 						});
 
-						eventEmbed.fields[3].value = registeredPlayerNames;
+						eventEmbed.fields[3].value = '>>> ' + registeredPlayerNames;
 
 						await message.edit({ embeds: [eventEmbed] });
 
@@ -219,13 +219,13 @@ const createEvent: Command = {
 							registeredPlayerNamesList.splice(userIndex, 1);
 						}
 
-						registeredPlayerNames = '>>>  ';
+						registeredPlayerNames = '';
 						registeredPlayerNamesList.forEach((player) => {
 							registeredPlayerNames =
 								registeredPlayerNames + player + '\n';
 						});
 
-						eventEmbed.fields[3].value = registeredPlayerNames;
+						eventEmbed.fields[3].value = '>>> ' + registeredPlayerNames;
 
 						await message.edit({ embeds: [eventEmbed] });
 

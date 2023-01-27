@@ -14,7 +14,9 @@ export default async (
 		);
 
 		if (!slashCommand) {
-			await interaction.reply({ content: 'An error has occured' });
+			await interaction.reply({
+				content: 'An error has occured [slash commands]',
+			});
 
 			return;
 		}
