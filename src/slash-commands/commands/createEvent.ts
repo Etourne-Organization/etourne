@@ -225,7 +225,10 @@ const createEvent: Command = {
 								registeredPlayerNames + player + '\n';
 						});
 
-						eventEmbed.fields[3].value = '>>> ' + registeredPlayerNames;
+						eventEmbed.fields[3].value =
+							registeredPlayerNames.length > 0
+								? '>>> ' + registeredPlayerNames
+								: ' ';
 
 						await message.edit({ embeds: [eventEmbed] });
 
