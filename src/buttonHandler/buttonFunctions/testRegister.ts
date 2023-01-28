@@ -18,29 +18,35 @@ const testRegister: ButtonFunction = {
 				(r) => r.name === 'Registered players',
 			);
 
-			const tempSplit = registeredPlayers.value.split(' ');
+			let tempSplit = registeredPlayers.value.split(' ');
 
 			// will be helpful for checking if the member is already registered
+			console.log(tempSplit);
+
 			let playersSplitted =
-				tempSplit.length < 2
-					? ''
+				tempSplit.length <= 1 && tempSplit[0].length < 1
+					? []
 					: tempSplit[1].includes('\n')
 					? tempSplit[1].split('\n')
-					: tempSplit[1];
+					: [tempSplit[1]];
 
 			// console.log(interaction.message.embeds[0].fields);
 			// console.log(interaction.message.embeds[0]);
 			// console.log(registeredPlayers);
-			console.log(tempSplit);
 			console.log('before', playersSplitted);
 
 			if (playersSplitted.length < 1) {
-				playersSplitted = '>>> ' + interaction.user.tag;
+				console.log(1);
+				playersSplitted.push('>>> ' + interaction.user.tag + '\n');
+				tempSplit = playersSplitted;
 			} else {
-				playersSplitted += `>>> ${playersSplitted}\n${interaction.user.tag}`;
+				console.log(2);
+				playersSplitted.push(`${interaction.user.tag}\n`);
+				tempSplit[1] = playersSplitted.join('');
 			}
 
 			console.log('after', playersSplitted);
+			console.log('---');
 
 			/* assigning updated player list back to the orignal embed field */
 			interaction.message.embeds[0].fields?.find((r) => {
@@ -59,7 +65,7 @@ const testRegister: ButtonFunction = {
 
 			await interaction.update({ embeds: [editedEmbed] });
 
-			// interaction.reply({
+			// await interaction.reply({
 			// 	content: 'hello',
 			// });
 		} catch (err) {

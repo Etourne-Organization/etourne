@@ -41,7 +41,7 @@ const createEvent: Command = {
 			let description: string | any;
 
 			let registeredPlayerNamesList: string[] = [];
-			let registeredPlayerNames: string = '';
+			let registeredPlayerNames: string = ' ';
 			let eventEmbed = new MessageEmbed();
 
 			/* modal */
