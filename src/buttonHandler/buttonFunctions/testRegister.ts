@@ -21,37 +21,27 @@ const testRegister: ButtonFunction = {
 			let tempSplit = registeredPlayers.value.split(' ');
 
 			// will be helpful for checking if the member is already registered
-			console.log(tempSplit);
-
 			let playersSplitted =
 				tempSplit.length <= 1 && tempSplit[0].length < 1
-					? []
+					? ''
 					: tempSplit[1].includes('\n')
 					? tempSplit[1].split('\n')
 					: [tempSplit[1]];
 
-			// console.log(interaction.message.embeds[0].fields);
-			// console.log(interaction.message.embeds[0]);
-			// console.log(registeredPlayers);
-			console.log('before', playersSplitted);
-
-			if (playersSplitted.length < 1) {
-				console.log(1);
-				playersSplitted.push('>>> ' + interaction.user.tag + '\n');
+			if (!Array.isArray(playersSplitted) && playersSplitted.length < 1) {
+				playersSplitted = `${interaction.user.tag}\n`;
 				tempSplit = playersSplitted;
 			} else {
-				console.log(2);
-				playersSplitted.push(`${interaction.user.tag}\n`);
-				tempSplit[1] = playersSplitted.join('');
+				tempSplit.push(`${interaction.user.tag}\n`);
+				tempSplit.shift();
 			}
-
-			console.log('after', playersSplitted);
-			console.log('---');
 
 			/* assigning updated player list back to the orignal embed field */
 			interaction.message.embeds[0].fields?.find((r) => {
 				if (r.name === 'Registered players') {
-					r.value = playersSplitted;
+					r.value = Array.isArray(tempSplit)
+						? '>>> ' + tempSplit.join('\n')
+						: '>>> ' + tempSplit;
 				}
 			});
 
@@ -64,12 +54,18 @@ const testRegister: ButtonFunction = {
 				.addFields(interaction.message.embeds[0].fields || []);
 
 			await interaction.update({ embeds: [editedEmbed] });
-
-			// await interaction.reply({
-			// 	content: 'hello',
-			// });
 		} catch (err) {
-			console.log(err);
+			try {
+				fs.appendFile(
+					'logs/crash_logs.txt',
+					`${new Date()} : Something went wrong in testRegister.ts \n Actual error: ${err} \n \n`,
+					(err) => {
+						if (err) throw err;
+					},
+				);
+			} catch (err) {
+				console.log('Error logging failed');
+			}
 		}
 	},
 };
