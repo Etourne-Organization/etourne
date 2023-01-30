@@ -130,7 +130,7 @@ const createTeamEvent: Command = {
 			/* buttons */
 			const buttons = new MessageActionRow().addComponents(
 				new MessageButton()
-					.setCustomId(createTeamBtnId)
+					.setCustomId('createTeam')
 					.setLabel('Create Team')
 					.setStyle('PRIMARY'),
 			);
