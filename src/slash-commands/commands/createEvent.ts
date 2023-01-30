@@ -24,12 +24,11 @@ import { Command } from '../CommandStructure';
 
 const createEvent: Command = {
 	name: 'createevent',
-	description: 'Create customs event',
+	description: 'Create event',
 	type: 'CHAT_INPUT',
 	run: async (client: Client, interaction: BaseCommandInteraction) => {
 		try {
 			const modalId: string = `myModal-${interaction.id}`;
-			const registerBtnId: string = `registerBtn-${interaction.id}`;
 			const unregisterBtnId: string = `unregisterBtn-${interaction.id}`;
 
 			let message: Message;
@@ -47,7 +46,7 @@ const createEvent: Command = {
 			/* modal */
 			const modal = new Modal()
 				.setCustomId(modalId)
-				.setTitle('Create Customs Event');
+				.setTitle('Create Event');
 
 			const eventNameInput = new TextInputComponent()
 				.setCustomId('eventName')
@@ -115,11 +114,11 @@ const createEvent: Command = {
 			/* buttons */
 			const buttons = new MessageActionRow().addComponents(
 				new MessageButton()
-					.setCustomId('register')
+					.setCustomId('normalEventRegister')
 					.setLabel('Register')
 					.setStyle('PRIMARY'),
 				new MessageButton()
-					.setCustomId(unregisterBtnId)
+					.setCustomId('normalEventUnregister')
 					.setLabel('Unregister')
 					.setStyle('DANGER'),
 			);
@@ -164,7 +163,7 @@ const createEvent: Command = {
 						fetchReply: true,
 					});
 				} else if (i.isButton()) {
-					if (i.customId === unregisterBtnId) {
+					if (i.customId === 'unregisterBtnId') {
 						// check whether if the user is registered/in the list
 						if (!registeredPlayerNamesList.includes(i.user.tag)) {
 							i.reply({

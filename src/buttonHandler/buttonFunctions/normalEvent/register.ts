@@ -2,11 +2,11 @@ import fs from 'fs';
 
 import { Client, ButtonInteraction, MessageEmbed } from 'discord.js';
 
-import { ButtonFunction } from '../ButtonStructure';
-import infoMessageEmbed from '../../globalUtils/infoMessageEmbed';
+import { ButtonFunction } from '../../ButtonStructure';
+import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
 
 const register: ButtonFunction = {
-	customId: 'register',
+	customId: 'normalEventRegister',
 	run: async (client: Client, interaction: ButtonInteraction) => {
 		try {
 			const registeredPlayers:
@@ -65,7 +65,7 @@ const register: ButtonFunction = {
 			try {
 				fs.appendFile(
 					'logs/crash_logs.txt',
-					`${new Date()} : Something went wrong in register.ts \n Actual error: ${err} \n \n`,
+					`${new Date()} : Something went wrong in buttonFunctions/normalEvent/register.ts \n Actual error: ${err} \n \n`,
 					(err) => {
 						if (err) throw err;
 					},
