@@ -162,44 +162,6 @@ const createEvent: Command = {
 						components: [buttons],
 						fetchReply: true,
 					});
-				} else if (i.isButton()) {
-					if (i.customId === 'unregisterBtnId') {
-						// check whether if the user is registered/in the list
-						if (!registeredPlayerNamesList.includes(i.user.tag)) {
-							i.reply({
-								content: 'You are not registered!',
-								ephemeral: true,
-							});
-
-							return;
-						}
-
-						const userIndex: number = registeredPlayerNamesList.indexOf(
-							i.user.tag,
-						);
-
-						if (userIndex > -1) {
-							registeredPlayerNamesList.splice(userIndex, 1);
-						}
-
-						registeredPlayerNames = '';
-						registeredPlayerNamesList.forEach((player) => {
-							registeredPlayerNames =
-								registeredPlayerNames + player + '\n';
-						});
-
-						eventEmbed.fields[3].value =
-							registeredPlayerNames.length > 0
-								? '>>> ' + registeredPlayerNames
-								: ' ';
-
-						await message.edit({ embeds: [eventEmbed] });
-
-						i.reply({
-							content: `You have been unregistered from the event \`${eventName}\``,
-							ephemeral: true,
-						});
-					}
 				}
 			});
 		} catch (err) {
