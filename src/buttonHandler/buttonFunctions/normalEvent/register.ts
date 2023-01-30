@@ -19,10 +19,10 @@ const register: ButtonFunction = {
 				(r) => r.name === 'Registered players',
 			);
 
-			let tempSplit = registeredPlayers.value.split(' ');
+			const tempSplit = registeredPlayers.value.split(' ');
 
 			// will be helpful for checking if the member is already registered
-			let playersSplitted =
+			const playersSplitted =
 				tempSplit.length <= 1 && tempSplit[0].length < 1
 					? ['']
 					: tempSplit[1].includes('\n')

@@ -20,50 +20,47 @@ const unregister: ButtonFunction = {
 				(r) => r.name === 'Registered players',
 			);
 
-			let tempSplit = registeredPlayers.value.split(' ');
+			const tempSplit: Array<string> = registeredPlayers.value.split(' ');
 
-			let playersSplitted =
+			const playersSplitted: Array<string> =
 				tempSplit.length <= 1 && tempSplit[0].length < 1
 					? ['']
 					: tempSplit[1].includes('\n')
 					? tempSplit[1].split('\n')
 					: [tempSplit[1]];
 
-			await playersSplitted.forEach(async (p: string, index: number) => {
-				if (p === interaction.user.tag) {
-					playersSplitted.splice(index, 1);
+			const playerIndex = playersSplitted.indexOf(interaction.user.tag);
 
-					console.log(playersSplitted);
+			if (playerIndex !== -1) {
+				playersSplitted.splice(playerIndex, 1);
 
-					/* assigning updated player list back to the orignal embed field */
-					interaction.message.embeds[0].fields?.find((r) => {
-						if (r.name === 'Registered players') {
-							r.value =
-								playersSplitted.length >= 1
-									? '>>> ' + playersSplitted.join('\n')
-									: ' ';
-						}
-					});
+				/* assigning updated player list back to the orignal embed field */
+				interaction.message.embeds[0].fields?.find((r) => {
+					if (r.name === 'Registered players') {
+						r.value =
+							playersSplitted.length >= 1
+								? '>>> ' + playersSplitted.join('\n')
+								: ' ';
+					}
+				});
 
-					const editedEmbed = new MessageEmbed()
-						.setColor('#3a9ce2')
-						.setTitle(interaction.message.embeds[0].title || 'Undefined')
-						.setDescription(
-							interaction.message.embeds[0].description || 'Undefined',
-						)
-						.addFields(interaction.message.embeds[0].fields || []);
+				const editedEmbed = new MessageEmbed()
+					.setColor('#3a9ce2')
+					.setTitle(interaction.message.embeds[0].title || 'Undefined')
+					.setDescription(
+						interaction.message.embeds[0].description || 'Undefined',
+					)
+					.addFields(interaction.message.embeds[0].fields || []);
 
-					FOUND = true;
-					await interaction.update({ embeds: [editedEmbed] });
-				}
-			});
+				FOUND = true;
+				await interaction.update({ embeds: [editedEmbed] });
+			}
 
 			if (!FOUND) {
 				return await interaction.reply({
 					embeds: [infoMessageEmbed('You are not registered!', 'WARNING')],
 					ephemeral: true,
 				});
-			} else {
 			}
 		} catch (err) {
 			try {
