@@ -115,17 +115,13 @@ const createEvent: Command = {
 			/* buttons */
 			const buttons = new MessageActionRow().addComponents(
 				new MessageButton()
-					.setCustomId(registerBtnId)
+					.setCustomId('register')
 					.setLabel('Register')
 					.setStyle('PRIMARY'),
 				new MessageButton()
 					.setCustomId(unregisterBtnId)
 					.setLabel('Unregister')
 					.setStyle('DANGER'),
-				new MessageButton()
-					.setCustomId('testregister')
-					.setLabel('Test Register')
-					.setStyle('PRIMARY'),
 			);
 
 			await interaction.showModal(modal);
@@ -168,38 +164,6 @@ const createEvent: Command = {
 						fetchReply: true,
 					});
 				} else if (i.isButton()) {
-					if (i.customId === registerBtnId) {
-						// registeredPlayerNames =
-						// 	registeredPlayerNames + i.user.tag + '\n';
-
-						// check whether if the user is registed/already in the list
-						if (registeredPlayerNamesList.includes(i.user.tag)) {
-							i.reply({
-								content: 'You are already registered!',
-								ephemeral: true,
-							});
-
-							return;
-						}
-
-						registeredPlayerNamesList.push(i.user.tag);
-
-						registeredPlayerNames = '';
-						registeredPlayerNamesList.forEach((player) => {
-							registeredPlayerNames =
-								registeredPlayerNames + player + '\n';
-						});
-
-						eventEmbed.fields[3].value = '>>> ' + registeredPlayerNames;
-
-						await message.edit({ embeds: [eventEmbed] });
-
-						i.reply({
-							content: `You have been registered for the event \`${eventName}\``,
-							ephemeral: true,
-						});
-					}
-
 					if (i.customId === unregisterBtnId) {
 						// check whether if the user is registered/in the list
 						if (!registeredPlayerNamesList.includes(i.user.tag)) {

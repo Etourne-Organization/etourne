@@ -1,7 +1,7 @@
 import { ButtonFunction } from './ButtonStructure';
 
-import testRegister from './buttonFunctions/testRegister';
+import register from './buttonFunctions/register';
 
-const buttonList: ButtonFunction[] = [testRegister];
+const buttonList: ButtonFunction[] = [register];
 
 export default buttonList;

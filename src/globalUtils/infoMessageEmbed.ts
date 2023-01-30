@@ -3,12 +3,10 @@ import { MessageEmbed } from 'discord.js';
 const infoMessageEmbed = (message: string, status?: string) => {
 	const infoEmbed = new MessageEmbed().setTitle(message).setTimestamp();
 
-	if (status === 'WARNING') {
-		infoEmbed.setColor('#800000');
+	if (status === 'WARNING' || status === 'ERROR') {
+		infoEmbed.setColor('#D83C3E');
 	} else if (status === 'SUCCESS') {
-		infoEmbed.setColor('#008E00');
-	} else if (status === 'ERROR') {
-		infoEmbed.setColor('#800000');
+		infoEmbed.setColor('#3BA55C');
 	} else {
 		infoEmbed.setColor('#3A9CE2');
 	}

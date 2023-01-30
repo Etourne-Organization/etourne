@@ -5,8 +5,8 @@ import { Client, ButtonInteraction, MessageEmbed } from 'discord.js';
 import { ButtonFunction } from '../ButtonStructure';
 import infoMessageEmbed from '../../globalUtils/infoMessageEmbed';
 
-const testRegister: ButtonFunction = {
-	customId: 'testregister',
+const register: ButtonFunction = {
+	customId: 'register',
 	run: async (client: Client, interaction: ButtonInteraction) => {
 		try {
 			const registeredPlayers:
@@ -65,7 +65,7 @@ const testRegister: ButtonFunction = {
 			try {
 				fs.appendFile(
 					'logs/crash_logs.txt',
-					`${new Date()} : Something went wrong in testRegister.ts \n Actual error: ${err} \n \n`,
+					`${new Date()} : Something went wrong in register.ts \n Actual error: ${err} \n \n`,
 					(err) => {
 						if (err) throw err;
 					},
@@ -77,4 +77,4 @@ const testRegister: ButtonFunction = {
 	},
 };
 
-export default testRegister;
+export default register;
