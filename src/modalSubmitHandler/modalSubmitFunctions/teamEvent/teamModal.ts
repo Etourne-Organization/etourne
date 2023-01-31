@@ -4,7 +4,6 @@ import {
 	Client,
 	ModalSubmitInteraction,
 	MessageEmbed,
-	Message,
 	MessageButton,
 	MessageActionRow,
 } from 'discord.js';

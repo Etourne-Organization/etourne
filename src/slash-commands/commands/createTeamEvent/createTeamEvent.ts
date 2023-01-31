@@ -18,7 +18,7 @@ import momentTimzone from 'moment-timezone';
 
 import { Command } from '../../CommandStructure';
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
-import createTeamInteractionCreate from './createTeamInteractionCreate';
+import teamEventInfoData from '../../../data/teamEventInfo';
 
 const createTeamEvent: Command = {
 	name: 'createteamevent',
@@ -40,28 +40,24 @@ const createTeamEvent: Command = {
 	],
 	run: async (client: Client, interaction: BaseCommandInteraction) => {
 		try {
-			const modalId: string = `myModal-${interaction.id}`;
 			const createTeamBtnId: string = `createTeamBtn-${interaction.id}`;
 
-			let message: Message | any;
-
-			let eventName: string | any;
-			let gameName: string | any;
-			let timezone: string | any;
-			let eventDateTime: string | any;
 			let numTeamLimit: number | any =
 				interaction.options.get('numteamlimit');
 			let numTeamMemberLimit: number | any =
 				interaction.options.get('numteammemberlimit');
-			let description: string | any;
 
-			let registeredPlayerNamesList: string[] = [];
-			let registeredPlayerNames: string = '>>>  ';
-			let eventEmbed = new MessageEmbed();
+			// set numTeamLimit and numTeamMemberLimit in a TS file temporarily
+			teamEventInfoData.numTeamLimit = numTeamLimit
+				? numTeamLimit.value
+				: null;
+			teamEventInfoData.numTeamMemberLimit = numTeamMemberLimit
+				? numTeamMemberLimit.value
+				: null;
 
 			/* modal */
 			const modal = new Modal()
-				.setCustomId(modalId)
+				.setCustomId(`eventModalSubmit-${interaction.id}`)
 				.setTitle('Create Team Event');
 
 			const eventNameInput = new TextInputComponent()
@@ -127,67 +123,9 @@ const createTeamEvent: Command = {
 				eventDescriptionActionRow,
 			);
 
-			/* buttons */
-			const buttons = new MessageActionRow().addComponents(
-				new MessageButton()
-					.setCustomId('createTeam')
-					.setLabel('Create Team')
-					.setStyle('PRIMARY'),
-			);
-
 			await interaction.showModal(modal);
 
 			client.on('interactionCreate', async (i) => {
-				if (i.isModalSubmit() && i.customId === modalId) {
-					eventName = i.fields.getTextInputValue('eventName');
-					gameName = i.fields.getTextInputValue('gameName');
-					timezone = i.fields.getTextInputValue('timezone');
-					eventDateTime = i.fields.getTextInputValue('date');
-					description = i.fields.getTextInputValue('eventDescription');
-
-					eventEmbed
-						.setColor('#3a9ce2')
-						.setTitle(eventName)
-						.setDescription(
-							`**----------------------------------------** \n **Event description:** \n \n >>> ${description}  \n \n`,
-						)
-						.addField(
-							'Event date & time',
-							`<t:${momentTimzone
-								.tz(eventDateTime, 'DD/MM/YYYY hh:mm', timezone)
-								.unix()}:F>`,
-							true,
-						)
-						.addField('Game name', gameName, true)
-						.addField(
-							'Num of team limit',
-							numTeamLimit ? `${numTeamLimit.value}` : 'Unlimited',
-						)
-						.addField(
-							'Num of team member limit',
-							numTeamMemberLimit
-								? `${numTeamMemberLimit.value}`
-								: 'Unlimited',
-						)
-						.addField('Hosted by', `${interaction.user.tag}`);
-
-					if (!i.inCachedGuild()) return;
-
-					message = await i.channel?.send({
-						embeds: [eventEmbed],
-						components: [buttons],
-					});
-
-					i.reply({
-						embeds: [
-							infoMessageEmbed(
-								':white_check_mark: Team Event Created Successfully',
-							),
-						],
-						ephemeral: true,
-					});
-				}
-
 				if (i.isButton()) {
 					if (i.customId.includes('register')) {
 						console.log(`register: ${i.customId}`);
