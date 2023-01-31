@@ -2,6 +2,7 @@ import { Client, Interaction } from 'discord.js';
 
 import slashCommandHandler from '../slash-commands/slashCommandHandler';
 import buttonHandler from '../buttonHandler/buttonHandler';
+import modalSubmitHandler from '../modalSubmitHandler/modalSubmitHandler';
 
 export default (client: Client): void => {
 	client.on('interactionCreate', async (interaction: Interaction) => {
@@ -11,6 +12,10 @@ export default (client: Client): void => {
 
 		if (interaction.isButton()) {
 			await buttonHandler(client, interaction);
+		}
+
+		if (interaction.isModalSubmit()) {
+			await modalSubmitHandler(client, interaction);
 		}
 	});
 };
