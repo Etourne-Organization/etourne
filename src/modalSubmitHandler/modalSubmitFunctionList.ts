@@ -1,3 +1,7 @@
 import { ModalFunction } from './ModalSubmitStructure';
 
-const modalSubmitFunctionList: ModalFunction[] = [];
+import teamModal from './modalSubmitFunctions/teamEvent/teamModal';
+
+const modalSubmitFunctionList: ModalFunction[] = [teamModal];
+
+export default modalSubmitFunctionList;

@@ -138,8 +138,6 @@ const createTeamEvent: Command = {
 			await interaction.showModal(modal);
 
 			client.on('interactionCreate', async (i) => {
-				const teamModalId = `createTeam-${i.id}`;
-
 				if (i.isModalSubmit() && i.customId === modalId) {
 					eventName = i.fields.getTextInputValue('eventName');
 					gameName = i.fields.getTextInputValue('gameName');

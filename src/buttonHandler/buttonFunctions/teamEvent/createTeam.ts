@@ -18,7 +18,7 @@ const createTeam: ButtonFunction = {
 	run: async (client: Client, interaction: ButtonInteraction) => {
 		try {
 			const teamFormModal = new Modal()
-				.setCustomId(`teamForModal-${interaction.id}`)
+				.setCustomId(`teamModalSubmit-${interaction.id}`)
 				.setTitle('Create Team');
 
 			const teamNameInput = new TextInputComponent()

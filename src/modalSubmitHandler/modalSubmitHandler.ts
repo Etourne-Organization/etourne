@@ -2,7 +2,7 @@ import fs from 'fs';
 
 import { ModalSubmitInteraction, Client } from 'discord.js';
 
-// import buttonList from './buttonList';
+import modalSubmitFunctionList from './modalSubmitFunctionList';
 
 export default async (
 	client: Client,
@@ -11,15 +11,21 @@ export default async (
 	try {
 		const { customId } = interaction;
 
-		// const buttonFunction = buttonList.find((b) => b.customId === customId);
+		const modalSubmitFunction = modalSubmitFunctionList.find((m) => {
+			const temp = customId.split('-');
 
-		// if (!buttonFunction) {
-		// 	// await interaction.reply({ content: 'An error has occured [buttons]' });
+			if (temp.indexOf(m.customId) !== -1) {
+				return m;
+			}
+		});
 
-		// 	return;
-		// }
+		if (!modalSubmitFunction) {
+			// await interaction.reply({ content: 'An error has occured [modalSubmit]' });
 
-		// buttonFunction.run(client, interaction);
+			return;
+		}
+
+		modalSubmitFunction.run(client, interaction);
 	} catch (err) {
 		try {
 			fs.appendFile(
