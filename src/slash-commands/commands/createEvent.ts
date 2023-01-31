@@ -3,18 +3,12 @@ import fs from 'fs';
 import {
 	BaseCommandInteraction,
 	Client,
-	Constants,
-	MessageEmbed,
-	MessageSelectMenu,
-	MessageAttachment,
 	MessageActionRow,
 	MessageButton,
 	Modal,
 	TextInputComponent,
 	ModalActionRowComponent,
-	Message,
 } from 'discord.js';
-import momentTimzone from 'moment-timezone';
 // import dayjs from 'dayjs';
 
 import infoMessageEmbed from '../../globalUtils/infoMessageEmbed';
@@ -28,24 +22,9 @@ const createEvent: Command = {
 	type: 'CHAT_INPUT',
 	run: async (client: Client, interaction: BaseCommandInteraction) => {
 		try {
-			const modalId: string = `myModal-${interaction.id}`;
-			const unregisterBtnId: string = `unregisterBtn-${interaction.id}`;
-
-			let message: Message;
-
-			let eventName: string | any;
-			let gameName: string | any;
-			let timezone: string | any;
-			let eventDateTime: string | any;
-			let description: string | any;
-
-			let registeredPlayerNamesList: string[] = [];
-			let registeredPlayerNames: string = ' ';
-			let eventEmbed = new MessageEmbed();
-
 			/* modal */
 			const modal = new Modal()
-				.setCustomId(modalId)
+				.setCustomId(`normalEventModalSubmit-${interaction.id}`)
 				.setTitle('Create Event');
 
 			const eventNameInput = new TextInputComponent()
@@ -124,46 +103,6 @@ const createEvent: Command = {
 			);
 
 			await interaction.showModal(modal);
-
-			client.on('interactionCreate', async (i) => {
-				if (i.isModalSubmit() && i.customId === modalId) {
-					eventName = i.fields.getTextInputValue('eventName');
-					gameName = i.fields.getTextInputValue('gameName');
-					timezone = i.fields.getTextInputValue('timezone');
-					eventDateTime = i.fields.getTextInputValue('date');
-					description = i.fields.getTextInputValue('eventDescription');
-
-					registeredPlayerNamesList.forEach((player) => {
-						registeredPlayerNames =
-							registeredPlayerNames + i.user.tag + '\n';
-					});
-
-					eventEmbed
-						.setColor('#3a9ce2')
-						.setTitle(eventName)
-						.setDescription(
-							`**----------------------------------------** \n **Event description:** \n \n >>> ${description}  \n \n`,
-						)
-						.addField(
-							'Event date & time',
-							`<t:${momentTimzone
-								.tz(eventDateTime, 'DD/MM/YYYY hh:mm', timezone)
-								.unix()}:F>`,
-							true,
-						)
-						.addField('Game name', gameName, true)
-						.addField('Hosted by', `${interaction.user.tag}`)
-						.addField('Registered players', ` ${registeredPlayerNames}`);
-
-					if (!i.inCachedGuild()) return;
-
-					message = await i.reply({
-						embeds: [eventEmbed],
-						components: [buttons],
-						fetchReply: true,
-					});
-				}
-			});
 		} catch (err) {
 			interaction.reply({
 				embeds: [infoMessageEmbed(':x: There has been an error', 'ERROR')],

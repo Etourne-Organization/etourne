@@ -57,7 +57,7 @@ const createTeamEvent: Command = {
 
 			/* modal */
 			const modal = new Modal()
-				.setCustomId(`eventModalSubmit-${interaction.id}`)
+				.setCustomId(`teamEventModalSubmit-${interaction.id}`)
 				.setTitle('Create Team Event');
 
 			const eventNameInput = new TextInputComponent()

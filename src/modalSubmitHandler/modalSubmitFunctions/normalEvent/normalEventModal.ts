@@ -11,10 +11,9 @@ import momentTimzone from 'moment-timezone';
 
 import { ModalFunction } from '../../ModalSubmitStructure';
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
-import teamEventInfoData from '../../../data/teamEventInfo';
 
-const teamEventModal: ModalFunction = {
-	customId: 'teamEventModalSubmit',
+const normalEventModal: ModalFunction = {
+	customId: 'normalEventModalSubmit',
 	run: async (client: Client, interaction: ModalSubmitInteraction) => {
 		try {
 			const eventName = interaction.fields.getTextInputValue('eventName');
@@ -38,25 +37,19 @@ const teamEventModal: ModalFunction = {
 					true,
 				)
 				.addField('Game name', gameName, true)
-				.addField(
-					'Num of team limit',
-					teamEventInfoData.numTeamLimit
-						? `${teamEventInfoData.numTeamLimit}`
-						: 'Unlimited',
-				)
-				.addField(
-					'Num of team member limit',
-					teamEventInfoData.numTeamMemberLimit
-						? `${teamEventInfoData.numTeamMemberLimit}`
-						: 'Unlimited',
-				)
-				.addField('Hosted by', `${interaction.user.tag}`);
+				.addField('Hosted by', `${interaction.user.tag}`)
+				.addField('Registered players', ` `);
 
+			/* buttons */
 			const buttons = new MessageActionRow().addComponents(
 				new MessageButton()
-					.setCustomId('createTeam')
-					.setLabel('Create Team')
+					.setCustomId('normalEventRegister')
+					.setLabel('Register')
 					.setStyle('PRIMARY'),
+				new MessageButton()
+					.setCustomId('normalEventUnregister')
+					.setLabel('Unregister')
+					.setStyle('DANGER'),
 			);
 
 			if (!interaction.inCachedGuild()) return;
@@ -69,7 +62,7 @@ const teamEventModal: ModalFunction = {
 			await interaction.reply({
 				embeds: [
 					infoMessageEmbed(
-						':white_check_mark: Team Event Created Successfully',
+						':white_check_mark: Event Created Successfully',
 						'SUCCESS',
 					),
 				],
@@ -79,7 +72,7 @@ const teamEventModal: ModalFunction = {
 			try {
 				fs.appendFile(
 					'logs/crash_logs.txt',
-					`${new Date()} : Something went wrong in modalFunctions/teamEvent/teamEventModal.ts \n Actual error: ${err} \n \n`,
+					`${new Date()} : Something went wrong in modalFunctions/normalEvent/normalEventModal.ts \n Actual error: ${err} \n \n`,
 					(err) => {
 						if (err) throw err;
 					},
@@ -91,4 +84,4 @@ const teamEventModal: ModalFunction = {
 	},
 };
 
-export default teamEventModal;
+export default normalEventModal;
