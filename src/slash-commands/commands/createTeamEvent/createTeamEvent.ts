@@ -191,52 +191,6 @@ const createTeamEvent: Command = {
 				}
 
 				if (i.isButton()) {
-					console.log('am i here');
-					if (i.customId === createTeamBtnId) {
-						const teamFormModal = new Modal()
-							.setCustomId(teamModalId)
-							.setTitle('Create Team');
-
-						const teamNameInput = new TextInputComponent()
-							.setCustomId('teamName')
-							.setLabel('Team Name')
-							.setStyle('SHORT')
-							.setPlaceholder('Enter team name');
-
-						const teamSmallDescriptionInput = new TextInputComponent()
-							.setCustomId('teamShortDescription')
-							.setLabel('Team Short Description')
-							.setStyle('SHORT')
-							.setPlaceholder('Enter short team description');
-
-						const teamNameActionRow =
-							new MessageActionRow<ModalActionRowComponent>().addComponents(
-								teamNameInput,
-							);
-
-						const teamSmallDescriptionActionRow =
-							new MessageActionRow<ModalActionRowComponent>().addComponents(
-								teamSmallDescriptionInput,
-							);
-
-						teamFormModal.addComponents(
-							teamNameActionRow,
-							teamSmallDescriptionActionRow,
-						);
-
-						await i.showModal(teamFormModal);
-
-						createTeamInteractionCreate(
-							client,
-							teamModalId,
-							eventName,
-							momentTimzone
-								.tz(eventDateTime, 'DD/MM/YYYY hh:mm', timezone)
-								.unix(),
-							createTeamBtnId,
-						);
-					}
-
 					if (i.customId.includes('register')) {
 						console.log(`register: ${i.customId}`);
 						i.reply({ content: `register: ${createTeamBtnId}` });
