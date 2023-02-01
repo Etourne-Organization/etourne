@@ -27,11 +27,11 @@ const teamModal: ModalFunction = {
 
 			const buttons = new MessageActionRow().addComponents(
 				new MessageButton()
-					.setCustomId('teamEventRegister')
+					.setCustomId('registerTeamMember')
 					.setLabel('Register')
 					.setStyle('PRIMARY'),
 				new MessageButton()
-					.setCustomId('teamEventUnregister')
+					.setCustomId('unregisterTeamMember')
 					.setLabel('Unregister')
 					.setStyle('DANGER'),
 			);
@@ -42,7 +42,8 @@ const teamModal: ModalFunction = {
 				.setDescription(`>>> ${teamShortDescription}`)
 				.addField('Team Leader', `${interaction.user.tag}`)
 				.addField('Event Name', `${eventName}`)
-				.addField('Event Date and Time', `${eventDateTime}`);
+				.addField('Event Date and Time', `${eventDateTime}`)
+				.addField('Registered players', ` `);
 
 			interaction.reply({
 				embeds: [teamEmbed],

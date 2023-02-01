@@ -90,18 +90,6 @@ const createEvent: Command = {
 				eventDescriptionActionRow,
 			);
 
-			/* buttons */
-			const buttons = new MessageActionRow().addComponents(
-				new MessageButton()
-					.setCustomId('normalEventRegister')
-					.setLabel('Register')
-					.setStyle('PRIMARY'),
-				new MessageButton()
-					.setCustomId('normalEventUnregister')
-					.setLabel('Unregister')
-					.setStyle('DANGER'),
-			);
-
 			await interaction.showModal(modal);
 		} catch (err) {
 			interaction.reply({
