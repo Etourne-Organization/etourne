@@ -4,6 +4,7 @@ import unregister from './buttonFunctions/normalEvent/unregister';
 import createTeam from './buttonFunctions/teamEvent/createTeam';
 import registerTeamMember from './buttonFunctions/teamEvent/registerTeamMember';
 import unregisterTeamMember from './buttonFunctions/teamEvent/unregisterTeamMember';
+import deleteTeam from './buttonFunctions/teamEvent/deleteTeam';
 
 const buttonList: ButtonFunction[] = [
 	register,
@@ -11,6 +12,7 @@ const buttonList: ButtonFunction[] = [
 	createTeam,
 	registerTeamMember,
 	unregisterTeamMember,
+	deleteTeam,
 ];
 
 export default buttonList;

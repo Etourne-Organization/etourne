@@ -40,8 +40,6 @@ const createTeamEvent: Command = {
 	],
 	run: async (client: Client, interaction: BaseCommandInteraction) => {
 		try {
-			const createTeamBtnId: string = `createTeamBtn-${interaction.id}`;
-
 			let numTeamLimit: number | any =
 				interaction.options.get('numteamlimit');
 			let numTeamMemberLimit: number | any =
