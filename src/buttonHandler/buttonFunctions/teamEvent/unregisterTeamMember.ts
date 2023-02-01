@@ -6,7 +6,7 @@ import { ButtonFunction } from '../../ButtonStructure';
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
 
 const unregisterTeamMember: ButtonFunction = {
-	customId: 'registerTeamMember',
+	customId: 'unregisterTeamMember',
 	run: async (client: Client, interaction: ButtonInteraction) => {
 		try {
 			let FOUND: boolean = false;
@@ -48,10 +48,13 @@ const unregisterTeamMember: ButtonFunction = {
 					.addFields(interaction.message.embeds[0].fields || []);
 
 				FOUND = true;
-				await interaction.update({ embeds: [editedEmbed] });
+				return await interaction.update({ embeds: [editedEmbed] });
 			}
 
+			console.log(FOUND);
+
 			if (!FOUND) {
+				console.log('im here');
 				return await interaction.reply({
 					embeds: [infoMessageEmbed('You are not registered!', 'WARNING')],
 					ephemeral: true,

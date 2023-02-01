@@ -69,7 +69,7 @@ const teamEventModal: ModalFunction = {
 			await interaction.reply({
 				embeds: [
 					infoMessageEmbed(
-						':white_check_mark: Team Event Created Successfully',
+						':white_check_mark: Team event created successfully',
 						'SUCCESS',
 					),
 				],

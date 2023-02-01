@@ -124,20 +124,6 @@ const createTeamEvent: Command = {
 			);
 
 			await interaction.showModal(modal);
-
-			client.on('interactionCreate', async (i) => {
-				if (i.isButton()) {
-					if (i.customId.includes('register')) {
-						console.log(`register: ${i.customId}`);
-						i.reply({ content: `register: ${createTeamBtnId}` });
-					}
-
-					if (i.customId.includes('unregister')) {
-						console.log(`unregister: ${i.customId}`);
-						i.reply({ content: `unregister: ${createTeamBtnId}` });
-					}
-				}
-			});
 		} catch (err) {
 			interaction.reply({
 				embeds: [infoMessageEmbed(':x: There has been an error', 'ERROR')],

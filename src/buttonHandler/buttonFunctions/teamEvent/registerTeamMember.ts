@@ -17,23 +17,21 @@ const registerTeamMember: ButtonFunction = {
 			const tempSplit = registeredPlayers.value.split(' ');
 
 			// will be helpful for checking if the member is already registered
-			const playersSplitted =
+			const playersSplitted: string[] =
 				tempSplit.length <= 1 && tempSplit[0].length < 1
 					? ['']
 					: tempSplit[1].includes('\n')
 					? tempSplit[1].split('\n')
 					: [tempSplit[1]];
 
-			playersSplitted.find((p: string) => {
-				if (p === interaction.user.tag) {
-					return interaction.reply({
-						embeds: [
-							infoMessageEmbed('You are already registered!', 'WARNING'),
-						],
-						ephemeral: true,
-					});
-				}
-			});
+			if (playersSplitted.indexOf(interaction.user.tag) !== -1) {
+				return await interaction.reply({
+					embeds: [
+						infoMessageEmbed('You are already registered!', 'WARNING'),
+					],
+					ephemeral: true,
+				});
+			}
 
 			tempSplit.push(`${interaction.user.tag}\n`);
 			tempSplit.shift();
@@ -55,7 +53,7 @@ const registerTeamMember: ButtonFunction = {
 				)
 				.addFields(interaction.message.embeds[0].fields || []);
 
-			await interaction.update({ embeds: [editedEmbed] });
+			return await interaction.update({ embeds: [editedEmbed] });
 		} catch (err) {
 			try {
 				fs.appendFile(

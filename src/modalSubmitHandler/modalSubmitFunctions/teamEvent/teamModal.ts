@@ -45,9 +45,19 @@ const teamModal: ModalFunction = {
 				.addField('Event Date and Time', `${eventDateTime}`)
 				.addField('Registered players', ` `);
 
-			interaction.reply({
+			await interaction.channel?.send({
 				embeds: [teamEmbed],
 				components: [buttons],
+			});
+
+			await interaction.reply({
+				embeds: [
+					infoMessageEmbed(
+						':white_check_mark: Team created successfully',
+						'SUCCESS',
+					),
+				],
+				ephemeral: true,
 			});
 		} catch (err) {
 			try {
