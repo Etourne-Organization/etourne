@@ -1,6 +1,12 @@
 import fs from 'fs';
 
-import { Client, ButtonInteraction, MessageEmbed } from 'discord.js';
+import {
+	Client,
+	ButtonInteraction,
+	MessageEmbed,
+	MessageButton,
+	MessageActionRow,
+} from 'discord.js';
 
 import { ButtonFunction } from '../../ButtonStructure';
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
@@ -30,22 +36,63 @@ const deleteTeam: ButtonFunction = {
 			);
 
 			if (fetchedMessage) {
-				// const filter: any = (i: ButtonInteraction) =>
-				// 	i.customId === 'deleteTeam' && i.user.id === interaction.user.id;
+				const confirmationButtons = new MessageActionRow().addComponents(
+					new MessageButton()
+						.setCustomId('deleteYes')
+						.setLabel('✔')
+						.setStyle('PRIMARY'),
+					new MessageButton()
+						.setCustomId('deleteNo')
+						.setLabel('✖')
+						.setStyle('SECONDARY'),
+				);
 
-				// const collector =
-				// 	interaction.channel?.createMessageComponentCollector({
-				// 		filter,
-				// 		time: 15000,
-				// 	});
-
-				await fetchedMessage.delete();
 				await interaction.reply({
 					embeds: [
-						infoMessageEmbed('Team deleted successfully', 'SUCCESS'),
+						infoMessageEmbed(
+							'Are you sure you want to delete your team?',
+						),
 					],
+					components: [confirmationButtons],
 					ephemeral: true,
 				});
+
+				const filter: any = (i: ButtonInteraction) =>
+					(i.customId === 'deleteYes' || i.customId === 'deleteNo') &&
+					i.user.id === interaction.user.id;
+
+				const collector =
+					interaction.channel?.createMessageComponentCollector({
+						filter,
+						time: 15000,
+						max: 1,
+						maxComponents: 1,
+					});
+
+				collector?.on('collect', async (i: ButtonInteraction) => {
+					if (i.customId === 'deleteYes') {
+						await fetchedMessage.delete();
+
+						await i.reply({
+							embeds: [
+								infoMessageEmbed(
+									':white_check_mark: Team deleted successfully!',
+									'SUCCESS',
+								),
+							],
+							ephemeral: true,
+						});
+					} else if (i.customId === 'deleteNo') {
+						await i.reply({
+							embeds: [infoMessageEmbed(':x: Team not deleted')],
+							ephemeral: true,
+						});
+					}
+				});
+
+				// collector?.on('end', (collected) =>
+				// 	console.log(`Collected ${collected.size} items`),
+				// );
 			} else {
 				await interaction.reply({
 					embeds: [infoMessageEmbed('Something went wrong', 'WARNING')],
@@ -56,7 +103,7 @@ const deleteTeam: ButtonFunction = {
 			try {
 				fs.appendFile(
 					'logs/crash_logs.txt',
-					`${new Date()} : Something went wrong in buttonFunctions/teamEvent/registerTeamMember.ts \n Actual error: ${err} \n \n`,
+					`${new Date()} : Something went wrong in buttonFunctions/teamEvent/deleteTeam.ts \n Actual error: ${err} \n \n`,
 					(err) => {
 						if (err) throw err;
 					},
