@@ -36,3 +36,11 @@
 Supabase provides in-depth explanation about self hosting on their [website](https://supabase.com/docs/guides/self-hosting/docker). Below is the summary of what needs to be done with this app:
 
 1. Create an account on [Doppler](https://www.doppler.com/). This is going to be used for storing `.env` secrets (most of them).
+2. Create a project in Doppler.
+3. Generate JWT_SECRET, ANON_KEY, SERVICE_ROLE_KEY and POSTGRES_PASSWORD using the [generator in Supabase](https://supabase.com/docs/guides/self-hosting#api-keys).
+4. Hardcode the ANON_KEY and SERVICE_ROLE_KEY in `volumes/api/kong.yml` (**for now**).
+5. Put them in the PROD of your project in Doppler.
+6. Install Doppler CLI by following this [guide/documentation](https://docs.doppler.com/docs/install-cli).
+7. Install Docker by following this [guide/documentation](https://docs.docker.com/get-docker/).
+8. Setup Doppler project in your local machine using this [instruction](https://docs.doppler.com/docs/install-cli#project-setup).
+9. Run the following command to spin up Supabase: `doppler run -- docker compose up -d`.
