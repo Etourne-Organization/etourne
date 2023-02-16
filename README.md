@@ -43,6 +43,6 @@ Supabase provides in-depth explanation about self hosting on their [website](htt
 6. Install Doppler CLI by following this [guide/documentation](https://docs.doppler.com/docs/install-cli).
 7. Login into your Doppler account from CLI using `doppler login`. Follow the steps on your terminal.
 8. Go to `supabase/docker` directory and setup your doppler project locally using `doppler setup`.
-9. Install Docker to your server/machine by following this [guide/documentation](https://docs.docker.com/get-docker/).
+9. Install Docker to your server/machine by following this [guide/documentation](https://docs.docker.com/get-docker/) (or [this](https://docs.docker.com/engine/install/) if you are on server).
 10.   Setup Doppler project in your local machine by following this [instruction](https://docs.doppler.com/docs/install-cli#project-setup).
 11.   Run the following command to spin up Supabase: `doppler run -- docker compose up -d`.
