@@ -41,6 +41,8 @@ Supabase provides in-depth explanation about self hosting on their [website](htt
 4. Hardcode the ANON_KEY and SERVICE_ROLE_KEY in `volumes/api/kong.yml` (**for now**).
 5. Put them in the PROD of your project in Doppler dashboard.
 6. Install Doppler CLI by following this [guide/documentation](https://docs.doppler.com/docs/install-cli).
-7. Install Docker to your server/machine by following this [guide/documentation](https://docs.docker.com/get-docker/).
-8. Setup Doppler project in your local machine by following this [instruction](https://docs.doppler.com/docs/install-cli#project-setup).
-9. Run the following command to spin up Supabase: `doppler run -- docker compose up -d`.
+7. Login into your Doppler account from CLI using `doppler login`. Follow the steps on your terminal.
+8. Go to `supabase/docker` directory and setup your doppler project locally using `doppler setup`.
+9. Install Docker to your server/machine by following this [guide/documentation](https://docs.docker.com/get-docker/).
+10.   Setup Doppler project in your local machine by following this [instruction](https://docs.doppler.com/docs/install-cli#project-setup).
+11.   Run the following command to spin up Supabase: `doppler run -- docker compose up -d`.
