@@ -1,5 +1,15 @@
 # Etourne
 
+## Prerequisite
+
+**Note for Windows:** This was tested on powershell which works properly.
+
+1. Create an account on [Doppler](https://www.doppler.com/). This is going to be used for storing `.env` secrets (most of them).
+2. Create a project in Doppler.
+3. Login into your Doppler account from CLI using `doppler login`. Follow the steps on your terminal.
+4. **Windows BUG with scoop:** Scoop needs to be added to the system user variable so that you can use scoop and the installed apps. Read this [GitHub issue](https://github.com/ScoopInstaller/Scoop/issues/3951) to learn more.
+5. Go to `etourne` directory and setup your doppler project locally using `doppler setup`.
+
 ## Instruction to setup the test version of the bot
 
 1. Clone the repo
@@ -21,7 +31,7 @@
 1. Make sure to have [NodeJS](https://nodejs.org/en/) (v16.6.0 and above) and [nodemon](https://www.npmjs.com/package/nodemon) installed.
 1. To start the bot, run: `nodemon src/bot.ts` (make sure to be in the directory).
 
-## Instruction to setup the bot in production
+## Instruction to setup the bot in production (server)
 
 1. Clone the repo.
 2. Create `logs` folder in the root directory as well as two files inside it:
