@@ -11,18 +11,9 @@ const testAdd: Command = {
 	type: 'CHAT_INPUT',
 	run: async (client: Client, interaction: BaseCommandInteraction) => {
 		try {
-			// const { data: d, error: e } = await supabase.auth.signInWithOAuth({
-			// 	provider: 'discord',
-			// });
-
 			const { data, error } = await supabase
 				.from('Users')
-				.insert([{ username: 'someValue', role: 'otherValue' }]);
-
-			// console.log('auth data', d);
-			// console.log('auth error', e);
-			console.log('addUser data', data);
-			console.log('addUser error', error);
+				.insert([{ username: 'someValues', role: 'otherValues' }]);
 
 			await interaction.reply({
 				content: 'Done',
