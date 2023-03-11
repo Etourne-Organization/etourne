@@ -12,7 +12,7 @@ const testAdd: Command = {
 	run: async (client: Client, interaction: BaseCommandInteraction) => {
 		try {
 			const { data, error } = await supabase
-				.from('Users')
+				.from('Test')
 				.insert([{ username: 'someValues', role: 'otherValues' }]);
 
 			await interaction.reply({
