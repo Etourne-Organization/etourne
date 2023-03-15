@@ -55,7 +55,7 @@ const normalEventModal: ModalFunction = {
 
 			if (!interaction.inCachedGuild()) return;
 
-			await addEvent({
+			const id = await addEvent({
 				eventName: eventName,
 				description: description,
 				dateTime: new Date(
@@ -67,6 +67,10 @@ const normalEventModal: ModalFunction = {
 				serverId: parseInt(interaction.guild.id),
 				timezone: timezone,
 				serverName: interaction.guild.name,
+			});
+
+			eventEmbed.setFooter({
+				text: `Event ID: ${id}`,
 			});
 
 			await interaction.channel?.send({

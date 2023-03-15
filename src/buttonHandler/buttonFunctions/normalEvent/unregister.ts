@@ -9,6 +9,9 @@ const unregister: ButtonFunction = {
 	customId: 'normalEventUnregister',
 	run: async (client: Client, interaction: ButtonInteraction) => {
 		try {
+			const eventId: string | any =
+				interaction.message.embeds[0].footer?.text.split(': ')[1];
+
 			let FOUND: boolean = false;
 			const registeredPlayers:
 				| {
@@ -50,7 +53,8 @@ const unregister: ButtonFunction = {
 					.setDescription(
 						interaction.message.embeds[0].description || 'Undefined',
 					)
-					.addFields(interaction.message.embeds[0].fields || []);
+					.addFields(interaction.message.embeds[0].fields || [])
+					.setFooter({ text: `Event ID: ${eventId}` });
 
 				FOUND = true;
 				await interaction.update({ embeds: [editedEmbed] });

@@ -4,11 +4,17 @@ import { Client, ButtonInteraction, MessageEmbed } from 'discord.js';
 
 import { ButtonFunction } from '../../ButtonStructure';
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
+import { addPlayer } from '../../../supabase/supabaseFunctions/players';
 
 const register: ButtonFunction = {
 	customId: 'normalEventRegister',
 	run: async (client: Client, interaction: ButtonInteraction) => {
 		try {
+			const eventId: string | any =
+				interaction.message.embeds[0].footer?.text.split(': ')[1];
+
+			console.log(eventId);
+
 			const registeredPlayers:
 				| {
 						name: string;
@@ -52,17 +58,25 @@ const register: ButtonFunction = {
 				}
 			});
 
+			await addPlayer({
+				username: interaction.user.tag,
+				userId: parseInt(interaction.user.id),
+				eventId: parseInt(eventId),
+			});
+
 			const editedEmbed = new MessageEmbed()
 				.setColor('#3a9ce2')
 				.setTitle(interaction.message.embeds[0].title || 'Undefined')
 				.setDescription(
 					interaction.message.embeds[0].description || 'Undefined',
 				)
-				.addFields(interaction.message.embeds[0].fields || []);
+				.addFields(interaction.message.embeds[0].fields || [])
+				.setFooter({ text: `Event ID: ${eventId}` });
 
 			await interaction.update({ embeds: [editedEmbed] });
 		} catch (err) {
 			try {
+				console.log(err);
 				fs.appendFile(
 					'logs/crash_logs.txt',
 					`${new Date()} : Something went wrong in buttonFunctions/normalEvent/register.ts \n Actual error: ${err} \n \n`,

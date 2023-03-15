@@ -15,7 +15,7 @@ interface checkUserExists {
 interface addUser {
 	userId: number;
 	username: string;
-	role: string;
+	roleName?: string;
 }
 
 export const checkUserExists = async (props: checkUserExists) => {
@@ -30,11 +30,11 @@ export const checkUserExists = async (props: checkUserExists) => {
 };
 
 export const addUser = async (props: addUser) => {
-	const { username, role, userId } = props;
+	const { username, userId } = props;
 
 	const { data, error } = await supabase
 		.from('Users')
-		.insert([{ id: userId, username: username, role: role }]);
+		.insert([{ id: userId, username: username }]);
 
 	return { data, error };
 };
