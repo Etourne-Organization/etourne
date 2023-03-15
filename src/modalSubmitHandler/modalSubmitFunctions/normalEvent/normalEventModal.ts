@@ -55,14 +55,6 @@ const normalEventModal: ModalFunction = {
 
 			if (!interaction.inCachedGuild()) return;
 
-			// console.log(
-			// 	new Date(
-			// 		momentTimezone
-			// 			.tz(eventDateTime, 'DD/MM/YYYY hh:mm', timezone)
-			// 			.format(),
-			// 	).toISOString(),
-			// );
-
 			await addEvent({
 				eventName: eventName,
 				description: description,

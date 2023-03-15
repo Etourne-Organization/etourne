@@ -40,8 +40,7 @@ export const addEvent = async (props: addEvent) => {
 			serverId: serverId,
 		});
 
-	console.log({ checkServerExistsData, checkServerExistsError });
-
+	// if server exists in DB
 	if (!checkServerExistsError && checkServerExistsData) {
 		const { data, error } = await supabase.from('Events').insert([
 			{
@@ -59,14 +58,15 @@ export const addEvent = async (props: addEvent) => {
 		if (error) throw error;
 
 		return { data, error };
+
+		// if server does not exist in DB
 	} else if (checkServerExistsError && !checkServerExistsData) {
 		const { data: addServerData, error: addServerError } = await addServer({
 			serverId: serverId,
 			name: serverName,
 		});
 
-		console.log({ addServerData, addServerError });
-
+		// if server was added successfully to DB
 		if (!addServerError && addServerData) {
 			const { data, error } = await supabase.from('Events').insert([
 				{

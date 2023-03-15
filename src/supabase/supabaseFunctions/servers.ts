@@ -23,7 +23,7 @@ export const checkServerExists = async (props: checkServerExists) => {
 
 	const { data, error } = await supabase
 		.from('Servers')
-		.select('serverId')
+		.select('id')
 		.eq('id', serverId);
 
 	return { data, error };
