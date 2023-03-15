@@ -5,6 +5,7 @@ import { Client, ButtonInteraction, MessageEmbed } from 'discord.js';
 import { ButtonFunction } from '../../ButtonStructure';
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
 import { addPlayer } from '../../../supabase/supabaseFunctions/players';
+import { isJson } from '../../../globalUtils/isJson';
 
 const register: ButtonFunction = {
 	customId: 'normalEventRegister',

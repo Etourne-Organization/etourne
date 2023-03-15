@@ -26,6 +26,8 @@ export const checkServerExists = async (props: checkServerExists) => {
 		.select('id')
 		.eq('id', serverId);
 
+	console.log({ data, error });
+
 	return { data, error };
 };
 

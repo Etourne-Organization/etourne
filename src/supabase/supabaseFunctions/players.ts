@@ -18,13 +18,18 @@ interface addPlayer {
 export const addPlayer = async (props: addPlayer) => {
 	const { username, userId, eventId } = props;
 
+	console.log(props);
+
 	const { data: checkUserExistsData, error: checkUserExistsError } =
 		await checkUserExists({
 			userId: userId,
 		});
 
+	console.log({ checkUserExistsData, checkUserExistsError });
+
 	// if user exists in DB
 	if (!checkUserExistsError) {
+		console.log('here');
 		const { data, error } = await supabase.from('SinglePlayers').insert([
 			{
 				username: username,

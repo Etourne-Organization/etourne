@@ -41,6 +41,8 @@ export const addEvent = async (props: addEvent) => {
 			serverId: serverId,
 		});
 
+	console.log({ checkServerExistsData, checkServerExistsError });
+
 	// if server exists in DB
 	if (!checkServerExistsError) {
 		const { data, error } = await supabase
