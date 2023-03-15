@@ -34,7 +34,7 @@ export const addUser = async (props: addUser) => {
 
 	const { data, error } = await supabase
 		.from('Users')
-		.insert([{ id: userId, username: username }]);
+		.upsert([{ id: userId, username: username }]);
 
 	return { data, error };
 };

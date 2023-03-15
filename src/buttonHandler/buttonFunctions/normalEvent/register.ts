@@ -14,8 +14,6 @@ const register: ButtonFunction = {
 			const eventId: string | any =
 				interaction.message.embeds[0].footer?.text.split(': ')[1];
 
-			console.log(eventId);
-
 			const registeredPlayers:
 				| {
 						name: string;

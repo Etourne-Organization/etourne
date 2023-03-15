@@ -24,7 +24,7 @@ export const checkServerExists = async (props: checkServerExists) => {
 	const { data, error } = await supabase
 		.from('Servers')
 		.select('id')
-		.eq('id', serverId);
+		.containedBy('id', [serverId]);
 
 	console.log({ data, error });
 
@@ -36,7 +36,7 @@ export const addServer = async (props: addServer) => {
 
 	const { data, error } = await supabase
 		.from('Servers')
-		.insert([{ id: serverId, name: name }]);
+		.upsert([{ id: serverId, name: name }]);
 
 	return { data, error };
 };
