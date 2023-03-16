@@ -4,6 +4,7 @@ import { Client, ButtonInteraction, MessageEmbed } from 'discord.js';
 
 import { ButtonFunction } from '../../ButtonStructure';
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
+import { removePlayer } from '../../../supabase/supabaseFunctions/singlePlayers';
 
 const unregister: ButtonFunction = {
 	customId: 'normalEventUnregister',
@@ -12,7 +13,6 @@ const unregister: ButtonFunction = {
 			const eventId: string | any =
 				interaction.message.embeds[0].footer?.text.split(': ')[1];
 
-			let FOUND: boolean = false;
 			const registeredPlayers:
 				| {
 						name: string;
@@ -56,11 +56,13 @@ const unregister: ButtonFunction = {
 					.addFields(interaction.message.embeds[0].fields || [])
 					.setFooter({ text: `Event ID: ${eventId}` });
 
-				FOUND = true;
-				await interaction.update({ embeds: [editedEmbed] });
-			}
+				await removePlayer({
+					userId: parseInt(interaction.user.id),
+					eventId: eventId,
+				});
 
-			if (!FOUND) {
+				return await interaction.update({ embeds: [editedEmbed] });
+			} else {
 				return await interaction.reply({
 					embeds: [infoMessageEmbed('You are not registered!', 'WARNING')],
 					ephemeral: true,

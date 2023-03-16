@@ -7,10 +7,16 @@
 */
 
 import { supabase } from '../supabase';
-import { checkUserExists, addUser } from './users';
+import { addUser } from './users';
 
 interface addPlayer {
 	username: string;
+	userId: number;
+	eventId: number;
+}
+
+interface removePlayer {
+	username?: string;
 	userId: number;
 	eventId: number;
 }
@@ -30,6 +36,20 @@ export const addPlayer = async (props: addPlayer) => {
 			userId: userId,
 		},
 	]);
+
+	if (error) throw error;
+
+	return { data, error };
+};
+
+export const removePlayer = async (props: removePlayer) => {
+	const { username, userId, eventId } = props;
+
+	const { data, error } = await supabase
+		.from('SinglePlayers')
+		.delete()
+		.eq('id', userId)
+		.eq('eventId', eventId);
 
 	if (error) throw error;
 
