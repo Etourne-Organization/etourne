@@ -48,10 +48,12 @@ export const removePlayer = async (props: removePlayer) => {
 	const { data, error } = await supabase
 		.from('SinglePlayers')
 		.delete()
-		.eq('id', userId)
+		.eq('userId', userId)
 		.eq('eventId', eventId);
 
 	if (error) throw error;
+
+	console.log(data, error);
 
 	return { data, error };
 };
