@@ -4,11 +4,7 @@ import {
 	BaseCommandInteraction,
 	Client,
 	Constants,
-	MessageEmbed,
-	MessageSelectMenu,
-	MessageAttachment,
 	MessageActionRow,
-	MessageButton,
 	Modal,
 	TextInputComponent,
 	ModalActionRowComponent,
@@ -122,6 +118,8 @@ const createTeamEvent: Command = {
 			);
 
 			await interaction.showModal(modal);
+
+			console.log('done!!');
 		} catch (err) {
 			interaction.reply({
 				embeds: [infoMessageEmbed(':x: There has been an error', 'ERROR')],

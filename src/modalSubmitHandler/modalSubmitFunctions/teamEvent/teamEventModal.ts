@@ -7,11 +7,12 @@ import {
 	MessageButton,
 	MessageActionRow,
 } from 'discord.js';
-import momentTimzone from 'moment-timezone';
+import momentTimezone from 'moment-timezone';
 
 import { ModalFunction } from '../../ModalSubmitStructure';
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
 import teamEventInfoData from '../../../data/teamEventInfo';
+import { addEvent } from '../../../supabase/supabaseFunctions/events';
 
 const teamEventModal: ModalFunction = {
 	customId: 'teamEventModalSubmit',
@@ -32,7 +33,7 @@ const teamEventModal: ModalFunction = {
 				)
 				.addField(
 					'Event date & time',
-					`<t:${momentTimzone
+					`<t:${momentTimezone
 						.tz(eventDateTime, 'DD/MM/YYYY hh:mm', timezone)
 						.unix()}:F>`,
 					true,
@@ -60,6 +61,20 @@ const teamEventModal: ModalFunction = {
 			);
 
 			if (!interaction.inCachedGuild()) return;
+
+			// const id = await addEvent({
+			// 	eventName: eventName,
+			// 	description: description,
+			// 	dateTime: new Date(
+			// 		momentTimezone
+			// 			.tz(eventDateTime, 'DD/MM/YYYY hh:mm', timezone)
+			// 			.format(),
+			// 	).toISOString(),
+			// 	isTeamEvent: false,
+			// 	serverId: parseInt(interaction.guild.id),
+			// 	timezone: timezone,
+			// 	serverName: interaction.guild.name,
+			// });
 
 			await interaction.channel?.send({
 				embeds: [eventEmbed],

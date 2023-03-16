@@ -1,6 +1,6 @@
 /* 
 
-* This file contains all the 'single players' table related functions
+* This file contains all the 'team players' table related functions
 *
 *
 
