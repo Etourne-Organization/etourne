@@ -13,6 +13,7 @@ interface addPlayer {
 	username: string;
 	userId: number;
 	eventId: number;
+	serverId: string;
 }
 
 interface removePlayer {
@@ -22,11 +23,12 @@ interface removePlayer {
 }
 
 export const addPlayer = async (props: addPlayer) => {
-	const { username, userId, eventId } = props;
+	const { username, userId, eventId, serverId } = props;
 
 	const { data: addUserData, error: addUserError } = await addUser({
 		username: username,
 		userId: userId,
+		serverId: serverId,
 	});
 
 	const { data, error } = await supabase.from('SinglePlayers').insert([

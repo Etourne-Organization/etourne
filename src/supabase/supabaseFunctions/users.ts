@@ -12,6 +12,7 @@ interface addUser {
 	userId: number;
 	username: string;
 	roleName?: string;
+	serverId: string;
 }
 
 export const addUser = async (props: addUser) => {
@@ -19,7 +20,7 @@ export const addUser = async (props: addUser) => {
 
 	const { data, error } = await supabase
 		.from('Users')
-		.upsert([{ id: userId, username: username }]);
+		.upsert([{ userId: userId, username: username }]);
 
 	return { data, error };
 };
