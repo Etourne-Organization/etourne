@@ -30,16 +30,18 @@ const normalEventModal: ModalFunction = {
 				.setDescription(
 					`**----------------------------------------** \n **Event description:** \n \n >>> ${description}  \n \n`,
 				)
-				.addField(
-					'Event date & time',
-					`<t:${momentTimezone
-						.tz(eventDateTime, 'DD/MM/YYYY hh:mm', timezone)
-						.unix()}:F>`,
-					true,
-				)
-				.addField('Game name', gameName, true)
-				.addField('Hosted by', `${interaction.user.tag}`)
-				.addField('Registered players', ` `);
+				.addFields([
+					{
+						name: 'Event date & time',
+						value: `<t:${momentTimezone
+							.tz(eventDateTime, 'DD/MM/YYYY hh:mm', timezone)
+							.unix()}:F>`,
+						inline: true,
+					},
+					{ name: 'Game name', value: gameName, inline: true },
+					{ name: 'Hosted by', value: `${interaction.user.tag}` },
+					{ name: 'Registered players', value: ` ` },
+				]);
 
 			/* buttons */
 			const buttons = new MessageActionRow().addComponents(

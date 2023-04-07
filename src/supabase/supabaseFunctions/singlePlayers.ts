@@ -20,7 +20,6 @@ interface removePlayer {
 	username?: string;
 	userId: number;
 	eventId: number;
-	serverId: number;
 }
 
 export const addPlayer = async (props: addPlayer) => {
@@ -59,17 +58,20 @@ export const addPlayer = async (props: addPlayer) => {
 };
 
 export const removePlayer = async (props: removePlayer) => {
-	const { username, userId, eventId } = props;
+	const { userId, eventId } = props;
+
+	// get user ID from DB
+	const { data: getUserIdData, error: getUserIdError } = await getUserId({
+		userId: userId,
+	});
 
 	const { data, error } = await supabase
 		.from('SinglePlayers')
 		.delete()
-		.eq('userId', userId)
+		.eq('userId', getUserIdData![0]['id'])
 		.eq('eventId', eventId);
 
 	if (error) throw error;
-
-	console.log(data, error);
 
 	return { data, error };
 };
