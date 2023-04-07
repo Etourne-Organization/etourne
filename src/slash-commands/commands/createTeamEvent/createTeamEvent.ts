@@ -3,7 +3,6 @@ import fs from 'fs';
 import {
 	BaseCommandInteraction,
 	Client,
-	Constants,
 	MessageActionRow,
 	Modal,
 	TextInputComponent,
@@ -24,13 +23,13 @@ const createTeamEvent: Command = {
 		{
 			name: 'numteamlimit',
 			description: 'Num of team. Defaults to unlimited',
-			type: Constants.ApplicationCommandOptionTypes.INTEGER,
+			type: 'INTEGER',
 			required: false,
 		},
 		{
 			name: 'numteammemberlimit',
 			description: 'Num of team member. Defaults to unlimited',
-			type: Constants.ApplicationCommandOptionTypes.INTEGER,
+			type: 'INTEGER',
 			required: false,
 		},
 	],

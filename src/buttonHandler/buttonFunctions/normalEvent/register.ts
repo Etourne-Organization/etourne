@@ -5,6 +5,7 @@ import { Client, ButtonInteraction, MessageEmbed } from 'discord.js';
 import { ButtonFunction } from '../../ButtonStructure';
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
 import { addPlayer } from '../../../supabase/supabaseFunctions/singlePlayers';
+import { parse } from 'path';
 
 const register: ButtonFunction = {
 	customId: 'normalEventRegister',
@@ -52,6 +53,7 @@ const register: ButtonFunction = {
 					username: interaction.user.tag,
 					userId: parseInt(interaction.user.id),
 					eventId: parseInt(eventId),
+					serverId: parseInt(interaction.guild?.id!),
 				});
 
 				const editedEmbed = new MessageEmbed()

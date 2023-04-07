@@ -59,6 +59,7 @@ const unregister: ButtonFunction = {
 				await removePlayer({
 					userId: parseInt(interaction.user.id),
 					eventId: parseInt(eventId),
+					serverId: parseInt(interaction.guild?.id!),
 				});
 
 				return await interaction.update({ embeds: [editedEmbed] });

@@ -18,15 +18,19 @@ interface addServer {
 	name: string;
 }
 
+interface getServer {
+	serverId: number;
+}
+
 export const checkServerExists = async (props: checkServerExists) => {
 	const { serverId } = props;
 
 	const { data, error } = await supabase
-		.from('Servers')
+		.from('DiscordServers')
 		.select('id')
 		.containedBy('id', [serverId]);
 
-	console.log({ data, error });
+	// console.log({ data, error });
 
 	return { data, error };
 };
@@ -35,8 +39,19 @@ export const addServer = async (props: addServer) => {
 	const { serverId, name } = props;
 
 	const { data, error } = await supabase
-		.from('Servers')
+		.from('DiscordServers')
 		.upsert([{ id: serverId, name: name }]);
+
+	return { data, error };
+};
+
+export const getServerId = async (props: getServer) => {
+	const { serverId } = props;
+
+	const { data, error } = await supabase
+		.from('DiscordServers')
+		.select('id')
+		.eq('id', serverId);
 
 	return { data, error };
 };
