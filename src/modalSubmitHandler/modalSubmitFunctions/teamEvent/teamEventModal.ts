@@ -55,6 +55,14 @@ const teamEventModal: ModalFunction = {
 					.setCustomId('createTeam')
 					.setLabel('Create Team')
 					.setStyle('PRIMARY'),
+				new MessageButton()
+					.setCustomId('setTeamNumLimit')
+					.setLabel('Set team num limit')
+					.setStyle('SECONDARY'),
+				new MessageButton()
+					.setCustomId('setTeamMemberNumLimit')
+					.setLabel('Set team member num limit')
+					.setStyle('SECONDARY'),
 			);
 
 			if (!interaction.inCachedGuild()) return;
