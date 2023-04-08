@@ -7,7 +7,7 @@ import {
 	Modal,
 	TextInputComponent,
 	ModalActionRowComponent,
-	Message,
+	Interaction,
 } from 'discord.js';
 import momentTimzone from 'moment-timezone';
 
@@ -19,35 +19,9 @@ const createTeamEvent: Command = {
 	name: 'createteamevent',
 	description: 'Create team event',
 	type: 'CHAT_INPUT',
-	options: [
-		{
-			name: 'numteamlimit',
-			description: 'Num of team. Defaults to unlimited',
-			type: 'INTEGER',
-			required: false,
-		},
-		{
-			name: 'numteammemberlimit',
-			description: 'Num of team member. Defaults to unlimited',
-			type: 'INTEGER',
-			required: false,
-		},
-	],
+
 	run: async (client: Client, interaction: BaseCommandInteraction) => {
 		try {
-			let numTeamLimit: number | any =
-				interaction.options.get('numteamlimit');
-			let numTeamMemberLimit: number | any =
-				interaction.options.get('numteammemberlimit');
-
-			// set numTeamLimit and numTeamMemberLimit in a TS file temporarily
-			teamEventInfoData.numTeamLimit = numTeamLimit
-				? numTeamLimit.value
-				: null;
-			teamEventInfoData.numTeamMemberLimit = numTeamMemberLimit
-				? numTeamMemberLimit.value
-				: null;
-
 			/* modal */
 			const modal = new Modal()
 				.setCustomId(`teamEventModalSubmit-${interaction.id}`)
@@ -117,8 +91,6 @@ const createTeamEvent: Command = {
 			);
 
 			await interaction.showModal(modal);
-
-			console.log('done!!');
 		} catch (err) {
 			interaction.reply({
 				embeds: [infoMessageEmbed(':x: There has been an error', 'ERROR')],

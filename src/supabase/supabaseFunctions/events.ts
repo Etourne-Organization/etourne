@@ -19,7 +19,7 @@ interface addEvent {
 	serverId: number;
 	timezone: string;
 	numTeamLimit?: number;
-	numTeamPlayerLimit?: number;
+	numTeamMemberLimit?: number;
 	serverName: string;
 }
 
@@ -32,7 +32,7 @@ export const addEvent = async (props: addEvent) => {
 		serverId,
 		timezone,
 		numTeamLimit,
-		numTeamPlayerLimit,
+		numTeamMemberLimit,
 		serverName,
 	} = props;
 
@@ -52,7 +52,7 @@ export const addEvent = async (props: addEvent) => {
 				serverId: serverId,
 				timezone: timezone,
 				numTeamLimit: numTeamLimit,
-				numTeamPlayerLimit: numTeamPlayerLimit,
+				numTeamMemberLimit: numTeamMemberLimit,
 			},
 		])
 		.select();

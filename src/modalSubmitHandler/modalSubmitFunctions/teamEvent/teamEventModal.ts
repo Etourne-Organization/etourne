@@ -11,7 +11,6 @@ import momentTimezone from 'moment-timezone';
 
 import { ModalFunction } from '../../ModalSubmitStructure';
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
-import teamEventInfoData from '../../../data/teamEventInfo';
 import { addEvent } from '../../../supabase/supabaseFunctions/events';
 
 const teamEventModal: ModalFunction = {
@@ -31,27 +30,25 @@ const teamEventModal: ModalFunction = {
 				.setDescription(
 					`**----------------------------------------** \n **Event description:** \n \n >>> ${description}  \n \n`,
 				)
-				.addField(
-					'Event date & time',
-					`<t:${momentTimezone
-						.tz(eventDateTime, 'DD/MM/YYYY hh:mm', timezone)
-						.unix()}:F>`,
-					true,
-				)
-				.addField('Game name', gameName, true)
-				.addField(
-					'Num of team limit',
-					teamEventInfoData.numTeamLimit
-						? `${teamEventInfoData.numTeamLimit}`
-						: 'Unlimited',
-				)
-				.addField(
-					'Num of team member limit',
-					teamEventInfoData.numTeamMemberLimit
-						? `${teamEventInfoData.numTeamMemberLimit}`
-						: 'Unlimited',
-				)
-				.addField('Hosted by', `${interaction.user.tag}`);
+				.addFields([
+					{
+						name: 'Event date & time',
+						value: `<t:${momentTimezone
+							.tz(eventDateTime, 'DD/MM/YYYY hh:mm', timezone)
+							.unix()}:F>`,
+						inline: true,
+					},
+					{ name: 'Game name', value: gameName, inline: true },
+					{
+						name: 'Num of team limit',
+						value: 'Unlimited',
+					},
+					{
+						name: 'Num of team member limit',
+						value: 'Unlimited',
+					},
+					{ name: 'Hosted by', value: `${interaction.user.tag}` },
+				]);
 
 			const buttons = new MessageActionRow().addComponents(
 				new MessageButton()
@@ -62,19 +59,23 @@ const teamEventModal: ModalFunction = {
 
 			if (!interaction.inCachedGuild()) return;
 
-			// const id = await addEvent({
-			// 	eventName: eventName,
-			// 	description: description,
-			// 	dateTime: new Date(
-			// 		momentTimezone
-			// 			.tz(eventDateTime, 'DD/MM/YYYY hh:mm', timezone)
-			// 			.format(),
-			// 	).toISOString(),
-			// 	isTeamEvent: false,
-			// 	serverId: parseInt(interaction.guild.id),
-			// 	timezone: timezone,
-			// 	serverName: interaction.guild.name,
-			// });
+			const id = await addEvent({
+				eventName: eventName,
+				description: description,
+				dateTime: new Date(
+					momentTimezone
+						.tz(eventDateTime, 'DD/MM/YYYY hh:mm', timezone)
+						.format(),
+				).toISOString(),
+				isTeamEvent: false,
+				serverId: parseInt(interaction.guild.id),
+				timezone: timezone,
+				serverName: interaction.guild.name,
+			});
+
+			eventEmbed.setFooter({
+				text: `Event ID: ${id}`,
+			});
 
 			await interaction.channel?.send({
 				embeds: [eventEmbed],
