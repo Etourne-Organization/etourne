@@ -17,7 +17,7 @@ const setTeamNumLimit: ButtonFunction = {
 	run: async (client: Client, interaction: ButtonInteraction) => {
 		try {
 			const modal = new Modal()
-				.setCustomId(`teamNumLimit-${interaction.id}`)
+				.setCustomId(`teamNumLimitModalSubmit-${interaction.id}`)
 				.setTitle('Create Team');
 
 			const teamLimitNumInput = new TextInputComponent()

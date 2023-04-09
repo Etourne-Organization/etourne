@@ -44,10 +44,24 @@ const teamModal: ModalFunction = {
 				.setColor('#3a9ce2')
 				.setTitle(teamName)
 				.setDescription(`>>> ${teamShortDescription}`)
-				.addField('Team Leader', `${interaction.user.tag}`)
-				.addField('Event Name', `${eventName}`)
-				.addField('Event Date and Time', `${eventDateTime}`)
-				.addField('Registered players', ` `);
+				.addFields([
+					{
+						name: 'Team Leader',
+						value: interaction.user.tag,
+					},
+					{
+						name: 'Event Name',
+						value: eventName,
+					},
+					{
+						name: 'Event Date and Time',
+						value: eventDateTime,
+					},
+					{
+						name: 'Registered players',
+						value: ` `,
+					},
+				]);
 
 			await interaction.channel?.send({
 				embeds: [teamEmbed],

@@ -41,11 +41,11 @@ const teamEventModal: ModalFunction = {
 					{ name: 'Game name', value: gameName, inline: true },
 					{
 						name: 'Num of team limit',
-						value: 'Unlimited',
+						value: 'Not specified yet',
 					},
 					{
 						name: 'Num of team member limit',
-						value: 'Unlimited',
+						value: 'Not specified yet',
 					},
 					{ name: 'Hosted by', value: `${interaction.user.tag}` },
 				]);
