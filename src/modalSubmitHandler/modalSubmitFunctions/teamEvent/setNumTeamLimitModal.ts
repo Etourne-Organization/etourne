@@ -5,7 +5,7 @@ import { Client, ModalSubmitInteraction, MessageEmbed } from 'discord.js';
 import { ModalFunction } from '../../ModalSubmitStructure';
 import { setColumnValue } from '../../../supabase/supabaseFunctions/events';
 
-const setTeamNumLimitModal: ModalFunction = {
+const setNumTeamLimitModal: ModalFunction = {
 	customId: 'teamNumLimitModalSubmit',
 	run: async (client: Client, interaction: ModalSubmitInteraction) => {
 		try {
@@ -57,4 +57,4 @@ const setTeamNumLimitModal: ModalFunction = {
 	},
 };
 
-export default setTeamNumLimitModal;
+export default setNumTeamLimitModal;
