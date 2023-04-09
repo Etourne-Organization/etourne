@@ -3,6 +3,7 @@ import fs from 'fs';
 import { Client, ModalSubmitInteraction, MessageEmbed } from 'discord.js';
 
 import { ModalFunction } from '../../ModalSubmitStructure';
+import { setColumnValue } from '../../../supabase/supabaseFunctions/events';
 
 const setTeamNumLimitModal: ModalFunction = {
 	customId: 'teamNumLimitModalSubmit',
@@ -13,6 +14,16 @@ const setTeamNumLimitModal: ModalFunction = {
 
 			const teamNumLimit: string =
 				interaction.fields.getTextInputValue('teamNumLimit');
+
+			setColumnValue({
+				data: [
+					{
+						key: 'numTeamLimit',
+						value: teamNumLimit,
+						id: parseInt(eventId),
+					},
+				],
+			});
 
 			interaction.message?.embeds[0].fields?.find((r) => {
 				if (r.name === 'Num of team limit') {

@@ -23,6 +23,10 @@ interface addEvent {
 	serverName: string;
 }
 
+interface setColumnValue {
+	data: [{ key: string; value: string; id: number }];
+}
+
 export const addEvent = async (props: addEvent) => {
 	const {
 		eventName,
@@ -61,4 +65,19 @@ export const addEvent = async (props: addEvent) => {
 
 	// return { data, error };
 	return data[0]['id'];
+};
+
+export const setColumnValue = async (props: setColumnValue) => {
+	const { data } = props;
+
+	data.forEach(async (d) => {
+		const { data, error } = await supabase
+			.from('Events')
+			.insert([
+				{
+					[d.key]: d.value,
+				},
+			])
+			.eq('id', d.id);
+	});
 };

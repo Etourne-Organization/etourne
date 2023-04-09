@@ -12,7 +12,7 @@ import {
 
 import { ButtonFunction } from '../../ButtonStructure';
 
-const setTeamMemberNumLimit: ButtonFunction = {
+const setNumTeamMemberLimit: ButtonFunction = {
 	customId: 'setTeamMemberNumLimit',
 	run: async (client: Client, interaction: ButtonInteraction) => {
 		try {
@@ -50,4 +50,4 @@ const setTeamMemberNumLimit: ButtonFunction = {
 	},
 };
 
-export default setTeamMemberNumLimit;
+export default setNumTeamMemberLimit;
