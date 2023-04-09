@@ -1,12 +1,6 @@
 import fs from 'fs';
 
-import {
-	Client,
-	ModalSubmitInteraction,
-	MessageEmbed,
-	MessageButton,
-	MessageActionRow,
-} from 'discord.js';
+import { Client, ModalSubmitInteraction, MessageEmbed } from 'discord.js';
 
 import { ModalFunction } from '../../ModalSubmitStructure';
 

@@ -24,6 +24,7 @@ const setTeamNumLimit: ButtonFunction = {
 				.setCustomId('teamNumLimit')
 				.setLabel('Team num limit')
 				.setStyle('SHORT')
+				// .setValue('123')
 				.setPlaceholder('Enter limit for num of team');
 
 			const teamLimitNumActionRow =
