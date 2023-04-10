@@ -63,7 +63,6 @@ export const addEvent = async (props: addEvent) => {
 
 	if (error) throw error;
 
-	// return { data, error };
 	return data[0]['id'];
 };
 

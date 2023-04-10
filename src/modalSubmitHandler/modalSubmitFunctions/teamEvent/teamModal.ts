@@ -10,11 +10,15 @@ import {
 
 import { ModalFunction } from '../../ModalSubmitStructure';
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
+import { addTeam } from '../../../supabase/supabaseFunctions/teams';
 
 const teamModal: ModalFunction = {
 	customId: 'teamModalSubmit',
 	run: async (client: Client, interaction: ModalSubmitInteraction) => {
 		try {
+			const eventId: string | any =
+				interaction.message?.embeds[0].footer?.text.split(': ')[1];
+
 			const eventName: any = interaction.message?.embeds[0].title;
 			const eventDateTime: any = interaction.message?.embeds[0].fields?.find(
 				(r) => r.name === 'Event date & time',
@@ -62,6 +66,16 @@ const teamModal: ModalFunction = {
 						value: ` `,
 					},
 				]);
+
+			const teamID = await addTeam({
+				eventId: eventId,
+				teamName: teamName,
+				teamDescription: teamShortDescription,
+			});
+
+			teamEmbed.setFooter({
+				text: `Event ID: ${eventId} Team ID: ${teamID}`,
+			});
 
 			await interaction.channel?.send({
 				embeds: [teamEmbed],
