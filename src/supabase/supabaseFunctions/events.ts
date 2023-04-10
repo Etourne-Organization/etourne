@@ -73,11 +73,9 @@ export const setColumnValue = async (props: setColumnValue) => {
 	data.forEach(async (d) => {
 		const { data, error } = await supabase
 			.from('Events')
-			.insert([
-				{
-					[d.key]: d.value,
-				},
-			])
+			.update({
+				[d.key]: d.value,
+			})
 			.eq('id', d.id);
 	});
 };

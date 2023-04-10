@@ -6,20 +6,20 @@ import { ModalFunction } from '../../ModalSubmitStructure';
 import { setColumnValue } from '../../../supabase/supabaseFunctions/events';
 
 const setNumTeamLimitModal: ModalFunction = {
-	customId: 'teamNumLimitModalSubmit',
+	customId: 'numTeamLimitModalSubmit',
 	run: async (client: Client, interaction: ModalSubmitInteraction) => {
 		try {
 			const eventId: string | any =
 				interaction.message?.embeds[0].footer?.text.split(': ')[1];
 
-			const teamNumLimit: string =
-				interaction.fields.getTextInputValue('teamNumLimit');
+			const numTeamLimit: string =
+				interaction.fields.getTextInputValue('numTeamLimit');
 
 			setColumnValue({
 				data: [
 					{
 						key: 'numTeamLimit',
-						value: teamNumLimit,
+						value: numTeamLimit,
 						id: parseInt(eventId),
 					},
 				],
@@ -27,7 +27,7 @@ const setNumTeamLimitModal: ModalFunction = {
 
 			interaction.message?.embeds[0].fields?.find((r) => {
 				if (r.name === 'Num of team limit') {
-					r.value = teamNumLimit;
+					r.value = numTeamLimit;
 				}
 			});
 

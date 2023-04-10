@@ -13,16 +13,16 @@ import {
 import { ButtonFunction } from '../../ButtonStructure';
 
 const setNumTeamMemberLimit: ButtonFunction = {
-	customId: 'setTeamMemberNumLimit',
+	customId: 'setNumTeamMemberLimit',
 	run: async (client: Client, interaction: ButtonInteraction) => {
 		try {
 			const modal = new Modal()
-				.setCustomId(`teamMemberNumLimitModalSubmit-${interaction.id}`)
+				.setCustomId(`numTeamMemberLimitModalSubmit-${interaction.id}`)
 				.setTitle('Create Team');
 
 			const teamMemberLimitNumInput = new TextInputComponent()
-				.setCustomId('teamMemberNumLimit')
-				.setLabel('Team member num limit')
+				.setCustomId('numTeamMemberLimit')
+				.setLabel('Num of team member limit')
 				.setStyle('SHORT')
 				.setPlaceholder('Enter limit for num of team members in each team');
 

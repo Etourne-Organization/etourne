@@ -56,12 +56,12 @@ const teamEventModal: ModalFunction = {
 					.setLabel('Create Team')
 					.setStyle('PRIMARY'),
 				new MessageButton()
-					.setCustomId('setTeamNumLimit')
-					.setLabel('Set team num limit')
+					.setCustomId('setNumTeamLimit')
+					.setLabel('Set num of team limit')
 					.setStyle('SECONDARY'),
 				new MessageButton()
-					.setCustomId('setTeamMemberNumLimit')
-					.setLabel('Set team member num limit')
+					.setCustomId('setNumTeamMemberLimit')
+					.setLabel('Set num of team member limit')
 					.setStyle('SECONDARY'),
 			);
 
