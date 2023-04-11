@@ -4,11 +4,16 @@ import { Client, ButtonInteraction, MessageEmbed } from 'discord.js';
 
 import { ButtonFunction } from '../../ButtonStructure';
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
+import { removePlayer } from '../../../supabase/supabaseFunctions/teamPlayers';
 
 const unregisterTeamMember: ButtonFunction = {
 	customId: 'unregisterTeamMember',
 	run: async (client: Client, interaction: ButtonInteraction) => {
 		try {
+			const footer = interaction.message.embeds[0].footer?.text;
+			const teamId: string | any =
+				interaction.message.embeds[0].footer?.text.split(': ')[2];
+
 			let FOUND: boolean = false;
 			const registeredPlayers: any =
 				interaction.message.embeds[0].fields?.find(
@@ -39,22 +44,25 @@ const unregisterTeamMember: ButtonFunction = {
 					}
 				});
 
+				await removePlayer({
+					userId: parseInt(interaction.user.id),
+					teamId: parseInt(teamId),
+				});
+
 				const editedEmbed = new MessageEmbed()
 					.setColor('#3a9ce2')
 					.setTitle(interaction.message.embeds[0].title || 'Undefined')
 					.setDescription(
 						interaction.message.embeds[0].description || 'Undefined',
 					)
-					.addFields(interaction.message.embeds[0].fields || []);
+					.addFields(interaction.message.embeds[0].fields || [])
+					.setFooter({ text: `${footer}` });
 
 				FOUND = true;
 				return await interaction.update({ embeds: [editedEmbed] });
 			}
 
-			console.log(FOUND);
-
 			if (!FOUND) {
-				console.log('im here');
 				return await interaction.reply({
 					embeds: [infoMessageEmbed('You are not registered!', 'WARNING')],
 					ephemeral: true,

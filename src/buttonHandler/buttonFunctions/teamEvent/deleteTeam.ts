@@ -10,6 +10,7 @@ import {
 
 import { ButtonFunction } from '../../ButtonStructure';
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
+import { deleteTeam as deleteTeamSupabase } from '../../../supabase/supabaseFunctions/teams';
 
 const deleteTeam: ButtonFunction = {
 	customId: 'deleteTeam',
@@ -28,12 +29,16 @@ const deleteTeam: ButtonFunction = {
 							'WARNING',
 						),
 					],
+					ephemeral: true,
 				});
 			}
 
 			const fetchedMessage = await interaction.channel?.messages.fetch(
 				interaction.message.id,
 			);
+
+			const teamId: string | any =
+				interaction.message.embeds[0].footer?.text.split(': ')[2];
 
 			if (fetchedMessage) {
 				const confirmationButtons = new MessageActionRow().addComponents(
@@ -74,6 +79,8 @@ const deleteTeam: ButtonFunction = {
 						await fetchedMessage.delete();
 
 						await interaction.deleteReply();
+
+						deleteTeamSupabase({ teamId: parseInt(teamId) });
 
 						await i.reply({
 							embeds: [

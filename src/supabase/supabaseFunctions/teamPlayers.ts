@@ -72,7 +72,5 @@ export const removePlayer = async (props: removePlayer) => {
 
 	if (error) throw error;
 
-	console.log(data, error);
-
 	return { data, error };
 };

@@ -14,6 +14,10 @@ interface addTeam {
 	teamDescription: string;
 }
 
+interface deleteTeam {
+	teamId: number;
+}
+
 export const addTeam = async (props: addTeam) => {
 	const { eventId, teamName, teamDescription } = props;
 
@@ -32,4 +36,13 @@ export const addTeam = async (props: addTeam) => {
 
 	// return { data, error };
 	return data[0]['id'];
+};
+
+export const deleteTeam = async (props: deleteTeam) => {
+	const { teamId } = props;
+
+	const { data, error } = await supabase
+		.from('Teams')
+		.delete()
+		.eq('id', teamId);
 };
