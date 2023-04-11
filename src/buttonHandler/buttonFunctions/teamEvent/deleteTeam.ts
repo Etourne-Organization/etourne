@@ -73,6 +73,8 @@ const deleteTeam: ButtonFunction = {
 					if (i.customId === 'deleteYes') {
 						await fetchedMessage.delete();
 
+						await interaction.deleteReply();
+
 						await i.reply({
 							embeds: [
 								infoMessageEmbed(
@@ -83,16 +85,14 @@ const deleteTeam: ButtonFunction = {
 							ephemeral: true,
 						});
 					} else if (i.customId === 'deleteNo') {
+						await interaction.deleteReply();
+
 						await i.reply({
 							embeds: [infoMessageEmbed(':x: Team not deleted')],
 							ephemeral: true,
 						});
 					}
 				});
-
-				// collector?.on('end', (collected) =>
-				// 	console.log(`Collected ${collected.size} items`),
-				// );
 			} else {
 				await interaction.reply({
 					embeds: [infoMessageEmbed('Something went wrong', 'WARNING')],

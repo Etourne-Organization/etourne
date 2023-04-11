@@ -7,35 +7,47 @@
 */
 
 import { supabase } from '../supabase';
-import { addUser } from './users';
+import { addUser, getUserId } from './users';
 
 interface addPlayer {
-	username: string;
 	userId: number;
-	eventId: number;
-	serverId: string;
+	teamId: number;
+	serverId: number;
+	username: string;
 }
 
 interface removePlayer {
-	username?: string;
 	userId: number;
-	eventId: number;
+	teamId: number;
 }
 
 export const addPlayer = async (props: addPlayer) => {
-	const { username, userId, eventId, serverId } = props;
+	const { userId, teamId, serverId, username } = props;
 
-	const { data: addUserData, error: addUserError } = await addUser({
-		username: username,
+	let dbUserId: number;
+
+	// get user ID from DB
+	const { data: getUserIdData, error: getUserIdError } = await getUserId({
 		userId: userId,
-		serverId: serverId,
 	});
 
-	const { data, error } = await supabase.from('SinglePlayers').insert([
-		{
+	// add user to the Supabase DB if the user does not exist
+	if (getUserIdData!.length < 1) {
+		const { data: addUserData, error: addUserError } = await addUser({
 			username: username,
-			eventId: eventId,
 			userId: userId,
+			serverId: serverId!,
+		});
+
+		dbUserId = addUserData![0]['id'];
+	} else {
+		dbUserId = getUserIdData![0]['id'];
+	}
+
+	const { data, error } = await supabase.from('TeamPlayers').insert([
+		{
+			teamId: teamId,
+			userId: dbUserId,
 		},
 	]);
 
@@ -45,13 +57,18 @@ export const addPlayer = async (props: addPlayer) => {
 };
 
 export const removePlayer = async (props: removePlayer) => {
-	const { username, userId, eventId } = props;
+	const { userId, teamId } = props;
+
+	// get user ID from DB
+	const { data: getUserIdData, error: getUserIdError } = await getUserId({
+		userId: userId,
+	});
 
 	const { data, error } = await supabase
-		.from('SinglePlayers')
+		.from('TeamPlayers')
 		.delete()
-		.eq('userId', userId)
-		.eq('eventId', eventId);
+		.eq('userId', getUserIdData![0]['id'])
+		.eq('teamId', teamId);
 
 	if (error) throw error;
 

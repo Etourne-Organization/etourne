@@ -4,11 +4,16 @@ import { Client, ButtonInteraction, MessageEmbed } from 'discord.js';
 
 import { ButtonFunction } from '../../ButtonStructure';
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
+import { addPlayer } from '../../../supabase/supabaseFunctions/teamPlayers';
 
 const registerTeamMember: ButtonFunction = {
 	customId: 'registerTeamMember',
 	run: async (client: Client, interaction: ButtonInteraction) => {
 		try {
+			const footer = interaction.message.embeds[0].footer?.text;
+			const teamId: string | any =
+				interaction.message.embeds[0].footer?.text.split(': ')[2];
+
 			const registeredPlayers: any =
 				interaction.message.embeds[0].fields?.find(
 					(r) => r.name === 'Registered players',
@@ -45,16 +50,25 @@ const registerTeamMember: ButtonFunction = {
 				}
 			});
 
+			await addPlayer({
+				username: interaction.user.tag,
+				userId: parseInt(interaction.user.id),
+				teamId: parseInt(teamId),
+				serverId: parseInt(interaction.guild?.id!),
+			});
+
 			const editedEmbed = new MessageEmbed()
 				.setColor('#3a9ce2')
 				.setTitle(interaction.message.embeds[0].title || 'Undefined')
 				.setDescription(
 					interaction.message.embeds[0].description || 'Undefined',
 				)
-				.addFields(interaction.message.embeds[0].fields || []);
+				.addFields(interaction.message.embeds[0].fields || [])
+				.setFooter({ text: `${footer}` });
 
 			return await interaction.update({ embeds: [editedEmbed] });
 		} catch (err) {
+			console.log(err);
 			try {
 				fs.appendFile(
 					'logs/crash_logs.txt',
