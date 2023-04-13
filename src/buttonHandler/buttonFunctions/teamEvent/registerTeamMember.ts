@@ -81,7 +81,6 @@ const registerTeamMember: ButtonFunction = {
 
 			return await interaction.update({ embeds: [editedEmbed] });
 		} catch (err) {
-			console.log(err);
 			try {
 				fs.appendFile(
 					'logs/crash_logs.txt',

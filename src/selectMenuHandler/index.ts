@@ -1,23 +1,25 @@
 import fs from 'fs';
 
-import { ButtonInteraction, Client } from 'discord.js';
+import { SelectMenuInteraction, Client } from 'discord.js';
 
-import buttonList from './buttonList';
+import selectMenuList from './selectMenuList';
 
 export default async (
 	client: Client,
-	interaction: ButtonInteraction,
+	interaction: SelectMenuInteraction,
 ): Promise<void> => {
 	try {
 		const { customId } = interaction;
 
-		const buttonFunction = buttonList.find((b) => b.customId === customId);
+		const selectMenuFunction = selectMenuList.find(
+			(b) => b.customId === customId,
+		);
 
-		if (!buttonFunction) {
+		if (!selectMenuFunction) {
 			return;
 		}
 
-		buttonFunction.run(client, interaction);
+		selectMenuFunction.run(client, interaction);
 	} catch (err) {
 		try {
 			fs.appendFile(

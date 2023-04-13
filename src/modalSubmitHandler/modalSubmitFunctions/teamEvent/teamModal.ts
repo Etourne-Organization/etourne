@@ -39,6 +39,10 @@ const teamModal: ModalFunction = {
 					.setLabel('Unregister')
 					.setStyle('DANGER'),
 				new MessageButton()
+					.setCustomId('manageTeamMembers')
+					.setLabel('⚙️  Manage team members')
+					.setStyle('SECONDARY'),
+				new MessageButton()
 					.setCustomId('deleteTeam')
 					.setLabel('🗑️  Delete team')
 					.setStyle('DANGER'),
