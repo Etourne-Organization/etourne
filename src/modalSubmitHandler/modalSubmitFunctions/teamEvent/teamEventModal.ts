@@ -63,6 +63,10 @@ const teamEventModal: ModalFunction = {
 					.setCustomId('setNumTeamMemberLimit')
 					.setLabel('Set num of team member limit')
 					.setStyle('SECONDARY'),
+				new MessageButton()
+					.setCustomId('deleteEvent')
+					.setLabel('🗑️  Delete event')
+					.setStyle('DANGER'),
 			);
 
 			if (!interaction.inCachedGuild()) return;
@@ -75,7 +79,7 @@ const teamEventModal: ModalFunction = {
 						.tz(eventDateTime, 'DD/MM/YYYY hh:mm', timezone)
 						.format(),
 				).toISOString(),
-				isTeamEvent: false,
+				isTeamEvent: true,
 				serverId: parseInt(interaction.guild.id),
 				timezone: timezone,
 				serverName: interaction.guild.name,

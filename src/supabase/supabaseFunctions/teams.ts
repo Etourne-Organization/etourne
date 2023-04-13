@@ -18,6 +18,10 @@ interface deleteTeam {
 	teamId: number;
 }
 
+interface checkTeamExists {
+	teamId: number;
+}
+
 export const addTeam = async (props: addTeam) => {
 	const { eventId, teamName, teamDescription } = props;
 
@@ -47,4 +51,21 @@ export const deleteTeam = async (props: deleteTeam) => {
 		.eq('id', teamId);
 
 	return { data, error };
+};
+
+export const checkTeamExists = async (props: checkTeamExists) => {
+	const { teamId } = props;
+
+	const { data, error } = await supabase
+		.from('Teams')
+		.select()
+		.eq('id', teamId);
+
+	if (error) throw error;
+
+	if (data.length > 0) {
+		return true;
+	} else {
+		return false;
+	}
 };

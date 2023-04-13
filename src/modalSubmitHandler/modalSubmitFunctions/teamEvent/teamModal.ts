@@ -74,7 +74,7 @@ const teamModal: ModalFunction = {
 			});
 
 			teamEmbed.setFooter({
-				text: `Event ID: ${eventId} Team ID: ${teamID}`,
+				text: `Team ID: ${teamID} Event ID: ${eventId}`,
 			});
 
 			await interaction.channel?.send({
