@@ -45,4 +45,6 @@ export const deleteTeam = async (props: deleteTeam) => {
 		.from('Teams')
 		.delete()
 		.eq('id', teamId);
+
+	return { data, error };
 };

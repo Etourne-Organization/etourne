@@ -53,6 +53,10 @@ const normalEventModal: ModalFunction = {
 					.setCustomId('normalEventUnregister')
 					.setLabel('Unregister')
 					.setStyle('DANGER'),
+				new MessageButton()
+					.setCustomId('deleteEvent')
+					.setLabel('🗑️  Delete event')
+					.setStyle('DANGER'),
 			);
 
 			if (!interaction.inCachedGuild()) return;

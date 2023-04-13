@@ -27,6 +27,10 @@ interface setColumnValue {
 	data: [{ key: string; value: string; id: number }];
 }
 
+interface deletEvent {
+	eventId: number;
+}
+
 export const addEvent = async (props: addEvent) => {
 	const {
 		eventName,
@@ -77,4 +81,15 @@ export const setColumnValue = async (props: setColumnValue) => {
 			})
 			.eq('id', d.id);
 	});
+};
+
+export const deleteEvent = async (props: deletEvent) => {
+	const { eventId } = props;
+
+	const { data, error } = await supabase
+		.from('Events')
+		.delete()
+		.eq('id', eventId);
+
+	return { data, error };
 };
