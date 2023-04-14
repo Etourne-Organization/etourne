@@ -8,6 +8,7 @@ import deleteTeam from './buttonFunctions/teamEvent/deleteTeam';
 import setNumTeamMemberLimit from './buttonFunctions/teamEvent/setNumTeamMemberLimit';
 import setNumTeamLimit from './buttonFunctions/teamEvent/setNumTeamLimit';
 import deleteEvent from './buttonFunctions/allEventButtonFunctions/deleteEvent';
+import removeTeamPlayer from './buttonFunctions/teamEvent/removeTeamPlayer';
 
 const buttonList: ButtonFunction[] = [
 	register,
@@ -19,6 +20,7 @@ const buttonList: ButtonFunction[] = [
 	setNumTeamLimit,
 	setNumTeamMemberLimit,
 	deleteEvent,
+	removeTeamPlayer,
 ];
 
 export default buttonList;

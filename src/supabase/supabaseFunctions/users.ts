@@ -17,6 +17,10 @@ interface addUser {
 }
 
 interface getUserId {
+	discordUserId: number;
+}
+
+interface getUsername {
 	userId: number;
 }
 
@@ -44,12 +48,23 @@ export const addUser = async (props: addUser) => {
 };
 
 export const getUserId = async (props: getUserId) => {
-	const { userId } = props;
+	const { discordUserId } = props;
 
 	const { data, error } = await supabase
 		.from('Users')
 		.select('id')
-		.eq('userId', userId);
+		.eq('userId', discordUserId);
 
 	return { data, error };
+};
+
+export const getUsername = async (props: getUsername) => {
+	const { userId } = props;
+
+	const { data, error } = await supabase
+		.from('Users')
+		.select('username')
+		.eq('id', userId);
+
+	return data;
 };

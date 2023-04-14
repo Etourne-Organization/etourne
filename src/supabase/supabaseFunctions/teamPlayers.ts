@@ -7,7 +7,7 @@
 */
 
 import { supabase } from '../supabase';
-import { addUser, getUserId } from './users';
+import { addUser, getUserId, getUsername } from './users';
 
 interface addPlayer {
 	userId: number;
@@ -21,6 +21,10 @@ interface removePlayer {
 	teamId: number;
 }
 
+interface getTeamPlayers {
+	teamId: number;
+}
+
 export const addPlayer = async (props: addPlayer) => {
 	const { userId, teamId, serverId, username } = props;
 
@@ -28,7 +32,7 @@ export const addPlayer = async (props: addPlayer) => {
 
 	// get user ID from DB
 	const { data: getUserIdData, error: getUserIdError } = await getUserId({
-		userId: userId,
+		discordUserId: userId,
 	});
 
 	// add user to the Supabase DB if the user does not exist
@@ -61,7 +65,7 @@ export const removePlayer = async (props: removePlayer) => {
 
 	// get user ID from DB
 	const { data: getUserIdData, error: getUserIdError } = await getUserId({
-		userId: userId,
+		discordUserId: userId,
 	});
 
 	const { data, error } = await supabase
@@ -73,4 +77,26 @@ export const removePlayer = async (props: removePlayer) => {
 	if (error) throw error;
 
 	return { data, error };
+};
+
+export const getTeamPlayers = async (props: getTeamPlayers) => {
+	const { teamId } = props;
+
+	let usernames: [string] = [' '];
+
+	const { data, error } = await supabase
+		.from('TeamPlayers')
+		.select('userId')
+		.eq('teamId', teamId);
+
+	data?.forEach(async (d, i: number) => {
+		const us: [{ username: string }] | any = await getUsername({
+			userId: d.userId,
+		});
+		usernames[i] = us[0]['username'];
+	});
+
+	console.log(usernames);
+
+	return usernames;
 };
