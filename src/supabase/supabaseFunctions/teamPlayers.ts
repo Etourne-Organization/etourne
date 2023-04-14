@@ -21,7 +21,7 @@ interface removePlayer {
 	teamId: number;
 }
 
-interface getTeamPlayers {
+interface getAllTeamPlayers {
 	teamId: number;
 }
 
@@ -79,24 +79,22 @@ export const removePlayer = async (props: removePlayer) => {
 	return { data, error };
 };
 
-export const getTeamPlayers = async (props: getTeamPlayers) => {
+export const getAllTeamPlayers = async (props: getAllTeamPlayers) => {
 	const { teamId } = props;
 
-	let usernames: [string] = [' '];
+	let usernames: [string?] = [];
 
 	const { data, error } = await supabase
 		.from('TeamPlayers')
 		.select('userId')
 		.eq('teamId', teamId);
 
-	data?.forEach(async (d, i: number) => {
+	for (const d of data!) {
 		const us: [{ username: string }] | any = await getUsername({
 			userId: d.userId,
 		});
-		usernames[i] = us[0]['username'];
-	});
-
-	console.log(usernames);
+		usernames.push(us[0]['username']);
+	}
 
 	return usernames;
 };

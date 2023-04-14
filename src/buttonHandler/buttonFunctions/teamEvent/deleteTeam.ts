@@ -37,7 +37,7 @@ const deleteTeam: ButtonFunction = {
 			}
 
 			const teamId: string | any =
-				interaction.message.embeds[0].footer?.text.split(': ')[2];
+				interaction.message.embeds[0].footer?.text.split(' ')[2];
 
 			const fetchedMessage = await interaction.channel?.messages.fetch(
 				interaction.message.id,

@@ -14,7 +14,7 @@ import { addPlayer } from '../../../supabase/supabaseFunctions/teamPlayers';
 import { checkTeamExists } from '../../../supabase/supabaseFunctions/teams';
 import {
 	removePlayer,
-	getTeamPlayers,
+	getAllTeamPlayers,
 } from '../../../supabase/supabaseFunctions/teamPlayers';
 
 const removeTeamPlayer: ButtonFunction = {
@@ -22,9 +22,9 @@ const removeTeamPlayer: ButtonFunction = {
 	run: async (client: Client, interaction: ButtonInteraction) => {
 		try {
 			const teamId: string | any =
-				interaction.message.embeds[0].footer?.text.split(': ')[2];
+				interaction.message.embeds[0].footer?.text.split(' ')[2];
 
-			const teamPlayers: [string] | any = await getTeamPlayers({
+			const teamPlayers: [string] | any = await getAllTeamPlayers({
 				teamId: parseInt(teamId),
 			});
 
@@ -44,7 +44,11 @@ const removeTeamPlayer: ButtonFunction = {
 			] = [{ label: ' ', description: ' ', value: ' ' }];
 
 			teamPlayers.forEach((tp: string, i: number) => {
-				selectMenuOptions[i] = { label: tp, description: tp, value: tp };
+				selectMenuOptions[i] = {
+					label: tp,
+					description: `Remove ${tp}`,
+					value: tp,
+				};
 			});
 
 			const selectMenu = new MessageActionRow().addComponents(

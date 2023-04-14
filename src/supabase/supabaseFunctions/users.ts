@@ -24,6 +24,10 @@ interface getUsername {
 	userId: number;
 }
 
+interface getMultipleUsernames {
+	userIds: [number];
+}
+
 export const addUser = async (props: addUser) => {
 	const { username, userId, serverId } = props;
 
@@ -65,6 +69,17 @@ export const getUsername = async (props: getUsername) => {
 		.from('Users')
 		.select('username')
 		.eq('id', userId);
+
+	return data;
+};
+
+export const getMultipleUsernames = async (props: getMultipleUsernames) => {
+	const { userIds } = props;
+
+	const { data, error } = await supabase
+		.from('Users')
+		.select('username')
+		.in('id', userIds);
 
 	return data;
 };
