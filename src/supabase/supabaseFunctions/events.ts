@@ -21,10 +21,16 @@ interface addEvent {
 	numTeamLimit?: number;
 	numTeamMemberLimit?: number;
 	serverName: string;
+	messageId?: number;
 }
 
 interface setColumnValue {
-	data: [{ key: string; value: string; id: number }];
+	data: [{ key: string; value: string | number; id: number }];
+}
+
+interface getColumnValueById {
+	columnName: string;
+	id: number;
 }
 
 interface deletEvent {
@@ -42,6 +48,7 @@ export const addEvent = async (props: addEvent) => {
 		numTeamLimit,
 		numTeamMemberLimit,
 		serverName,
+		messageId,
 	} = props;
 
 	const { data: addServerData, error: addServerError } = await addServer({
@@ -73,14 +80,27 @@ export const addEvent = async (props: addEvent) => {
 export const setColumnValue = async (props: setColumnValue) => {
 	const { data } = props;
 
-	data.forEach(async (d) => {
+	for (const d of data) {
 		const { data, error } = await supabase
 			.from('Events')
 			.update({
 				[d.key]: d.value,
 			})
 			.eq('id', d.id);
-	});
+	}
+};
+
+export const getColumnValueById = async (props: getColumnValueById) => {
+	const { columnName, id } = props;
+
+	const { data, error } = await supabase
+		.from('Events')
+		.select(columnName)
+		.eq('id', id);
+
+	if (error) throw error;
+
+	return data[0];
 };
 
 export const deleteEvent = async (props: deletEvent) => {
@@ -90,6 +110,8 @@ export const deleteEvent = async (props: deletEvent) => {
 		.from('Events')
 		.delete()
 		.eq('id', eventId);
+
+	if (error) throw error;
 
 	return { data, error };
 };

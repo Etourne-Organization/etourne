@@ -11,7 +11,10 @@ import momentTimezone from 'moment-timezone';
 
 import { ModalFunction } from '../../ModalSubmitStructure';
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
-import { addEvent } from '../../../supabase/supabaseFunctions/events';
+import {
+	addEvent,
+	setColumnValue,
+} from '../../../supabase/supabaseFunctions/events';
 
 const normalEventModal: ModalFunction = {
 	customId: 'normalEventModalSubmit',
@@ -79,9 +82,19 @@ const normalEventModal: ModalFunction = {
 				text: `Event ID: ${id}`,
 			});
 
-			await interaction.channel?.send({
+			const reply = await interaction.channel?.send({
 				embeds: [eventEmbed],
 				components: [buttons],
+			});
+
+			await setColumnValue({
+				data: [
+					{
+						id: id,
+						key: 'messageId',
+						value: parseInt(reply!.id),
+					},
+				],
 			});
 
 			await interaction.reply({
@@ -94,6 +107,7 @@ const normalEventModal: ModalFunction = {
 				ephemeral: true,
 			});
 		} catch (err) {
+			console.log(err);
 			try {
 				fs.appendFile(
 					'logs/crash_logs.txt',

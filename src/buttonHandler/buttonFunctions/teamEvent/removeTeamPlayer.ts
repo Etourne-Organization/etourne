@@ -21,8 +21,21 @@ const removeTeamPlayer: ButtonFunction = {
 	customId: 'removeTeamPlayer',
 	run: async (client: Client, interaction: ButtonInteraction) => {
 		try {
+			const footer = interaction.message.embeds[0].footer?.text;
 			const teamId: string | any =
 				interaction.message.embeds[0].footer?.text.split(' ')[2];
+
+			if (!(await checkTeamExists({ teamId: parseInt(teamId) }))) {
+				return interaction.reply({
+					embeds: [
+						infoMessageEmbed(
+							'The team does not exist anymore, maybe it was deleted?',
+							'WARNING',
+						),
+					],
+					ephemeral: true,
+				});
+			}
 
 			const teamPlayers: [string] | any = await getAllTeamPlayers({
 				teamId: parseInt(teamId),
@@ -58,8 +71,14 @@ const removeTeamPlayer: ButtonFunction = {
 					.addOptions(selectMenuOptions),
 			);
 
+			const selectMessageEmbed = new MessageEmbed()
+				.setTitle('Select team player to be removed')
+				.setColor('#3A9CE2')
+				.setFooter({ text: `${footer}` })
+				.setTimestamp();
+
 			await interaction.reply({
-				embeds: [infoMessageEmbed('Select team member to be removed')],
+				embeds: [selectMessageEmbed],
 				ephemeral: true,
 				components: [selectMenu],
 			});

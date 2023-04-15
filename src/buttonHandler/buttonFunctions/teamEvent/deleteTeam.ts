@@ -3,7 +3,6 @@ import fs from 'fs';
 import {
 	Client,
 	ButtonInteraction,
-	MessageEmbed,
 	MessageButton,
 	MessageActionRow,
 } from 'discord.js';
@@ -84,7 +83,7 @@ const deleteTeam: ButtonFunction = {
 						await interaction.deleteReply();
 
 						if (await checkTeamExists({ teamId: teamId }))
-							deleteTeamSupabase({ teamId: parseInt(teamId) });
+							await deleteTeamSupabase({ teamId: parseInt(teamId) });
 
 						await i.reply({
 							embeds: [
@@ -99,7 +98,7 @@ const deleteTeam: ButtonFunction = {
 						await interaction.deleteReply();
 
 						await i.reply({
-							embeds: [infoMessageEmbed(':x: Team not deleted')],
+							embeds: [infoMessageEmbed(':x: Team was not deleted')],
 							ephemeral: true,
 						});
 					}

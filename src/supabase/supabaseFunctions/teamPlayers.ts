@@ -17,7 +17,7 @@ interface addPlayer {
 }
 
 interface removePlayer {
-	userId: number;
+	discordUserId: number;
 	teamId: number;
 }
 
@@ -61,11 +61,11 @@ export const addPlayer = async (props: addPlayer) => {
 };
 
 export const removePlayer = async (props: removePlayer) => {
-	const { userId, teamId } = props;
+	const { discordUserId, teamId } = props;
 
 	// get user ID from DB
 	const { data: getUserIdData, error: getUserIdError } = await getUserId({
-		discordUserId: userId,
+		discordUserId: discordUserId,
 	});
 
 	const { data, error } = await supabase

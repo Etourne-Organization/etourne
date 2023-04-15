@@ -1,5 +1,7 @@
 import { SelectMenu } from './SelectMenu';
 
-const selectMenuList: SelectMenu[] = [];
+import removeTeamPlayer from './selectMenuFunctions/removeTeamPlayer/removeTeamPlayer';
+
+const selectMenuList: SelectMenu[] = [removeTeamPlayer];
 
 export default selectMenuList;
