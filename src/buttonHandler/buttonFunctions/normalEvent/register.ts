@@ -51,9 +51,9 @@ const register: ButtonFunction = {
 
 				await addPlayer({
 					username: interaction.user.tag,
-					userId: parseInt(interaction.user.id),
+					discordUserId: interaction.user.id,
 					eventId: parseInt(eventId),
-					serverId: parseInt(interaction.guild?.id!),
+					serverId: interaction.guild?.id!,
 				});
 
 				const editedEmbed = new MessageEmbed()

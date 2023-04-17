@@ -58,7 +58,7 @@ const unregisterTeamMember: ButtonFunction = {
 				});
 
 				await removePlayer({
-					discordUserId: parseInt(interaction.user.id),
+					discordUserId: interaction.user.id,
 					teamId: parseInt(teamId),
 				});
 

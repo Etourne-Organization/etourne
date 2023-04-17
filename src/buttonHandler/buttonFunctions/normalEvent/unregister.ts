@@ -57,7 +57,7 @@ const unregister: ButtonFunction = {
 					.setFooter({ text: `Event ID: ${eventId}` });
 
 				await removePlayer({
-					userId: parseInt(interaction.user.id),
+					discordUserId: interaction.user.id,
 					eventId: parseInt(eventId),
 				});
 

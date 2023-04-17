@@ -10,16 +10,16 @@ import { supabase } from '../supabase';
 import psqlErrorCodes from '../../data/psqlErrorCodes.json';
 
 interface checkServerExists {
-	serverId: number;
+	serverId: string;
 }
 
 interface addServer {
-	serverId: number;
+	serverId: string;
 	name: string;
 }
 
 interface getServer {
-	serverId: number;
+	serverId: string;
 }
 
 export const checkServerExists = async (props: checkServerExists) => {

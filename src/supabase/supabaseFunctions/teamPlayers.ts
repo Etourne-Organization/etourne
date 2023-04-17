@@ -10,14 +10,14 @@ import { supabase } from '../supabase';
 import { addUser, getUserId, getUsernameAndDiscordId } from './users';
 
 interface addPlayer {
-	userId: number;
+	discordUserId: string;
 	teamId: number;
-	serverId: number;
+	serverId: string;
 	username: string;
 }
 
 interface removePlayer {
-	discordUserId: number;
+	discordUserId: string;
 	teamId: number;
 }
 
@@ -26,20 +26,20 @@ interface getAllTeamPlayers {
 }
 
 export const addPlayer = async (props: addPlayer) => {
-	const { userId, teamId, serverId, username } = props;
+	const { discordUserId, teamId, serverId, username } = props;
 
 	let dbUserId: number;
 
 	// get user ID from DB
 	const { data: getUserIdData, error: getUserIdError } = await getUserId({
-		discordUserId: userId,
+		discordUserId: discordUserId,
 	});
 
 	// add user to the Supabase DB if the user does not exist
 	if (getUserIdData!.length < 1) {
 		const { data: addUserData, error: addUserError } = await addUser({
 			username: username,
-			userId: userId,
+			discordUserId: discordUserId,
 			serverId: serverId!,
 		});
 

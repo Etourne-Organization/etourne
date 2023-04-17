@@ -16,12 +16,12 @@ interface addEvent {
 	description: string;
 	dateTime: string;
 	isTeamEvent: boolean;
-	serverId: number;
+	serverId: string;
 	timezone: string;
 	numTeamLimit?: number;
 	numTeamMemberLimit?: number;
 	serverName: string;
-	messageId?: number;
+	messageId?: string;
 }
 
 interface setColumnValue {
@@ -81,6 +81,7 @@ export const setColumnValue = async (props: setColumnValue) => {
 	const { data } = props;
 
 	for (const d of data) {
+		console.log(d);
 		const { data, error } = await supabase
 			.from('Events')
 			.update({

@@ -71,17 +71,17 @@ const deleteEvent: ButtonFunction = {
 					interaction.channel?.createMessageComponentCollector({
 						filter,
 						time: 15000,
-						max: 1,
-						maxComponents: 1,
+						// max: 1,
+						// maxComponents: 1,
 					});
 
 				collector?.on('collect', async (i: ButtonInteraction) => {
 					if (i.customId === 'deleteYes') {
 						await fetchedMessage.delete();
 
-						await interaction.deleteReply();
+						await deleteEventSupabase({ eventId: parseInt(eventId) });
 
-						deleteEventSupabase({ eventId: parseInt(eventId) });
+						await interaction.deleteReply();
 
 						await i.reply({
 							embeds: [

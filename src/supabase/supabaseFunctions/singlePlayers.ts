@@ -11,32 +11,32 @@ import { addUser, getUserId } from './users';
 
 interface addPlayer {
 	username: string;
-	userId: number;
+	discordUserId: string;
 	eventId: number;
-	serverId?: number;
+	serverId?: string;
 }
 
 interface removePlayer {
 	username?: string;
-	userId: number;
+	discordUserId: string;
 	eventId: number;
 }
 
 export const addPlayer = async (props: addPlayer) => {
-	const { username, userId, eventId, serverId } = props;
+	const { username, discordUserId, eventId, serverId } = props;
 
 	let dbUserId: number;
 
 	// get user ID from DB
 	const { data: getUserIdData, error: getUserIdError } = await getUserId({
-		discordUserId: userId,
+		discordUserId: discordUserId,
 	});
 
 	// add user to the Supabase DB if the user does not exist
 	if (getUserIdData!.length < 1) {
 		const { data: addUserData, error: addUserError } = await addUser({
 			username: username,
-			userId: userId,
+			discordUserId: discordUserId,
 			serverId: serverId!,
 		});
 
@@ -58,11 +58,11 @@ export const addPlayer = async (props: addPlayer) => {
 };
 
 export const removePlayer = async (props: removePlayer) => {
-	const { userId, eventId } = props;
+	const { discordUserId, eventId } = props;
 
 	// get user ID from DB
 	const { data: getUserIdData, error: getUserIdError } = await getUserId({
-		discordUserId: userId,
+		discordUserId: discordUserId,
 	});
 
 	const { data, error } = await supabase
