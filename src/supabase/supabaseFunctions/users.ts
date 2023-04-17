@@ -62,12 +62,12 @@ export const getUserId = async (props: getUserId) => {
 	return { data, error };
 };
 
-export const getUsername = async (props: getUsername) => {
+export const getUsernameAndDiscordId = async (props: getUsername) => {
 	const { userId } = props;
 
 	const { data, error } = await supabase
 		.from('Users')
-		.select('username')
+		.select('username, userId')
 		.eq('id', userId);
 
 	return data;

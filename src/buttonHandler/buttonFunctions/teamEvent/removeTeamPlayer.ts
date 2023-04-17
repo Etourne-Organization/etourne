@@ -37,11 +37,12 @@ const removeTeamPlayer: ButtonFunction = {
 				});
 			}
 
-			const teamPlayers: [string] | any = await getAllTeamPlayers({
-				teamId: parseInt(teamId),
-			});
+			const teamPlayers: [{ username: string; userId: string }] | any =
+				await getAllTeamPlayers({
+					teamId: parseInt(teamId),
+				});
 
-			if (!(teamPlayers.length > 0))
+			if (!(teamPlayers!.length > 0))
 				return interaction.reply({
 					embeds: [
 						infoMessageEmbed(
@@ -56,13 +57,15 @@ const removeTeamPlayer: ButtonFunction = {
 				{ label: string; description: string; value: string },
 			] = [{ label: ' ', description: ' ', value: ' ' }];
 
-			teamPlayers.forEach((tp: string, i: number) => {
-				selectMenuOptions[i] = {
-					label: tp,
-					description: `Remove ${tp}`,
-					value: tp,
-				};
-			});
+			teamPlayers!.forEach(
+				(tp: { username: string; userId: string }, i: number) => {
+					selectMenuOptions[i] = {
+						label: tp.username,
+						description: `Remove ${tp.username}`,
+						value: `${tp.username}|${tp.userId}`,
+					};
+				},
+			);
 
 			const selectMenu = new MessageActionRow().addComponents(
 				new MessageSelectMenu()

@@ -7,7 +7,7 @@
 */
 
 import { supabase } from '../supabase';
-import { addUser, getUserId, getUsername } from './users';
+import { addUser, getUserId, getUsernameAndDiscordId } from './users';
 
 interface addPlayer {
 	userId: number;
@@ -82,7 +82,7 @@ export const removePlayer = async (props: removePlayer) => {
 export const getAllTeamPlayers = async (props: getAllTeamPlayers) => {
 	const { teamId } = props;
 
-	let usernames: [string?] = [];
+	let players: [{ username: string; userId: string }?] = [];
 
 	const { data, error } = await supabase
 		.from('TeamPlayers')
@@ -90,11 +90,14 @@ export const getAllTeamPlayers = async (props: getAllTeamPlayers) => {
 		.eq('teamId', teamId);
 
 	for (const d of data!) {
-		const us: [{ username: string }] | any = await getUsername({
+		const us: [{ username: string }] | any = await getUsernameAndDiscordId({
 			userId: d.userId,
 		});
-		usernames.push(us[0]['username']);
+		players.push({
+			username: us[0]['username'],
+			userId: us[0]['userId'].toString(),
+		});
 	}
 
-	return usernames;
+	return players;
 };

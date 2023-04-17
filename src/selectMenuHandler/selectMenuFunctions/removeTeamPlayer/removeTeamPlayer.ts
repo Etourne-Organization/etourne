@@ -115,14 +115,11 @@ const removeTeamPlayer: SelectMenu = {
 
 							const editedEmbed = new MessageEmbed()
 								.setColor('#3a9ce2')
-								.setTitle(
-									interaction.message.embeds[0].title || 'Undefined',
-								)
+								.setTitle(fetchedMessage.embeds[0].title || 'Undefined')
 								.setDescription(
-									interaction.message.embeds[0].description ||
-										'Undefined',
+									fetchedMessage.embeds[0].description || 'Undefined',
 								)
-								.addFields(interaction.message.embeds[0].fields || [])
+								.addFields(fetchedMessage.embeds[0].fields || [])
 								.setFooter({ text: `${footer}` });
 
 							FOUND = true;
