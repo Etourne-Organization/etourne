@@ -10,12 +10,8 @@ import {
 
 import { ButtonFunction } from '../../ButtonStructure';
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
-import { addPlayer } from '../../../supabase/supabaseFunctions/teamPlayers';
 import { checkTeamExists } from '../../../supabase/supabaseFunctions/teams';
-import {
-	removePlayer,
-	getAllTeamPlayers,
-} from '../../../supabase/supabaseFunctions/teamPlayers';
+import { getAllTeamPlayers } from '../../../supabase/supabaseFunctions/teamPlayers';
 
 const removeTeamPlayer: ButtonFunction = {
 	customId: 'removeTeamPlayer',

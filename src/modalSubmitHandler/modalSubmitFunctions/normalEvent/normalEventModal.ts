@@ -57,6 +57,10 @@ const normalEventModal: ModalFunction = {
 					.setLabel('Unregister')
 					.setStyle('DANGER'),
 				new MessageButton()
+					.setCustomId('removePlayer')
+					.setLabel('❌  Remove player')
+					.setStyle('SECONDARY'),
+				new MessageButton()
 					.setCustomId('deleteEvent')
 					.setLabel('🗑️  Delete event')
 					.setStyle('DANGER'),
