@@ -73,7 +73,7 @@ const normalEventModal: ModalFunction = {
 						.format(),
 				).toISOString(),
 				isTeamEvent: false,
-				serverId: parseInt(interaction.guild.id),
+				discordServerId: interaction.guild.id,
 				timezone: timezone,
 				serverName: interaction.guild.name,
 			});
@@ -92,7 +92,7 @@ const normalEventModal: ModalFunction = {
 					{
 						id: id,
 						key: 'messageId',
-						value: parseInt(reply!.id),
+						value: reply!.id,
 					},
 				],
 			});

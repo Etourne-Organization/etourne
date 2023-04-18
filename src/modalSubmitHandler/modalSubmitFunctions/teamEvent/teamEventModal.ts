@@ -83,7 +83,7 @@ const teamEventModal: ModalFunction = {
 						.format(),
 				).toISOString(),
 				isTeamEvent: true,
-				serverId: parseInt(interaction.guild.id),
+				discordServerId: interaction.guild.id,
 				timezone: timezone,
 				serverName: interaction.guild.name,
 			});
@@ -97,12 +97,14 @@ const teamEventModal: ModalFunction = {
 				components: [buttons],
 			});
 
+			console.log(parseInt(reply!.id));
+
 			await setColumnValue({
 				data: [
 					{
 						id: id,
 						key: 'messageId',
-						value: parseInt(reply!.id),
+						value: reply!.id,
 					},
 				],
 			});

@@ -13,19 +13,18 @@ import { SelectMenu } from '../../../selectMenuHandler/SelectMenu';
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
 import { removePlayer } from '../../../supabase/supabaseFunctions/teamPlayers';
 import { checkTeamExists } from '../../../supabase/supabaseFunctions/teams';
-import { getColumnValueById } from '../../../supabase/supabaseFunctions/events';
+import { getColumnValueById } from '../../../supabase/supabaseFunctions/teams';
 
 const removeTeamPlayer: SelectMenu = {
 	customId: 'removeTeamPlayer',
 	run: async (client: Client, interaction: SelectMenuInteraction) => {
 		try {
-			const selected = interaction.values;
+			const username: string = interaction.values[0].split('|')[0];
+			const userId: string = interaction.values[0].split('|')[1];
 			const teamId: string | any =
-				interaction.message.embeds[0].footer?.text.split(': ')[2];
+				interaction.message.embeds[0].footer?.text.split(' ')[2];
 			const eventId: string | any =
 				interaction.message.embeds[0].footer?.text.split(' ')[5];
-
-			console.log(teamId);
 
 			const confirmationButtons = new MessageActionRow().addComponents(
 				new MessageButton()
@@ -40,9 +39,7 @@ const removeTeamPlayer: SelectMenu = {
 
 			await interaction.update({
 				embeds: [
-					infoMessageEmbed(
-						`Are you sure you want to remove ${selected[0]}?`,
-					),
+					infoMessageEmbed(`Are you sure you want to remove ${username}?`),
 				],
 				components: [confirmationButtons],
 			});
@@ -66,17 +63,17 @@ const removeTeamPlayer: SelectMenu = {
 
 					if (await checkTeamExists({ teamId: teamId }))
 						await removePlayer({
-							discordUserId: parseInt(interaction.user.id),
-							teamId: teamId,
+							discordUserId: userId,
+							teamId: parseInt(teamId),
 						});
 
-					const messageId = await getColumnValueById({
+					const { data, error }: any = await getColumnValueById({
 						columnName: 'messageId',
-						id: eventId,
+						id: parseInt(teamId),
 					});
 
 					const fetchedMessage = await interaction.channel?.messages.fetch(
-						messageId,
+						data[0]['messageId'],
 					);
 
 					if (fetchedMessage) {
@@ -98,7 +95,7 @@ const removeTeamPlayer: SelectMenu = {
 								? tempSplit[1].split('\n')
 								: [tempSplit[1]];
 
-						const playerIndex = playersSplitted.indexOf(selected[0]);
+						const playerIndex = playersSplitted.indexOf(username);
 
 						if (playerIndex !== -1) {
 							playersSplitted.splice(playerIndex, 1);
@@ -123,14 +120,23 @@ const removeTeamPlayer: SelectMenu = {
 								.setFooter({ text: `${footer}` });
 
 							FOUND = true;
-							// return await interaction.update({ embeds: [editedEmbed] });
+
+							const fetchedMessageButtons =
+								new MessageActionRow().addComponents(
+									fetchedMessage.components[0].components,
+								);
+
+							await fetchedMessage.edit({
+								embeds: [editedEmbed],
+								components: [fetchedMessageButtons],
+							});
 						}
 					}
 
 					await i.reply({
 						embeds: [
 							infoMessageEmbed(
-								`:white_check_mark: Removed ${selected[0]} successfully!`,
+								`:white_check_mark: Removed ${username} successfully!`,
 								'SUCCESS',
 							),
 						],
@@ -141,9 +147,7 @@ const removeTeamPlayer: SelectMenu = {
 
 					await i.reply({
 						embeds: [
-							infoMessageEmbed(
-								`:x: Player ${selected[0]} was not deleted`,
-							),
+							infoMessageEmbed(`:x: Player ${username} was not deleted`),
 						],
 						ephemeral: true,
 					});

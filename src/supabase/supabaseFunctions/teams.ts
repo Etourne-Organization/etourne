@@ -22,6 +22,15 @@ interface checkTeamExists {
 	teamId: number;
 }
 
+interface setColumnValue {
+	data: [{ key: string; value: string | number; id: number }];
+}
+
+interface getColumnValueById {
+	columnName: string;
+	id: number;
+}
+
 export const addTeam = async (props: addTeam) => {
 	const { eventId, teamName, teamDescription } = props;
 
@@ -68,4 +77,32 @@ export const checkTeamExists = async (props: checkTeamExists) => {
 	} else {
 		return false;
 	}
+};
+
+export const setColumnValue = async (props: setColumnValue) => {
+	const { data } = props;
+
+	for (const d of data) {
+		const { data, error } = await supabase
+			.from('Teams')
+			.update({
+				[d.key]: d.value,
+			})
+			.eq('id', d.id);
+	}
+};
+
+export const getColumnValueById = async (props: getColumnValueById) => {
+	const { columnName, id } = props;
+
+	console.log(props);
+
+	const { data, error } = await supabase
+		.from('Teams')
+		.select(columnName)
+		.eq('id', id);
+
+	if (error) throw error;
+
+	return { data, error };
 };

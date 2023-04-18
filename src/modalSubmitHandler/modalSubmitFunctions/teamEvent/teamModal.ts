@@ -10,7 +10,10 @@ import {
 
 import { ModalFunction } from '../../ModalSubmitStructure';
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
-import { addTeam } from '../../../supabase/supabaseFunctions/teams';
+import {
+	addTeam,
+	setColumnValue,
+} from '../../../supabase/supabaseFunctions/teams';
 
 const teamModal: ModalFunction = {
 	customId: 'teamModalSubmit',
@@ -81,9 +84,19 @@ const teamModal: ModalFunction = {
 				text: `Team ID: ${teamID} Event ID: ${eventId}`,
 			});
 
-			await interaction.channel?.send({
+			const reply = await interaction.channel?.send({
 				embeds: [teamEmbed],
 				components: [buttons],
+			});
+
+			await setColumnValue({
+				data: [
+					{
+						id: teamID,
+						key: 'messageId',
+						value: reply!.id,
+					},
+				],
 			});
 
 			await interaction.reply({
