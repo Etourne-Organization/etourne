@@ -61,6 +61,10 @@ const normalEventModal: ModalFunction = {
 					.setLabel('❌  Remove player')
 					.setStyle('SECONDARY'),
 				new MessageButton()
+					.setCustomId('editEventInfo')
+					.setLabel('⚙️  Edit event info')
+					.setStyle('SECONDARY'),
+				new MessageButton()
 					.setCustomId('deleteEvent')
 					.setLabel('🗑️  Delete event')
 					.setStyle('DANGER'),
@@ -70,6 +74,7 @@ const normalEventModal: ModalFunction = {
 
 			const id = await addEvent({
 				eventName: eventName,
+				gameName: gameName,
 				description: description,
 				dateTime: new Date(
 					momentTimezone

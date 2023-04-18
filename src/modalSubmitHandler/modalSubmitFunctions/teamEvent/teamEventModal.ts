@@ -67,6 +67,10 @@ const teamEventModal: ModalFunction = {
 					.setLabel('Set num of team member limit')
 					.setStyle('SECONDARY'),
 				new MessageButton()
+					.setCustomId('editEventInfo')
+					.setLabel('⚙️  Edit event info')
+					.setStyle('SECONDARY'),
+				new MessageButton()
 					.setCustomId('deleteEvent')
 					.setLabel('🗑️  Delete event')
 					.setStyle('DANGER'),
@@ -76,6 +80,7 @@ const teamEventModal: ModalFunction = {
 
 			const id = await addEvent({
 				eventName: eventName,
+				gameName: gameName,
 				description: description,
 				dateTime: new Date(
 					momentTimezone

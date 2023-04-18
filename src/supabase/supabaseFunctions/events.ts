@@ -13,6 +13,7 @@ import psqlErrorCodes from '../../data/psqlErrorCodes.json';
 interface addEvent {
 	eventId?: number;
 	eventName: string;
+	gameName: string;
 	description: string;
 	dateTime: string;
 	isTeamEvent: boolean;
@@ -37,9 +38,14 @@ interface deletEvent {
 	eventId: number;
 }
 
+interface getAllColumnValueById {
+	id: number;
+}
+
 export const addEvent = async (props: addEvent) => {
 	const {
 		eventName,
+		gameName,
 		description,
 		dateTime,
 		isTeamEvent,
@@ -78,6 +84,7 @@ export const addEvent = async (props: addEvent) => {
 		.insert([
 			{
 				eventName: eventName,
+				gameName: gameName,
 				description: description,
 				dateTime: dateTime,
 				isTeamEvent: isTeamEvent,
@@ -127,6 +134,16 @@ export const deleteEvent = async (props: deletEvent) => {
 		.from('Events')
 		.delete()
 		.eq('id', eventId);
+
+	if (error) throw error;
+
+	return { data, error };
+};
+
+export const getAllColumnValueById = async (props: getAllColumnValueById) => {
+	const { id } = props;
+
+	const { data, error } = await supabase.from('Events').select().eq('id', id);
 
 	if (error) throw error;
 
