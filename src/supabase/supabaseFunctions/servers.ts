@@ -10,7 +10,7 @@ import { supabase } from '../supabase';
 import psqlErrorCodes from '../../data/psqlErrorCodes.json';
 
 interface checkServerExists {
-	serverId: string;
+	discordServerId: string;
 }
 
 interface addServer {
@@ -19,20 +19,22 @@ interface addServer {
 }
 
 interface getServer {
-	serverId: string;
+	discordServerId: string;
 }
 
 export const checkServerExists = async (props: checkServerExists) => {
-	const { serverId } = props;
+	const { discordServerId } = props;
 
 	const { data, error } = await supabase
 		.from('DiscordServers')
 		.select('id')
-		.containedBy('id', [serverId]);
+		.eq('serverId', discordServerId);
 
-	// console.log({ data, error });
-
-	return { data, error };
+	if (data!.length > 0) {
+		return true;
+	} else {
+		return false;
+	}
 };
 
 export const addServer = async (props: addServer) => {
@@ -40,18 +42,19 @@ export const addServer = async (props: addServer) => {
 
 	const { data, error } = await supabase
 		.from('DiscordServers')
-		.upsert([{ id: serverId, name: name }]);
+		.insert([{ serverId: serverId, name: name }])
+		.select();
 
 	return { data, error };
 };
 
 export const getServerId = async (props: getServer) => {
-	const { serverId } = props;
+	const { discordServerId } = props;
 
 	const { data, error } = await supabase
 		.from('DiscordServers')
 		.select('id')
-		.eq('id', serverId);
+		.eq('serverId', discordServerId);
 
 	return { data, error };
 };

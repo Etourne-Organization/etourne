@@ -67,7 +67,7 @@ const registerTeamMember: ButtonFunction = {
 				username: interaction.user.tag,
 				discordUserId: interaction.user.id,
 				teamId: parseInt(teamId),
-				serverId: interaction.guild?.id!,
+				discordServerId: interaction.guild?.id!,
 			});
 
 			const editedEmbed = new MessageEmbed()

@@ -12,7 +12,7 @@ import { addUser, getUserId, getUsernameAndDiscordId } from './users';
 interface addPlayer {
 	discordUserId: string;
 	teamId: number;
-	serverId: string;
+	discordServerId: string;
 	username: string;
 }
 
@@ -26,7 +26,7 @@ interface getAllTeamPlayers {
 }
 
 export const addPlayer = async (props: addPlayer) => {
-	const { discordUserId, teamId, serverId, username } = props;
+	const { discordUserId, teamId, discordServerId, username } = props;
 
 	let dbUserId: number;
 
@@ -40,7 +40,7 @@ export const addPlayer = async (props: addPlayer) => {
 		const { data: addUserData, error: addUserError } = await addUser({
 			username: username,
 			discordUserId: discordUserId,
-			serverId: serverId!,
+			discordServerId: discordServerId!,
 		});
 
 		dbUserId = addUserData![0]['id'];

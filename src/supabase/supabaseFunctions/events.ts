@@ -7,7 +7,7 @@
 */
 
 import { supabase } from '../supabase';
-import { addServer } from './servers';
+import { addServer, checkServerExists, getServerId } from './servers';
 import psqlErrorCodes from '../../data/psqlErrorCodes.json';
 
 interface addEvent {
@@ -16,7 +16,7 @@ interface addEvent {
 	description: string;
 	dateTime: string;
 	isTeamEvent: boolean;
-	serverId: string;
+	discordServerId: string;
 	timezone: string;
 	numTeamLimit?: number;
 	numTeamMemberLimit?: number;
@@ -43,7 +43,7 @@ export const addEvent = async (props: addEvent) => {
 		description,
 		dateTime,
 		isTeamEvent,
-		serverId,
+		discordServerId,
 		timezone,
 		numTeamLimit,
 		numTeamMemberLimit,
@@ -51,10 +51,27 @@ export const addEvent = async (props: addEvent) => {
 		messageId,
 	} = props;
 
-	const { data: addServerData, error: addServerError } = await addServer({
-		serverId: serverId,
-		name: serverName,
+	const isServerExist: boolean = await checkServerExists({
+		discordServerId: discordServerId,
 	});
+
+	let dbServerId: number;
+
+	if (!isServerExist) {
+		const { data: addServerData, error: addServerError } = await addServer({
+			serverId: discordServerId,
+			name: serverName,
+		});
+
+		dbServerId = addServerData![0]['id'];
+	} else {
+		const { data: getServerIdData, error: getServerIdError } =
+			await getServerId({
+				discordServerId: discordServerId,
+			});
+
+		dbServerId = getServerIdData![0]['id'];
+	}
 
 	const { data, error } = await supabase
 		.from('Events')
@@ -64,7 +81,7 @@ export const addEvent = async (props: addEvent) => {
 				description: description,
 				dateTime: dateTime,
 				isTeamEvent: isTeamEvent,
-				serverId: serverId,
+				serverId: dbServerId,
 				timezone: timezone,
 				numTeamLimit: numTeamLimit,
 				numTeamMemberLimit: numTeamMemberLimit,

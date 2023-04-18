@@ -13,7 +13,7 @@ interface addUser {
 	discordUserId: string;
 	username: string;
 	roleName?: string;
-	serverId: string;
+	discordServerId: string;
 }
 
 interface getUserId {
@@ -29,17 +29,17 @@ interface getMultipleUsernames {
 }
 
 export const addUser = async (props: addUser) => {
-	const { username, discordUserId, serverId } = props;
+	const { username, discordUserId, discordServerId } = props;
 
 	const { data: getServerIdData, error: getServerIdError } = await getServerId(
 		{
-			serverId: serverId,
+			discordServerId: discordServerId,
 		},
 	);
 
 	const { data, error } = await supabase
 		.from('Users')
-		.upsert([
+		.insert([
 			{
 				userId: discordUserId,
 				username: username,

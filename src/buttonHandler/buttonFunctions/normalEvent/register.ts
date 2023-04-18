@@ -53,7 +53,7 @@ const register: ButtonFunction = {
 					username: interaction.user.tag,
 					discordUserId: interaction.user.id,
 					eventId: parseInt(eventId),
-					serverId: interaction.guild?.id!,
+					discordServerId: interaction.guild?.id!,
 				});
 
 				const editedEmbed = new MessageEmbed()

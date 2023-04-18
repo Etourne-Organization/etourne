@@ -13,7 +13,7 @@ interface addPlayer {
 	username: string;
 	discordUserId: string;
 	eventId: number;
-	serverId?: string;
+	discordServerId?: string;
 }
 
 interface removePlayer {
@@ -23,7 +23,7 @@ interface removePlayer {
 }
 
 export const addPlayer = async (props: addPlayer) => {
-	const { username, discordUserId, eventId, serverId } = props;
+	const { username, discordUserId, eventId, discordServerId } = props;
 
 	let dbUserId: number;
 
@@ -37,7 +37,7 @@ export const addPlayer = async (props: addPlayer) => {
 		const { data: addUserData, error: addUserError } = await addUser({
 			username: username,
 			discordUserId: discordUserId,
-			serverId: serverId!,
+			discordServerId: discordServerId!,
 		});
 
 		dbUserId = addUserData![0]['id'];
