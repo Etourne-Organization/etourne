@@ -42,6 +42,17 @@ interface getAllColumnValueById {
 	id: number;
 }
 
+interface updateEvent {
+	eventId: number;
+	eventName: string;
+	gameName: string;
+	description: string;
+	dateTime: string;
+	isTeamEvent: boolean;
+	discordServerId: string;
+	timezone: string;
+}
+
 export const addEvent = async (props: addEvent) => {
 	const {
 		eventName,
@@ -94,6 +105,45 @@ export const addEvent = async (props: addEvent) => {
 				numTeamMemberLimit: numTeamMemberLimit,
 			},
 		])
+		.select();
+
+	if (error) throw error;
+
+	return data[0]['id'];
+};
+
+export const updateEvent = async (props: updateEvent) => {
+	const {
+		eventName,
+		eventId,
+		gameName,
+		description,
+		dateTime,
+		isTeamEvent,
+		discordServerId,
+		timezone,
+	} = props;
+
+	const { data: getServerIdData, error: getServerIdError } = await getServerId(
+		{
+			discordServerId: discordServerId,
+		},
+	);
+
+	const { data, error } = await supabase
+		.from('Events')
+		.update([
+			{
+				eventName: eventName,
+				gameName: gameName,
+				description: description,
+				dateTime: dateTime,
+				isTeamEvent: isTeamEvent,
+				serverId: getServerIdData![0]['id'],
+				timezone: timezone,
+			},
+		])
+		.eq('id', eventId)
 		.select();
 
 	if (error) throw error;

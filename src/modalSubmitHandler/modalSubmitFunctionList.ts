@@ -5,6 +5,7 @@ import teamEventModal from './modalSubmitFunctions/teamEvent/teamEventModal';
 import normalEventModal from './modalSubmitFunctions/normalEvent/normalEventModal';
 import setNumTeamLimitModal from './modalSubmitFunctions/teamEvent/setNumTeamLimitModal';
 import setNumTeamMemberLimitModal from './modalSubmitFunctions/teamEvent/setNumTeamMemberLimitModal';
+import editEventInfoModal from './modalSubmitFunctions/normalEvent/editEventInfoModal';
 
 const modalSubmitFunctionList: ModalFunction[] = [
 	teamModal,
@@ -12,6 +13,7 @@ const modalSubmitFunctionList: ModalFunction[] = [
 	normalEventModal,
 	setNumTeamLimitModal,
 	setNumTeamMemberLimitModal,
+	editEventInfoModal,
 ];
 
 export default modalSubmitFunctionList;
