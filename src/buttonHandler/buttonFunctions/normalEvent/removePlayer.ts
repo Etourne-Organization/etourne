@@ -29,17 +29,50 @@ const removePlayer: ButtonFunction = {
 				return interaction.reply({
 					embeds: [
 						infoMessageEmbed(
-							'There are no  players to remove!',
+							'There are no players to remove!',
 							'WARNING',
 						),
 					],
 					ephemeral: true,
 				});
+
+			const selectMenuOptions: [
+				{ label: string; description: string; value: string },
+			] = [{ label: ' ', description: ' ', value: ' ' }];
+
+			players!.forEach(
+				(tp: { username: string; userId: string }, i: number) => {
+					selectMenuOptions[i] = {
+						label: tp.username,
+						description: `Remove ${tp.username}`,
+						value: `${tp.username}|${tp.userId}`,
+					};
+				},
+			);
+
+			const selectMenu = new MessageActionRow().addComponents(
+				new MessageSelectMenu()
+					.setCustomId('removePlayer')
+					.setPlaceholder('Select a player to be removed')
+					.addOptions(selectMenuOptions),
+			);
+
+			const selectMessageEmbed = new MessageEmbed()
+				.setTitle('Select team player to be removed')
+				.setColor('#3A9CE2')
+				.setFooter({ text: `${footer}` })
+				.setTimestamp();
+
+			await interaction.reply({
+				embeds: [selectMessageEmbed],
+				ephemeral: true,
+				components: [selectMenu],
+			});
 		} catch (err) {
 			try {
 				fs.appendFile(
 					'logs/crash_logs.txt',
-					`${new Date()} : Something went wrong in buttonFunctions/teamEvent/manageTeamMembers.ts \n Actual error: ${err} \n \n`,
+					`${new Date()} : Something went wrong in buttonFunctions/normalEvent/removePlayers.ts \n Actual error: ${err} \n \n`,
 					(err) => {
 						if (err) throw err;
 					},

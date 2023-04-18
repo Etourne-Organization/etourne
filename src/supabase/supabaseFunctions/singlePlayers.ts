@@ -86,7 +86,7 @@ export const getAllPlayers = async (props: getAllPlayers) => {
 	let players: [{ username: string; userId: string }?] = [];
 
 	const { data, error } = await supabase
-		.from('Singlelayers')
+		.from('SinglePlayers')
 		.select('userId')
 		.eq('eventId', eventId);
 

@@ -49,7 +49,7 @@ const removeTeamPlayer: ButtonFunction = {
 					ephemeral: true,
 				});
 
-			let selectMenuOptions: [
+			const selectMenuOptions: [
 				{ label: string; description: string; value: string },
 			] = [{ label: ' ', description: ' ', value: ' ' }];
 
@@ -85,7 +85,7 @@ const removeTeamPlayer: ButtonFunction = {
 			try {
 				fs.appendFile(
 					'logs/crash_logs.txt',
-					`${new Date()} : Something went wrong in buttonFunctions/teamEvent/manageTeamMembers.ts \n Actual error: ${err} \n \n`,
+					`${new Date()} : Something went wrong in buttonFunctions/teamEvent/removeTeamPlayers.ts \n Actual error: ${err} \n \n`,
 					(err) => {
 						if (err) throw err;
 					},
