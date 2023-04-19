@@ -33,7 +33,10 @@ const createTeam: ButtonFunction = {
 			) {
 				return await interaction.reply({
 					embeds: [
-						infoMessageEmbed('Team limit has exceeded!', 'WARNING'),
+						infoMessageEmbed(
+							'Number of team has reached the limit!',
+							'WARNING',
+						),
 					],
 					ephemeral: true,
 				});

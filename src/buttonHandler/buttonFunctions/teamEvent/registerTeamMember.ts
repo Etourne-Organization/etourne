@@ -4,7 +4,11 @@ import { Client, ButtonInteraction, MessageEmbed } from 'discord.js';
 
 import { ButtonFunction } from '../../ButtonStructure';
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
-import { addPlayer } from '../../../supabase/supabaseFunctions/teamPlayers';
+import {
+	addPlayer,
+	getNumOfTeamPlayers,
+} from '../../../supabase/supabaseFunctions/teamPlayers';
+import { getColumnValueById } from '../../../supabase/supabaseFunctions/events';
 import { checkTeamExists } from '../../../supabase/supabaseFunctions/teams';
 
 const registerTeamMember: ButtonFunction = {
@@ -14,12 +18,35 @@ const registerTeamMember: ButtonFunction = {
 			const footer = interaction.message.embeds[0].footer?.text;
 			const teamId: string | any =
 				interaction.message.embeds[0].footer?.text.split(' ')[2];
+			const eventId: string | any =
+				interaction.message.embeds[0].footer?.text.split(' ')[5];
+
+			const numTeamPlayerLimit: any = await getColumnValueById({
+				id: eventId,
+				columnName: 'numTeamMemberLimit',
+			});
 
 			if (!(await checkTeamExists({ teamId: parseInt(teamId) }))) {
 				return interaction.reply({
 					embeds: [
 						infoMessageEmbed(
 							'The team does not exist anymore, maybe it was deleted?',
+							'WARNING',
+						),
+					],
+					ephemeral: true,
+				});
+			}
+
+			if (
+				numTeamPlayerLimit.length > 0 &&
+				(await getNumOfTeamPlayers({ teamId: teamId })) ===
+					numTeamPlayerLimit[0]['numTeamMemberLimit']
+			) {
+				return await interaction.reply({
+					embeds: [
+						infoMessageEmbed(
+							'Number of players has reached the limit!',
 							'WARNING',
 						),
 					],

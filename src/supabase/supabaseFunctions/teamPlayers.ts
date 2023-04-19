@@ -25,6 +25,10 @@ interface getAllTeamPlayers {
 	teamId: number;
 }
 
+interface getNumOfTeamPlayers {
+	teamId: number;
+}
+
 export const addPlayer = async (props: addPlayer) => {
 	const { discordUserId, teamId, discordServerId, username } = props;
 
@@ -100,4 +104,17 @@ export const getAllTeamPlayers = async (props: getAllTeamPlayers) => {
 	}
 
 	return players;
+};
+
+export const getNumOfTeamPlayers = async (props: getNumOfTeamPlayers) => {
+	const { teamId } = props;
+
+	const { data, error } = await supabase
+		.from('TeamPlayers')
+		.select('id')
+		.eq('teamId', teamId);
+
+	if (error) throw error;
+
+	return data.length;
 };
