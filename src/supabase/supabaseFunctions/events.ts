@@ -174,7 +174,7 @@ export const getColumnValueById = async (props: getColumnValueById) => {
 
 	if (error) throw error;
 
-	return { data, error };
+	return data;
 };
 
 export const deleteEvent = async (props: deletEvent) => {

@@ -10,16 +10,28 @@ import {
 import momentTimezone from 'moment-timezone';
 
 import { ModalFunction } from '../../ModalSubmitStructure';
-import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
 import {
-	addEvent,
-	setColumnValue,
+	updateEvent,
+	getColumnValueById,
 } from '../../../supabase/supabaseFunctions/events';
 
-const teamEventModal: ModalFunction = {
-	customId: 'teamEventModalSubmit',
+const editTeamEventInfoModal: ModalFunction = {
+	customId: 'editTeamEventInfoModal',
 	run: async (client: Client, interaction: ModalSubmitInteraction) => {
 		try {
+			const eventId: string | any =
+				interaction.message?.embeds[0].footer?.text.split(': ')[1];
+
+			const registeredPlayers:
+				| {
+						name: string;
+						value: string;
+						inline: boolean;
+				  }
+				| any = interaction.message?.embeds[0].fields?.find(
+				(r) => r.name === 'Registered players',
+			);
+
 			const eventName = interaction.fields.getTextInputValue('eventName');
 			const gameName = interaction.fields.getTextInputValue('gameName');
 			const timezone = interaction.fields.getTextInputValue('timezone');
@@ -27,7 +39,17 @@ const teamEventModal: ModalFunction = {
 			const description =
 				interaction.fields.getTextInputValue('eventDescription');
 
-			const eventEmbed = new MessageEmbed()
+			const numTeamLimit: any = await getColumnValueById({
+				id: eventId,
+				columnName: 'numTeamLimit',
+			});
+
+			const numTeamPlayerLimit: any = await getColumnValueById({
+				id: eventId,
+				columnName: 'numTeamMemberLimit',
+			});
+
+			const editedEmbed = new MessageEmbed()
 				.setColor('#3a9ce2')
 				.setTitle(eventName)
 				.setDescription(
@@ -44,30 +66,34 @@ const teamEventModal: ModalFunction = {
 					{ name: 'Game name', value: gameName, inline: true },
 					{
 						name: 'Num of team limit',
-						value: 'Not specified yet',
+						value: `${numTeamLimit[0]['numTeamLimit']}`,
 					},
 					{
 						name: 'Num of team member limit',
-						value: 'Not specified yet',
+						value: `${numTeamPlayerLimit[0]['numTeamMemberLimit']}`,
 					},
 					{ name: 'Hosted by', value: `${interaction.user.tag}` },
-				]);
+				])
+				.setFooter({
+					text: `Event ID: ${eventId}`,
+				});
 
+			/* buttons */
 			const buttons = new MessageActionRow().addComponents(
 				new MessageButton()
-					.setCustomId('createTeam')
-					.setLabel('Create Team')
+					.setCustomId('normalEventRegister')
+					.setLabel('Register')
 					.setStyle('PRIMARY'),
 				new MessageButton()
-					.setCustomId('setNumTeamLimit')
-					.setLabel('Set num of team limit')
+					.setCustomId('normalEventUnregister')
+					.setLabel('Unregister')
+					.setStyle('DANGER'),
+				new MessageButton()
+					.setCustomId('removePlayer')
+					.setLabel('❌  Remove player')
 					.setStyle('SECONDARY'),
 				new MessageButton()
-					.setCustomId('setNumTeamMemberLimit')
-					.setLabel('Set num of team member limit')
-					.setStyle('SECONDARY'),
-				new MessageButton()
-					.setCustomId('editTeamEventInfo')
+					.setCustomId('editEventInfo')
 					.setLabel('⚙️  Edit event info')
 					.setStyle('SECONDARY'),
 				new MessageButton()
@@ -78,7 +104,8 @@ const teamEventModal: ModalFunction = {
 
 			if (!interaction.inCachedGuild()) return;
 
-			const id = await addEvent({
+			await updateEvent({
+				eventId: eventId,
 				eventName: eventName,
 				gameName: gameName,
 				description: description,
@@ -87,47 +114,20 @@ const teamEventModal: ModalFunction = {
 						.tz(eventDateTime, 'DD/MM/YYYY hh:mm', timezone)
 						.format(),
 				).toISOString(),
-				isTeamEvent: true,
+				isTeamEvent: false,
 				discordServerId: interaction.guild.id,
 				timezone: timezone,
-				serverName: interaction.guild.name,
 			});
 
-			eventEmbed.setFooter({
-				text: `Event ID: ${id}`,
-			});
-
-			const reply = await interaction.channel?.send({
-				embeds: [eventEmbed],
+			return await interaction.update({
+				embeds: [editedEmbed],
 				components: [buttons],
-			});
-
-			console.log(parseInt(reply!.id));
-
-			await setColumnValue({
-				data: [
-					{
-						id: id,
-						key: 'messageId',
-						value: reply!.id,
-					},
-				],
-			});
-
-			await interaction.reply({
-				embeds: [
-					infoMessageEmbed(
-						':white_check_mark: Team event created successfully',
-						'SUCCESS',
-					),
-				],
-				ephemeral: true,
 			});
 		} catch (err) {
 			try {
 				fs.appendFile(
 					'logs/crash_logs.txt',
-					`${new Date()} : Something went wrong in modalFunctions/teamEvent/teamEventModal.ts \n Actual error: ${err} \n \n`,
+					`${new Date()} : Something went wrong in modalFunctions/normalEvent/editEventInfoModal.ts \n Actual error: ${err} \n \n`,
 					(err) => {
 						if (err) throw err;
 					},
@@ -139,4 +139,4 @@ const teamEventModal: ModalFunction = {
 	},
 };
 
-export default teamEventModal;
+export default editTeamEventInfoModal;

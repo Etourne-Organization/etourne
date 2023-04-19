@@ -58,13 +58,13 @@ const removePlayer: SelectMenu = {
 				if (i.customId === 'deleteYes') {
 					await interaction.deleteReply();
 
-					const { data, error }: any = await getColumnValueById({
+					const messageId: any = await getColumnValueById({
 						columnName: 'messageId',
 						id: parseInt(eventId),
 					});
 
 					const fetchedMessage = await interaction.channel?.messages.fetch(
-						data[0]['messageId'],
+						messageId[0]['messageId'],
 					);
 
 					if (fetchedMessage) {

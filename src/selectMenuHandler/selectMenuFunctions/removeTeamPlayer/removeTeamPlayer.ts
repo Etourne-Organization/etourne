@@ -67,13 +67,13 @@ const removeTeamPlayer: SelectMenu = {
 							teamId: parseInt(teamId),
 						});
 
-					const { data, error }: any = await getColumnValueById({
+					const messageId: any = await getColumnValueById({
 						columnName: 'messageId',
 						id: parseInt(teamId),
 					});
 
 					const fetchedMessage = await interaction.channel?.messages.fetch(
-						data[0]['messageId'],
+						messageId[0]['messageId'],
 					);
 
 					if (fetchedMessage) {

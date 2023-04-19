@@ -12,7 +12,6 @@ import {
 import momentTimezone, { min } from 'moment-timezone';
 
 import { ButtonFunction } from '../../ButtonStructure';
-import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
 import { getAllColumnValueById } from '../../../supabase/supabaseFunctions/events';
 
 const editTeamEventInfo: ButtonFunction = {
