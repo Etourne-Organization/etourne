@@ -115,7 +115,7 @@ const editTeamEventInfo: ButtonFunction = {
 				console.log(err);
 				fs.appendFile(
 					'logs/crash_logs.txt',
-					`${new Date()} : Something went wrong in buttonFunctions/normalEvent/editTeamEventInfo.ts \n Actual error: ${err} \n \n`,
+					`${new Date()} : Something went wrong in buttonFunctions/teamEvent/editTeamEventInfo.ts \n Actual error: ${err} \n \n`,
 					(err) => {
 						if (err) throw err;
 					},

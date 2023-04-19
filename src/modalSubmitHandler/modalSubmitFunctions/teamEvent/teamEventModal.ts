@@ -102,8 +102,6 @@ const teamEventModal: ModalFunction = {
 				components: [buttons],
 			});
 
-			console.log(parseInt(reply!.id));
-
 			await setColumnValue({
 				data: [
 					{

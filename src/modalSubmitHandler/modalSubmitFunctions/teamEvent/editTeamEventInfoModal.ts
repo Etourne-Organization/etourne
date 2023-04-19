@@ -22,16 +22,6 @@ const editTeamEventInfoModal: ModalFunction = {
 			const eventId: string | any =
 				interaction.message?.embeds[0].footer?.text.split(': ')[1];
 
-			const registeredPlayers:
-				| {
-						name: string;
-						value: string;
-						inline: boolean;
-				  }
-				| any = interaction.message?.embeds[0].fields?.find(
-				(r) => r.name === 'Registered players',
-			);
-
 			const eventName = interaction.fields.getTextInputValue('eventName');
 			const gameName = interaction.fields.getTextInputValue('gameName');
 			const timezone = interaction.fields.getTextInputValue('timezone');
@@ -66,11 +56,15 @@ const editTeamEventInfoModal: ModalFunction = {
 					{ name: 'Game name', value: gameName, inline: true },
 					{
 						name: 'Num of team limit',
-						value: `${numTeamLimit[0]['numTeamLimit']}`,
+						value: numTeamLimit[0]['numTeamLimit']
+							? numTeamLimit[0]['numTeamLimit']
+							: 'Not specified yet',
 					},
 					{
 						name: 'Num of team member limit',
-						value: `${numTeamPlayerLimit[0]['numTeamMemberLimit']}`,
+						value: numTeamPlayerLimit[0]['numTeamMemberLimit']
+							? numTeamPlayerLimit[0]['numTeamMemberLimit']
+							: 'Not specified yet',
 					},
 					{ name: 'Hosted by', value: `${interaction.user.tag}` },
 				])
@@ -81,19 +75,19 @@ const editTeamEventInfoModal: ModalFunction = {
 			/* buttons */
 			const buttons = new MessageActionRow().addComponents(
 				new MessageButton()
-					.setCustomId('normalEventRegister')
-					.setLabel('Register')
+					.setCustomId('createTeam')
+					.setLabel('Create Team')
 					.setStyle('PRIMARY'),
 				new MessageButton()
-					.setCustomId('normalEventUnregister')
-					.setLabel('Unregister')
-					.setStyle('DANGER'),
-				new MessageButton()
-					.setCustomId('removePlayer')
-					.setLabel('❌  Remove player')
+					.setCustomId('setNumTeamLimit')
+					.setLabel('Set num of team limit')
 					.setStyle('SECONDARY'),
 				new MessageButton()
-					.setCustomId('editEventInfo')
+					.setCustomId('setNumTeamMemberLimit')
+					.setLabel('Set num of team member limit')
+					.setStyle('SECONDARY'),
+				new MessageButton()
+					.setCustomId('editTeamEventInfo')
 					.setLabel('⚙️  Edit event info')
 					.setStyle('SECONDARY'),
 				new MessageButton()
@@ -125,9 +119,10 @@ const editTeamEventInfoModal: ModalFunction = {
 			});
 		} catch (err) {
 			try {
+				console.log(err);
 				fs.appendFile(
 					'logs/crash_logs.txt',
-					`${new Date()} : Something went wrong in modalFunctions/normalEvent/editEventInfoModal.ts \n Actual error: ${err} \n \n`,
+					`${new Date()} : Something went wrong in modalFunctions/teamEvent/editTeamEventInfoModal.ts \n Actual error: ${err} \n \n`,
 					(err) => {
 						if (err) throw err;
 					},

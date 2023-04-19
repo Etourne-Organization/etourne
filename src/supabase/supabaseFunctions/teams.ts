@@ -95,8 +95,6 @@ export const setColumnValue = async (props: setColumnValue) => {
 export const getColumnValueById = async (props: getColumnValueById) => {
 	const { columnName, id } = props;
 
-	console.log(props);
-
 	const { data, error } = await supabase
 		.from('Teams')
 		.select(columnName)
