@@ -58,13 +58,13 @@ const editTeamEventInfoModal: ModalFunction = {
 						name: 'Num of team limit',
 						value: numTeamLimit[0]['numTeamLimit']
 							? numTeamLimit[0]['numTeamLimit']
-							: 'Not specified yet',
+							: 'Unlimited',
 					},
 					{
 						name: 'Num of team member limit',
 						value: numTeamPlayerLimit[0]['numTeamMemberLimit']
 							? numTeamPlayerLimit[0]['numTeamMemberLimit']
-							: 'Not specified yet',
+							: 'Unlimited',
 					},
 					{ name: 'Hosted by', value: `${interaction.user.tag}` },
 				])

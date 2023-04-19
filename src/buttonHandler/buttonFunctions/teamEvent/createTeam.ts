@@ -3,7 +3,6 @@ import fs from 'fs';
 import {
 	Client,
 	ButtonInteraction,
-	MessageEmbed,
 	Modal,
 	TextInputComponent,
 	MessageActionRow,
@@ -11,12 +10,35 @@ import {
 } from 'discord.js';
 
 import { ButtonFunction } from '../../ButtonStructure';
+import { getNumOfTeam } from '../../../supabase/supabaseFunctions/teams';
+import { getColumnValueById } from '../../../supabase/supabaseFunctions/events';
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
 
 const createTeam: ButtonFunction = {
 	customId: 'createTeam',
 	run: async (client: Client, interaction: ButtonInteraction) => {
 		try {
+			const eventId: string | any =
+				interaction.message.embeds[0].footer?.text.split(': ')[1];
+
+			const numTeamLimit: any = await getColumnValueById({
+				id: eventId,
+				columnName: 'numTeamLimit',
+			});
+
+			if (
+				numTeamLimit.length > 0 &&
+				(await getNumOfTeam({ eventId: eventId })) ===
+					numTeamLimit[0]['numTeamLimit']
+			) {
+				return await interaction.reply({
+					embeds: [
+						infoMessageEmbed('Team limit has exceeded!', 'WARNING'),
+					],
+					ephemeral: true,
+				});
+			}
+
 			const teamFormModal = new Modal()
 				.setCustomId(`teamModalSubmit-${interaction.id}`)
 				.setTitle('Create Team');
