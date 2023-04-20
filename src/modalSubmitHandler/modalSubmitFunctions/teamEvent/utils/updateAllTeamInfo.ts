@@ -7,11 +7,12 @@ import { getColumnValueByEventId } from '../../../../supabase/supabaseFunctions/
 interface updateAllTeamInfo {
 	eventId: number;
 	interaction: ModalSubmitInteraction;
+	columnNames: [string];
 }
 
 const updateAllTeamInfo = async (props: updateAllTeamInfo) => {
 	try {
-		const { eventId, interaction } = props;
+		const { eventId, interaction, columnNames } = props;
 
 		const messageIds: any = await getColumnValueByEventId({
 			eventId: eventId,
@@ -23,6 +24,13 @@ const updateAllTeamInfo = async (props: updateAllTeamInfo) => {
 				const fetchedMessage = await interaction.channel?.messages.fetch(
 					mId['messageId'],
 				);
+
+				for (const cV of columnNames) {
+					const value = await getColumnValueByEventId({
+						eventId: eventId,
+						columnName: cV,
+					});
+				}
 			}
 		}
 	} catch (err) {
