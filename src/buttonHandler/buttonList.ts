@@ -12,6 +12,7 @@ import removeTeamPlayer from './buttonFunctions/teamEvent/removeTeamPlayer';
 import removePlayer from './buttonFunctions/normalEvent/removePlayer';
 import editEventInfo from './buttonFunctions/normalEvent/editEventInfo';
 import editTeamEventInfo from './buttonFunctions/teamEvent/editTeamEventInfo';
+import editTeamInfo from './buttonFunctions/teamEvent/editTeamInfo';
 
 const buttonList: ButtonFunction[] = [
 	register,
@@ -27,6 +28,7 @@ const buttonList: ButtonFunction[] = [
 	removePlayer,
 	editEventInfo,
 	editTeamEventInfo,
+	editTeamInfo,
 ];
 
 export default buttonList;

@@ -9,23 +9,46 @@ import {
 } from 'discord.js';
 
 import { ModalFunction } from '../../ModalSubmitStructure';
-import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
-import {
-	addTeam,
-	setColumnValue,
-} from '../../../supabase/supabaseFunctions/teams';
+import { updateTeam } from '../../../supabase/supabaseFunctions/teams';
 
-const teamModal: ModalFunction = {
-	customId: 'teamModalSubmit',
+const editTeamInfoModal: ModalFunction = {
+	customId: 'editTeamInfoModal',
 	run: async (client: Client, interaction: ModalSubmitInteraction) => {
 		try {
+			const teamId: string | any =
+				interaction.message?.embeds[0].footer?.text.split(' ')[2];
 			const eventId: string | any =
-				interaction.message?.embeds[0].footer?.text.split(': ')[1];
+				interaction.message?.embeds[0].footer?.text.split(' ')[5];
 
-			const eventName: any = interaction.message?.embeds[0].title;
-			const eventDateTime: any = interaction.message?.embeds[0].fields?.find(
-				(r) => r.name === 'Event date & time',
-			)?.value;
+			const registeredPlayers:
+				| {
+						name: string;
+						value: string;
+						inline: boolean;
+				  }
+				| any = interaction.message?.embeds[0].fields?.find(
+				(r) => r.name === 'Registered players',
+			);
+
+			const eventDateTime:
+				| {
+						name: string;
+						value: string;
+						inline: boolean;
+				  }
+				| any = interaction.message?.embeds[0].fields?.find(
+				(r) => r.name === 'Event Date and Time',
+			);
+
+			const eventName:
+				| {
+						name: string;
+						value: string;
+						inline: boolean;
+				  }
+				| any = interaction.message?.embeds[0].fields?.find(
+				(r) => r.name === 'Event Name',
+			);
 
 			const teamName: string =
 				interaction.fields.getTextInputValue('teamName');
@@ -55,7 +78,7 @@ const teamModal: ModalFunction = {
 					.setStyle('DANGER'),
 			);
 
-			const teamEmbed = new MessageEmbed()
+			const editedEmbed = new MessageEmbed()
 				.setColor('#3a9ce2')
 				.setTitle(teamName)
 				.setDescription(`>>> ${teamShortDescription}`)
@@ -66,57 +89,41 @@ const teamModal: ModalFunction = {
 					},
 					{
 						name: 'Event Name',
-						value: eventName,
+						value: eventName.value,
 					},
 					{
 						name: 'Event Date and Time',
-						value: eventDateTime,
+						value: eventDateTime.value,
 					},
 					{
 						name: 'Registered players',
-						value: ` `,
+						value:
+							registeredPlayers.value.length <= 0
+								? ' '
+								: registeredPlayers.value,
 					},
-				]);
+				])
+				.setFooter({
+					text: `Team ID: ${teamId} Event ID: ${eventId}`,
+				});
 
-			const teamId = await addTeam({
-				eventId: eventId,
+			if (!interaction.inCachedGuild()) return;
+
+			await updateTeam({
+				id: teamId,
 				teamName: teamName,
 				teamDescription: teamShortDescription,
 			});
 
-			teamEmbed.setFooter({
-				text: `Team ID: ${teamId} Event ID: ${eventId}`,
-			});
-
-			const reply = await interaction.channel?.send({
-				embeds: [teamEmbed],
+			return await interaction.update({
+				embeds: [editedEmbed],
 				components: [buttons],
-			});
-
-			await setColumnValue({
-				data: [
-					{
-						id: teamId,
-						key: 'messageId',
-						value: reply!.id,
-					},
-				],
-			});
-
-			await interaction.reply({
-				embeds: [
-					infoMessageEmbed(
-						':white_check_mark: Team created successfully',
-						'SUCCESS',
-					),
-				],
-				ephemeral: true,
 			});
 		} catch (err) {
 			try {
 				fs.appendFile(
 					'logs/crash_logs.txt',
-					`${new Date()} : Something went wrong in modalFunctions/teamEvent/teamModal.ts \n Actual error: ${err} \n \n`,
+					`${new Date()} : Something went wrong in modalFunctions/teamEvent/editTeamInfoModal.ts \n Actual error: ${err} \n \n`,
 					(err) => {
 						if (err) throw err;
 					},
@@ -128,4 +135,4 @@ const teamModal: ModalFunction = {
 	},
 };
 
-export default teamModal;
+export default editTeamInfoModal;

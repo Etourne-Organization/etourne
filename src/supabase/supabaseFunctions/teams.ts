@@ -14,6 +14,12 @@ interface addTeam {
 	teamDescription: string;
 }
 
+interface updateTeam {
+	id: number;
+	teamName: string;
+	teamDescription: string;
+}
+
 interface deleteTeam {
 	teamId: number;
 }
@@ -35,6 +41,10 @@ interface getNumOfTeam {
 	eventId: number;
 }
 
+interface getAllColumnValueById {
+	id: number;
+}
+
 export const addTeam = async (props: addTeam) => {
 	const { eventId, teamName, teamDescription } = props;
 
@@ -47,6 +57,26 @@ export const addTeam = async (props: addTeam) => {
 				eventId: eventId,
 			},
 		])
+		.select();
+
+	if (error) throw error;
+
+	// return { data, error };
+	return data[0]['id'];
+};
+
+export const updateTeam = async (props: updateTeam) => {
+	const { id, teamName, teamDescription } = props;
+
+	const { data, error } = await supabase
+		.from('Teams')
+		.update([
+			{
+				name: teamName,
+				description: teamDescription,
+			},
+		])
+		.eq('id', id)
 		.select();
 
 	if (error) throw error;
@@ -120,4 +150,14 @@ export const getNumOfTeam = async (props: getNumOfTeam) => {
 	if (error) throw error;
 
 	return data.length;
+};
+
+export const getAllColumnValueById = async (props: getAllColumnValueById) => {
+	const { id } = props;
+
+	const { data, error } = await supabase.from('Teams').select().eq('id', id);
+
+	if (error) throw error;
+
+	return data;
 };

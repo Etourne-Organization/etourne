@@ -53,7 +53,13 @@ const editEventInfoModal: ModalFunction = {
 					},
 					{ name: 'Game name', value: gameName, inline: true },
 					{ name: 'Hosted by', value: `${interaction.user.tag}` },
-					{ name: 'Registered players', value: registeredPlayers.value },
+					{
+						name: 'Registered players',
+						value:
+							registeredPlayers.value.length <= 0
+								? ' '
+								: registeredPlayers.value,
+					},
 				])
 				.setFooter({
 					text: `Event ID: ${eventId}`,

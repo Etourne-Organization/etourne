@@ -197,5 +197,5 @@ export const getAllColumnValueById = async (props: getAllColumnValueById) => {
 
 	if (error) throw error;
 
-	return { data, error };
+	return data;
 };

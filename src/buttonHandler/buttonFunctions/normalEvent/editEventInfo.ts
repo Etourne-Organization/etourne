@@ -22,11 +22,11 @@ const editEventInfo: ButtonFunction = {
 			const eventId: string | any =
 				interaction.message.embeds[0].footer?.text.split(': ')[1];
 
-			const { data, error } = await getAllColumnValueById({ id: eventId });
+			const allColumnValue = await getAllColumnValueById({ id: eventId });
 
 			const date = new Date(
 				momentTimezone
-					.tz(data[0]['dateTime'], data[0]['timezone'])
+					.tz(allColumnValue[0]['dateTime'], allColumnValue[0]['timezone'])
 					.format(),
 			);
 
@@ -47,14 +47,14 @@ const editEventInfo: ButtonFunction = {
 				.setLabel('Event name')
 				.setStyle('SHORT')
 				.setPlaceholder('Event name')
-				.setValue(data[0]['eventName']);
+				.setValue(allColumnValue[0]['eventName']);
 
 			const gameNameInput = new TextInputComponent()
 				.setCustomId('gameName')
 				.setLabel('Game name')
 				.setStyle('SHORT')
 				.setPlaceholder('Game name')
-				.setValue(data[0]['gameName']);
+				.setValue(allColumnValue[0]['gameName']);
 
 			const eventDateTimeInput = new TextInputComponent()
 				.setCustomId('date')
@@ -68,14 +68,14 @@ const editEventInfo: ButtonFunction = {
 				.setLabel('Your timezone: timezones.etourne.xyz')
 				.setStyle('SHORT')
 				.setPlaceholder('Your timezone')
-				.setValue(data[0]['timezone']);
+				.setValue(allColumnValue[0]['timezone']);
 
 			const eventDescriptionInput = new TextInputComponent()
 				.setCustomId('eventDescription')
 				.setLabel('Event description')
 				.setStyle('PARAGRAPH')
 				.setPlaceholder('Event description')
-				.setValue(data[0]['description']);
+				.setValue(allColumnValue[0]['description']);
 
 			const eventNameActionRow =
 				new MessageActionRow<ModalActionRowComponent>().addComponents(
