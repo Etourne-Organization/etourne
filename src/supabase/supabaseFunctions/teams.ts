@@ -37,6 +37,11 @@ interface getColumnValueById {
 	id: number;
 }
 
+interface getColumnValueByEventId {
+	columnName: string;
+	eventId: number;
+}
+
 interface getNumOfTeam {
 	eventId: number;
 }
@@ -133,6 +138,21 @@ export const getColumnValueById = async (props: getColumnValueById) => {
 		.from('Teams')
 		.select(columnName)
 		.eq('id', id);
+
+	if (error) throw error;
+
+	return data;
+};
+
+export const getColumnValueByEventId = async (
+	props: getColumnValueByEventId,
+) => {
+	const { columnName, eventId } = props;
+
+	const { data, error } = await supabase
+		.from('Teams')
+		.select(columnName)
+		.eq('eventId', eventId);
 
 	if (error) throw error;
 
