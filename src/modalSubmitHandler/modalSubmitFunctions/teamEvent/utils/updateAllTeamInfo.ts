@@ -16,7 +16,7 @@ const updateAllTeamInfo = async (props: updateAllTeamInfo) => {
 
 		const messageIds: any = await getColumnValueByEventId({
 			eventId: eventId,
-			columnName: 'messageId',
+			columnName: 'id, messageId',
 		});
 
 		if (messageIds.length > 0) {
