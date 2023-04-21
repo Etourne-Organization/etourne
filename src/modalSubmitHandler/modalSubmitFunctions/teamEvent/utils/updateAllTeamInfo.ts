@@ -2,17 +2,19 @@ import fs from 'fs';
 
 import { ModalSubmitInteraction } from 'discord.js';
 
-import { getColumnValueByEventId } from '../../../../supabase/supabaseFunctions/teams';
+import {
+	getAllColumnValueById,
+	getColumnValueByEventId,
+} from '../../../../supabase/supabaseFunctions/teams';
 
 interface updateAllTeamInfo {
 	eventId: number;
 	interaction: ModalSubmitInteraction;
-	columnNames: [string];
 }
 
 const updateAllTeamInfo = async (props: updateAllTeamInfo) => {
 	try {
-		const { eventId, interaction, columnNames } = props;
+		const { eventId, interaction } = props;
 
 		const messageIds: any = await getColumnValueByEventId({
 			eventId: eventId,
@@ -25,12 +27,9 @@ const updateAllTeamInfo = async (props: updateAllTeamInfo) => {
 					mId['messageId'],
 				);
 
-				for (const cV of columnNames) {
-					const value = await getColumnValueByEventId({
-						eventId: eventId,
-						columnName: cV,
-					});
-				}
+				const values = await getAllColumnValueById({
+					id: mId['id'],
+				});
 			}
 		}
 	} catch (err) {
