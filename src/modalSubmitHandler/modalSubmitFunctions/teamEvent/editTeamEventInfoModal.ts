@@ -14,6 +14,7 @@ import {
 	updateEvent,
 	getColumnValueById,
 } from '../../../supabase/supabaseFunctions/events';
+import updateAllTeamInfo from './utils/updateAllTeamInfo';
 
 const editTeamEventInfoModal: ModalFunction = {
 	customId: 'editTeamEventInfoModal',
@@ -39,6 +40,16 @@ const editTeamEventInfoModal: ModalFunction = {
 				columnName: 'numTeamMemberLimit',
 			});
 
+			const eventHost:
+				| {
+						name: string;
+						value: string;
+						inline: boolean;
+				  }
+				| any = interaction.message?.embeds[0].fields?.find(
+				(r) => r.name === 'Hosted by',
+			);
+
 			const editedEmbed = new MessageEmbed()
 				.setColor('#3a9ce2')
 				.setTitle(eventName)
@@ -57,16 +68,16 @@ const editTeamEventInfoModal: ModalFunction = {
 					{
 						name: 'Num of team limit',
 						value: numTeamLimit[0]['numTeamLimit']
-							? numTeamLimit[0]['numTeamLimit']
+							? numTeamLimit[0]['numTeamLimit'].toString()
 							: 'Unlimited',
 					},
 					{
 						name: 'Num of team member limit',
 						value: numTeamPlayerLimit[0]['numTeamMemberLimit']
-							? numTeamPlayerLimit[0]['numTeamMemberLimit']
+							? numTeamPlayerLimit[0]['numTeamMemberLimit'].toString()
 							: 'Unlimited',
 					},
-					{ name: 'Hosted by', value: `${interaction.user.tag}` },
+					{ name: 'Hosted by', value: `${eventHost.value}` },
 				])
 				.setFooter({
 					text: `Event ID: ${eventId}`,
@@ -111,6 +122,11 @@ const editTeamEventInfoModal: ModalFunction = {
 				isTeamEvent: false,
 				discordServerId: interaction.guild.id,
 				timezone: timezone,
+			});
+
+			updateAllTeamInfo({
+				eventId: eventId,
+				interaction: interaction,
 			});
 
 			return await interaction.update({

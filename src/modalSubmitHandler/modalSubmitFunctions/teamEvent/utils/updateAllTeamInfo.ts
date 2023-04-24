@@ -1,11 +1,18 @@
 import fs from 'fs';
 
-import { ModalSubmitInteraction } from 'discord.js';
+import {
+	ModalSubmitInteraction,
+	MessageEmbed,
+	MessageButton,
+	MessageActionRow,
+} from 'discord.js';
+import momentTimezone from 'moment-timezone';
 
 import {
 	getAllColumnValueById,
 	getColumnValueByEventId,
 } from '../../../../supabase/supabaseFunctions/teams';
+import { getColumnValueById } from '../../../../supabase/supabaseFunctions/events';
 
 interface updateAllTeamInfo {
 	eventId: number;
@@ -16,20 +23,87 @@ const updateAllTeamInfo = async (props: updateAllTeamInfo) => {
 	try {
 		const { eventId, interaction } = props;
 
-		const messageIds: any = await getColumnValueByEventId({
+		const values: any = await getColumnValueByEventId({
 			eventId: eventId,
-			columnName: 'id, messageId',
+			columnName: '*',
 		});
 
-		if (messageIds.length > 0) {
-			for (const mId of messageIds) {
+		if (values.length > 0) {
+			for (const value of values) {
 				const fetchedMessage = await interaction.channel?.messages.fetch(
-					mId['messageId'],
+					value['messageId'],
 				);
 
-				const values = await getAllColumnValueById({
-					id: mId['id'],
-				});
+				if (fetchedMessage) {
+					// get registered team players
+					const registeredPlayers:
+						| {
+								name: string;
+								value: string;
+								inline: boolean;
+						  }
+						| any = fetchedMessage.embeds[0].fields?.find(
+						(r) => r.name === 'Registered players',
+					);
+
+					const eventInfo: any = await getColumnValueById({
+						id: eventId,
+						columnName: 'eventName, dateTime, timezone',
+					});
+
+					const date = new Date(
+						momentTimezone
+							.tz(eventInfo[0]['dateTime'], eventInfo[0]['timezone'])
+							.format(),
+					);
+
+					const [day, month, year, hour, minute] = [
+						date.getDate(),
+						date.getMonth() + 1,
+						date.getFullYear(),
+						date.getHours(),
+						date.getMinutes(),
+					];
+
+					const editedEmbed = new MessageEmbed()
+						.setColor('#3a9ce2')
+						.setTitle(value['name'])
+						.setDescription(`>>> ${value['description']}`)
+						.addFields([
+							{
+								name: 'Team Leader',
+								value: interaction.user.tag,
+							},
+							{
+								name: 'Event Name',
+								value: eventInfo[0]['eventName'],
+							},
+							{
+								name: 'Event Date and Time',
+								value: `<t:${momentTimezone
+									.tz(
+										`${day}/${month}/${year} ${hour}:${minute}`,
+										'DD/MM/YYYY hh:mm',
+										eventInfo[0]['timezone'],
+									)
+									.unix()}:F>`,
+							},
+							{
+								name: 'Registered players',
+								value:
+									registeredPlayers.value.length <= 0
+										? ' '
+										: registeredPlayers.value,
+							},
+						])
+						.setFooter({
+							text: `Team ID: ${value['id']} Event ID: ${eventId}`,
+						});
+
+					await fetchedMessage.edit({
+						embeds: [editedEmbed],
+					});
+				}
 			}
 		}
 	} catch (err) {
