@@ -35,7 +35,11 @@ const setNumTeamLimit: ButtonFunction = {
 				.setStyle('SHORT')
 				// .setValue('123')
 				.setPlaceholder('Enter limit for num of team')
-				.setValue(numTeamLimit[0]['numTeamLimit'].toString());
+				.setValue(
+					numTeamLimit[0]['numTeamLimit']
+						? numTeamLimit[0]['numTeamLimit'].toString()
+						: '',
+				);
 
 			const teamLimitNumActionRow =
 				new MessageActionRow<ModalActionRowComponent>().addComponents(
