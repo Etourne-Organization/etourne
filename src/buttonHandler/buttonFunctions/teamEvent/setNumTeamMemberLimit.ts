@@ -11,11 +11,20 @@ import {
 } from 'discord.js';
 
 import { ButtonFunction } from '../../ButtonStructure';
+import { getColumnValueById } from '../../../supabase/supabaseFunctions/events';
 
 const setNumTeamMemberLimit: ButtonFunction = {
 	customId: 'setNumTeamMemberLimit',
 	run: async (client: Client, interaction: ButtonInteraction) => {
 		try {
+			const eventId: string | any =
+				interaction.message?.embeds[0].footer?.text.split(': ')[1];
+
+			const numTeamMemberLimit: any = await getColumnValueById({
+				id: eventId,
+				columnName: 'numTeamMemberLimit',
+			});
+
 			const modal = new Modal()
 				.setCustomId(`numTeamMemberLimitModalSubmit-${interaction.id}`)
 				.setTitle('Create Team');
@@ -24,7 +33,8 @@ const setNumTeamMemberLimit: ButtonFunction = {
 				.setCustomId('numTeamMemberLimit')
 				.setLabel('Num of team member limit')
 				.setStyle('SHORT')
-				.setPlaceholder('Enter limit for num of team members in each team');
+				.setPlaceholder('Enter limit for num of team members in each team')
+				.setValue(numTeamMemberLimit[0]['numTeamMemberLimit'].toString());
 
 			const teamMemberLimitNumActionRow =
 				new MessageActionRow<ModalActionRowComponent>().addComponents(
