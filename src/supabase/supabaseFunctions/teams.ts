@@ -159,7 +159,7 @@ export const getColumnValueByEventId = async (
 	return data;
 };
 
-export const getNumOfTeam = async (props: getNumOfTeam) => {
+export const getNumOfTeams = async (props: getNumOfTeam) => {
 	const { eventId } = props;
 
 	const { data, error } = await supabase

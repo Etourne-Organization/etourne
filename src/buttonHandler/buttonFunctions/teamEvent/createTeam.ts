@@ -10,7 +10,7 @@ import {
 } from 'discord.js';
 
 import { ButtonFunction } from '../../ButtonStructure';
-import { getNumOfTeam } from '../../../supabase/supabaseFunctions/teams';
+import { getNumOfTeams } from '../../../supabase/supabaseFunctions/teams';
 import { getColumnValueById } from '../../../supabase/supabaseFunctions/events';
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
 
@@ -28,7 +28,7 @@ const createTeam: ButtonFunction = {
 
 			if (
 				numTeamLimit.length > 0 &&
-				(await getNumOfTeam({ eventId: eventId })) ===
+				(await getNumOfTeams({ eventId: eventId })) ===
 					numTeamLimit[0]['numTeamLimit']
 			) {
 				return await interaction.reply({

@@ -1,9 +1,16 @@
 import fs from 'fs';
 
-import { Client, ModalSubmitInteraction, MessageEmbed } from 'discord.js';
+import {
+	Client,
+	ModalSubmitInteraction,
+	MessageEmbed,
+	Message,
+} from 'discord.js';
 
 import { ModalFunction } from '../../ModalSubmitStructure';
 import { setColumnValue } from '../../../supabase/supabaseFunctions/events';
+import { getNumOfTeams } from '../../../supabase/supabaseFunctions/teams';
+import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
 
 const setNumTeamLimitModal: ModalFunction = {
 	customId: 'numTeamLimitModalSubmit',
@@ -14,6 +21,25 @@ const setNumTeamLimitModal: ModalFunction = {
 
 			const numTeamLimit: string =
 				interaction.fields.getTextInputValue('numTeamLimit');
+
+			const numOfTeams: number = await getNumOfTeams({ eventId: eventId });
+
+			if (numOfTeams > parseInt(numTeamLimit)) {
+				const replyEmbed: MessageEmbed = new MessageEmbed()
+					.setColor('#D83C3E')
+					.setTitle(
+						':x: Number of registered teams is more than the new limit',
+					)
+					.setDescription(
+						'Decrease the number of registered teams to set a lower limit than the present value',
+					)
+					.setTimestamp();
+
+				return await interaction.reply({
+					embeds: [replyEmbed],
+					ephemeral: true,
+				});
+			}
 
 			setColumnValue({
 				data: [
