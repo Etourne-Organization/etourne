@@ -10,7 +10,6 @@ import {
 import { ModalFunction } from '../../ModalSubmitStructure';
 import { setColumnValue } from '../../../supabase/supabaseFunctions/events';
 import { getNumOfTeams } from '../../../supabase/supabaseFunctions/teams';
-import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
 
 const setNumTeamLimitModal: ModalFunction = {
 	customId: 'numTeamLimitModalSubmit',
