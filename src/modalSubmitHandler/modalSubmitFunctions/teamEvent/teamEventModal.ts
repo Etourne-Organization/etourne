@@ -80,6 +80,7 @@ const teamEventModal: ModalFunction = {
 
 			const id = await addEvent({
 				eventName: eventName,
+				eventHost: interaction.user.tag,
 				gameName: gameName,
 				description: description,
 				dateTime: new Date(

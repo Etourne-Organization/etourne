@@ -85,6 +85,7 @@ const normalEventModal: ModalFunction = {
 				discordServerId: interaction.guild.id,
 				timezone: timezone,
 				serverName: interaction.guild.name,
+				eventHost: interaction.user.tag,
 			});
 
 			eventEmbed.setFooter({

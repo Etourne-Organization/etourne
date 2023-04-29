@@ -14,6 +14,7 @@ interface addEvent {
 	eventId?: number;
 	eventName: string;
 	gameName: string;
+	eventHost: string;
 	description: string;
 	dateTime: string;
 	isTeamEvent: boolean;
@@ -57,6 +58,7 @@ export const addEvent = async (props: addEvent) => {
 	const {
 		eventName,
 		gameName,
+		eventHost,
 		description,
 		dateTime,
 		isTeamEvent,
@@ -95,6 +97,7 @@ export const addEvent = async (props: addEvent) => {
 		.insert([
 			{
 				eventName: eventName,
+				eventHost: eventHost,
 				gameName: gameName,
 				description: description,
 				dateTime: dateTime,
