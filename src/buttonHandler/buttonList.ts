@@ -13,6 +13,7 @@ import removePlayer from './buttonFunctions/normalEvent/removePlayer';
 import editEventInfo from './buttonFunctions/normalEvent/editEventInfo';
 import editTeamEventInfo from './buttonFunctions/teamEvent/editTeamEventInfo';
 import editTeamInfo from './buttonFunctions/teamEvent/editTeamInfo';
+import setMaxNumPlayer from './buttonFunctions/normalEvent/setMaxNumPlayer';
 
 const buttonList: ButtonFunction[] = [
 	register,
@@ -29,6 +30,7 @@ const buttonList: ButtonFunction[] = [
 	editEventInfo,
 	editTeamEventInfo,
 	editTeamInfo,
+	setMaxNumPlayer,
 ];
 
 export default buttonList;

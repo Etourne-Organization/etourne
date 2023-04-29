@@ -58,6 +58,9 @@ const teamEventModal: ModalFunction = {
 					.setCustomId('createTeam')
 					.setLabel('Create Team')
 					.setStyle('PRIMARY'),
+			);
+
+			const setMaxNumButtons = new MessageActionRow().addComponents(
 				new MessageButton()
 					.setCustomId('setNumTeamLimit')
 					.setLabel('Set num of team limit')
@@ -66,6 +69,9 @@ const teamEventModal: ModalFunction = {
 					.setCustomId('setNumTeamMemberLimit')
 					.setLabel('Set num of team member limit')
 					.setStyle('SECONDARY'),
+			);
+
+			const manageEventButtons = new MessageActionRow().addComponents(
 				new MessageButton()
 					.setCustomId('editTeamEventInfo')
 					.setLabel('⚙️  Edit event info')
@@ -100,7 +106,7 @@ const teamEventModal: ModalFunction = {
 
 			const reply = await interaction.channel?.send({
 				embeds: [eventEmbed],
-				components: [buttons],
+				components: [buttons, setMaxNumButtons, manageEventButtons],
 			});
 
 			await setColumnValue({
