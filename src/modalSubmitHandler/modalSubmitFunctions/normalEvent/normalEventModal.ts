@@ -56,10 +56,20 @@ const normalEventModal: ModalFunction = {
 					.setCustomId('normalEventUnregister')
 					.setLabel('Unregister')
 					.setStyle('DANGER'),
+			);
+
+			const managePlayerButtons = new MessageActionRow().addComponents(
+				new MessageButton()
+					.setCustomId('setMaxNumPlayer')
+					.setLabel('Set max num of players')
+					.setStyle('SECONDARY'),
 				new MessageButton()
 					.setCustomId('removePlayer')
 					.setLabel('❌  Remove player')
 					.setStyle('SECONDARY'),
+			);
+
+			const manageEventButtons = new MessageActionRow().addComponents(
 				new MessageButton()
 					.setCustomId('editEventInfo')
 					.setLabel('⚙️  Edit event info')
@@ -94,7 +104,7 @@ const normalEventModal: ModalFunction = {
 
 			const reply = await interaction.channel?.send({
 				embeds: [eventEmbed],
-				components: [buttons],
+				components: [buttons, managePlayerButtons, manageEventButtons],
 			});
 
 			await setColumnValue({
