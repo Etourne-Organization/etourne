@@ -4,7 +4,11 @@ import { Client, ButtonInteraction, MessageEmbed } from 'discord.js';
 
 import { ButtonFunction } from '../../ButtonStructure';
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
-import { addPlayer } from '../../../supabase/supabaseFunctions/singlePlayers';
+import {
+	addPlayer,
+	getNumOfPlayers,
+} from '../../../supabase/supabaseFunctions/singlePlayers';
+import { getColumnValueById } from '../../../supabase/supabaseFunctions/events';
 
 const register: ButtonFunction = {
 	customId: 'normalEventRegister',
@@ -13,14 +17,35 @@ const register: ButtonFunction = {
 			const eventId: string | any =
 				interaction.message.embeds[0].footer?.text.split(': ')[1];
 
+			const maxNumPlayer: any = await getColumnValueById({
+				id: eventId,
+				columnName: 'maxNumPlayer',
+			});
+
+			if (
+				maxNumPlayer.length > 0 &&
+				(await getNumOfPlayers({ eventId: eventId })) ===
+					maxNumPlayer[0]['maxNumPlayer']
+			) {
+				return await interaction.reply({
+					embeds: [
+						infoMessageEmbed(
+							'Number of players has reached the limit!',
+							'WARNING',
+						),
+					],
+					ephemeral: true,
+				});
+			}
+
 			const registeredPlayers:
 				| {
 						name: string;
 						value: string;
 						inline: boolean;
 				  }
-				| any = interaction.message.embeds[0].fields?.find(
-				(r) => r.name === 'Registered players',
+				| any = interaction.message.embeds[0].fields?.find((r) =>
+				r.name.includes('Registered players'),
 			);
 
 			const tempSplit: Array<string> = registeredPlayers.value.split(' ');
@@ -41,7 +66,7 @@ const register: ButtonFunction = {
 
 				/* assigning updated player list back to the orignal embed field */
 				interaction.message.embeds[0].fields?.find((r) => {
-					if (r.name === 'Registered players') {
+					if (r.name.includes('Registered players')) {
 						r.value = Array.isArray(tempSplit)
 							? '>>> ' + tempSplit.join('\n')
 							: '>>> ' + tempSplit;

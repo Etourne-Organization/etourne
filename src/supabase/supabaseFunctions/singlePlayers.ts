@@ -26,6 +26,10 @@ interface getAllPlayers {
 	eventId: number;
 }
 
+interface getNumOfPlayers {
+	eventId: number;
+}
+
 export const addPlayer = async (props: addPlayer) => {
 	const { username, discordUserId, eventId, discordServerId } = props;
 
@@ -101,4 +105,17 @@ export const getAllPlayers = async (props: getAllPlayers) => {
 	}
 
 	return players;
+};
+
+export const getNumOfPlayers = async (props: getNumOfPlayers) => {
+	const { eventId } = props;
+
+	const { data, error } = await supabase
+		.from('SinglePlayers')
+		.select('id')
+		.eq('eventId', eventId);
+
+	if (error) throw error;
+
+	return data.length;
 };
