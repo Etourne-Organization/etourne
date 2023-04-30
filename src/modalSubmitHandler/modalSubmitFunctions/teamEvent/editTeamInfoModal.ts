@@ -55,29 +55,6 @@ const editTeamInfoModal: ModalFunction = {
 			const teamShortDescription: string =
 				interaction.fields.getTextInputValue('teamShortDescription');
 
-			const buttons = new MessageActionRow().addComponents(
-				new MessageButton()
-					.setCustomId('registerTeamMember')
-					.setLabel('Register')
-					.setStyle('PRIMARY'),
-				new MessageButton()
-					.setCustomId('unregisterTeamMember')
-					.setLabel('Unregister')
-					.setStyle('DANGER'),
-				new MessageButton()
-					.setCustomId('removeTeamPlayer')
-					.setLabel('❌  Remove team player')
-					.setStyle('SECONDARY'),
-				new MessageButton()
-					.setCustomId('editTeamInfo')
-					.setLabel('⚙️  Edit team info')
-					.setStyle('SECONDARY'),
-				new MessageButton()
-					.setCustomId('deleteTeam')
-					.setLabel('🗑️  Delete team')
-					.setStyle('DANGER'),
-			);
-
 			const editedEmbed = new MessageEmbed()
 				.setColor('#3a9ce2')
 				.setTitle(teamName)
@@ -117,7 +94,7 @@ const editTeamInfoModal: ModalFunction = {
 
 			return await interaction.update({
 				embeds: [editedEmbed],
-				components: [buttons],
+				// components: [buttons],
 			});
 		} catch (err) {
 			try {

@@ -83,30 +83,6 @@ const editTeamEventInfoModal: ModalFunction = {
 					text: `Event ID: ${eventId}`,
 				});
 
-			/* buttons */
-			const buttons = new MessageActionRow().addComponents(
-				new MessageButton()
-					.setCustomId('createTeam')
-					.setLabel('Create Team')
-					.setStyle('PRIMARY'),
-				new MessageButton()
-					.setCustomId('setNumTeamLimit')
-					.setLabel('Set num of team limit')
-					.setStyle('SECONDARY'),
-				new MessageButton()
-					.setCustomId('setNumTeamMemberLimit')
-					.setLabel('Set num of team member limit')
-					.setStyle('SECONDARY'),
-				new MessageButton()
-					.setCustomId('editTeamEventInfo')
-					.setLabel('⚙️  Edit event info')
-					.setStyle('SECONDARY'),
-				new MessageButton()
-					.setCustomId('deleteEvent')
-					.setLabel('🗑️  Delete event')
-					.setStyle('DANGER'),
-			);
-
 			if (!interaction.inCachedGuild()) return;
 
 			await updateEvent({
@@ -131,7 +107,6 @@ const editTeamEventInfoModal: ModalFunction = {
 
 			return await interaction.update({
 				embeds: [editedEmbed],
-				components: [buttons],
 			});
 		} catch (err) {
 			try {
