@@ -33,6 +33,28 @@ const removeTeamPlayer: ButtonFunction = {
 				});
 			}
 
+			const teamLeader:
+				| {
+						name: string;
+						value: string;
+						inline: boolean;
+				  }
+				| any = interaction.message?.embeds[0].fields?.find(
+				(r) => r.name === 'Team Leader',
+			);
+
+			if (interaction.user.tag !== teamLeader.value) {
+				return interaction.reply({
+					embeds: [
+						infoMessageEmbed(
+							':warning: You are not allowed to use this button!',
+							'WARNING',
+						),
+					],
+					ephemeral: true,
+				});
+			}
+
 			const teamPlayers: [{ username: string; userId: string }] | any =
 				await getAllTeamPlayers({
 					teamId: parseInt(teamId),

@@ -27,7 +27,7 @@ const deleteTeam: ButtonFunction = {
 				return interaction.reply({
 					embeds: [
 						infoMessageEmbed(
-							'You are not allowed to use this button!',
+							':warning: You are not allowed to use this button!',
 							'WARNING',
 						),
 					],

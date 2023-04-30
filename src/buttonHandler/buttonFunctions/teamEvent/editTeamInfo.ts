@@ -30,7 +30,29 @@ const editTeamInfo: ButtonFunction = {
 				return interaction.reply({
 					embeds: [
 						infoMessageEmbed(
-							'The team does not exist anymore, maybe it was deleted?',
+							':warning: The team does not exist anymore, maybe it was deleted?',
+							'WARNING',
+						),
+					],
+					ephemeral: true,
+				});
+			}
+
+			const teamLeader:
+				| {
+						name: string;
+						value: string;
+						inline: boolean;
+				  }
+				| any = interaction.message?.embeds[0].fields?.find(
+				(r) => r.name === 'Team Leader',
+			);
+
+			if (interaction.user.tag !== teamLeader.value) {
+				return interaction.reply({
+					embeds: [
+						infoMessageEmbed(
+							':warning: You are not allowed to use this button!',
 							'WARNING',
 						),
 					],
