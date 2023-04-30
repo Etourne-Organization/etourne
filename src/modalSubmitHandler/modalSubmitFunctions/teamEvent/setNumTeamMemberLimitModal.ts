@@ -4,6 +4,7 @@ import { Client, ModalSubmitInteraction, MessageEmbed } from 'discord.js';
 
 import { ModalFunction } from '../../ModalSubmitStructure';
 import { setColumnValue } from '../../../supabase/supabaseFunctions/events';
+import updateAllTeamInfo from './utils/updateAllTeamInfo';
 
 const setNumTeamMemberLimitModal: ModalFunction = {
 	customId: 'numTeamMemberLimitModalSubmit',
@@ -39,6 +40,8 @@ const setNumTeamMemberLimitModal: ModalFunction = {
 				)
 				.addFields(interaction.message?.embeds[0].fields || [])
 				.setFooter({ text: `Event ID: ${eventId}` });
+
+			updateAllTeamInfo({ eventId: eventId, interaction: interaction });
 
 			return await interaction.update({ embeds: [editedEmbed] });
 		} catch (err) {

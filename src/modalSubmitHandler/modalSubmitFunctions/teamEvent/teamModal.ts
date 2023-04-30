@@ -14,6 +14,7 @@ import {
 	addTeam,
 	setColumnValue,
 } from '../../../supabase/supabaseFunctions/teams';
+import { getColumnValueById } from '../../../supabase/supabaseFunctions/events';
 
 const teamModal: ModalFunction = {
 	customId: 'teamModalSubmit',
@@ -21,6 +22,11 @@ const teamModal: ModalFunction = {
 		try {
 			const eventId: string | any =
 				interaction.message?.embeds[0].footer?.text.split(': ')[1];
+
+			const maxNumOfTeamPlayers: any = await getColumnValueById({
+				id: eventId,
+				columnName: 'numTeamMemberLimit',
+			});
 
 			const eventName: any = interaction.message?.embeds[0].title;
 			const eventDateTime: any = interaction.message?.embeds[0].fields?.find(
@@ -41,6 +47,9 @@ const teamModal: ModalFunction = {
 					.setCustomId('unregisterTeamMember')
 					.setLabel('Unregister')
 					.setStyle('DANGER'),
+			);
+
+			const manageTeamButtons = new MessageActionRow().addComponents(
 				new MessageButton()
 					.setCustomId('removeTeamPlayer')
 					.setLabel('❌  Remove team player')
@@ -73,7 +82,11 @@ const teamModal: ModalFunction = {
 						value: eventDateTime,
 					},
 					{
-						name: 'Registered players',
+						name: `Registered players 0/${
+							maxNumOfTeamPlayers.length > 0
+								? maxNumOfTeamPlayers[0]['numTeamMemberLimit']
+								: 'unlimited'
+						}`,
 						value: ` `,
 					},
 				]);
@@ -90,7 +103,7 @@ const teamModal: ModalFunction = {
 
 			const reply = await interaction.channel?.send({
 				embeds: [teamEmbed],
-				components: [buttons],
+				components: [buttons, manageTeamButtons],
 			});
 
 			await setColumnValue({

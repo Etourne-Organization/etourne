@@ -42,13 +42,18 @@ const updateAllTeamInfo = async (props: updateAllTeamInfo) => {
 								value: string;
 								inline: boolean;
 						  }
-						| any = fetchedMessage.embeds[0].fields?.find(
-						(r) => r.name === 'Registered players',
+						| any = fetchedMessage.embeds[0].fields?.find((r) =>
+						r.name.includes('Registered players'),
+					);
+
+					const numRegisteredPlayers: number = parseInt(
+						registeredPlayers.name.split(' ')[2].split('/')[0],
 					);
 
 					const eventInfo: any = await getColumnValueById({
 						id: eventId,
-						columnName: 'eventName, dateTime, timezone',
+						columnName:
+							'eventName, dateTime, timezone, numTeamMemberLimit',
 					});
 
 					const date = new Date(
@@ -89,7 +94,7 @@ const updateAllTeamInfo = async (props: updateAllTeamInfo) => {
 									.unix()}:F>`,
 							},
 							{
-								name: 'Registered players',
+								name: `Registered players ${numRegisteredPlayers}/${eventInfo[0]['numTeamMemberLimit']}`,
 								value:
 									registeredPlayers.value.length <= 0
 										? ' '

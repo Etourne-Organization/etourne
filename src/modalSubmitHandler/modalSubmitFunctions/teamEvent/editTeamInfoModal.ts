@@ -1,12 +1,6 @@
 import fs from 'fs';
 
-import {
-	Client,
-	ModalSubmitInteraction,
-	MessageEmbed,
-	MessageButton,
-	MessageActionRow,
-} from 'discord.js';
+import { Client, ModalSubmitInteraction, MessageEmbed } from 'discord.js';
 
 import { ModalFunction } from '../../ModalSubmitStructure';
 import { updateTeam } from '../../../supabase/supabaseFunctions/teams';
@@ -36,8 +30,8 @@ const editTeamInfoModal: ModalFunction = {
 						value: string;
 						inline: boolean;
 				  }
-				| any = interaction.message?.embeds[0].fields?.find(
-				(r) => r.name === 'Event Date and Time',
+				| any = interaction.message?.embeds[0].fields?.find((r) =>
+				r.name.includes('Registered players'),
 			);
 
 			const eventName:
@@ -73,7 +67,7 @@ const editTeamInfoModal: ModalFunction = {
 						value: eventDateTime.value,
 					},
 					{
-						name: 'Registered players',
+						name: registeredPlayers.name,
 						value:
 							registeredPlayers.value.length <= 0
 								? ' '
@@ -94,7 +88,6 @@ const editTeamInfoModal: ModalFunction = {
 
 			return await interaction.update({
 				embeds: [editedEmbed],
-				// components: [buttons],
 			});
 		} catch (err) {
 			try {

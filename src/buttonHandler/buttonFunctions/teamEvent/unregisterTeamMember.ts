@@ -29,8 +29,8 @@ const unregisterTeamMember: ButtonFunction = {
 
 			let FOUND: boolean = false;
 			const registeredPlayers: any =
-				interaction.message.embeds[0].fields?.find(
-					(r) => r.name === 'Registered players',
+				interaction.message.embeds[0].fields?.find((r) =>
+					r.name.includes('Registered players'),
 				);
 
 			const tempSplit: Array<string> = registeredPlayers.value.split(' ');
@@ -49,7 +49,15 @@ const unregisterTeamMember: ButtonFunction = {
 
 				/* assigning updated player list back to the orignal embed field */
 				interaction.message.embeds[0].fields?.find((r) => {
-					if (r.name === 'Registered players') {
+					if (r.name.includes('Registered players')) {
+						let numRegisteredPlayers: number = parseInt(
+							r.name.split(' ')[2].split('/')[0],
+						);
+						const maxNumPlayer = r.name.split(' ')[2].split('/')[1];
+
+						numRegisteredPlayers -= 1;
+
+						r.name = `Registered players ${numRegisteredPlayers}/${maxNumPlayer}`;
 						r.value =
 							playersSplitted.length >= 1
 								? '>>> ' + playersSplitted.join('\n')

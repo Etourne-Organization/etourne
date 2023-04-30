@@ -1,16 +1,9 @@
 import fs from 'fs';
 
-import {
-	Client,
-	ModalSubmitInteraction,
-	MessageEmbed,
-	MessageButton,
-	MessageActionRow,
-} from 'discord.js';
+import { Client, ModalSubmitInteraction, MessageEmbed } from 'discord.js';
 import momentTimezone from 'moment-timezone';
 
 import { ModalFunction } from '../../ModalSubmitStructure';
-import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
 import { updateEvent } from '../../../supabase/supabaseFunctions/events';
 
 const editEventInfoModal: ModalFunction = {

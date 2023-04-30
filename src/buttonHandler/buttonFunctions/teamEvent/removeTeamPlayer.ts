@@ -55,6 +55,8 @@ const removeTeamPlayer: ButtonFunction = {
 
 			teamPlayers!.forEach(
 				(tp: { username: string; userId: string }, i: number) => {
+					if (tp.username === interaction.user.tag) return;
+
 					selectMenuOptions[i] = {
 						label: tp.username,
 						description: `Remove ${tp.username}`,
