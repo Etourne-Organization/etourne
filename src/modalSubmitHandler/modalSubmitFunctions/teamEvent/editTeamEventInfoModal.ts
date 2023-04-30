@@ -30,14 +30,14 @@ const editTeamEventInfoModal: ModalFunction = {
 			const description =
 				interaction.fields.getTextInputValue('eventDescription');
 
-			const numTeamLimit: any = await getColumnValueById({
+			const maxNumTeams: any = await getColumnValueById({
 				id: eventId,
-				columnName: 'numTeamLimit',
+				columnName: 'maxNumTeams',
 			});
 
-			const numTeamPlayerLimit: any = await getColumnValueById({
+			const maxNumTeamPlayers: any = await getColumnValueById({
 				id: eventId,
-				columnName: 'numTeamMemberLimit',
+				columnName: 'maxNumTeamPlayers',
 			});
 
 			const eventHost:
@@ -67,14 +67,14 @@ const editTeamEventInfoModal: ModalFunction = {
 					{ name: 'Game name', value: gameName, inline: true },
 					{
 						name: 'Num of team limit',
-						value: numTeamLimit[0]['numTeamLimit']
-							? numTeamLimit[0]['numTeamLimit'].toString()
+						value: maxNumTeams[0]['maxNumTeams']
+							? maxNumTeams[0]['maxNumTeams'].toString()
 							: 'Unlimited',
 					},
 					{
 						name: 'Num of team member limit',
-						value: numTeamPlayerLimit[0]['numTeamMemberLimit']
-							? numTeamPlayerLimit[0]['numTeamMemberLimit'].toString()
+						value: maxNumTeamPlayers[0]['maxNumTeamPlayers']
+							? maxNumTeamPlayers[0]['maxNumTeamPlayers'].toString()
 							: 'Unlimited',
 					},
 					{ name: 'Hosted by', value: `${eventHost.value}` },

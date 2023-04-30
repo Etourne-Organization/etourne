@@ -13,40 +13,40 @@ import {
 import { ButtonFunction } from '../../ButtonStructure';
 import { getColumnValueById } from '../../../supabase/supabaseFunctions/events';
 
-const setNumTeamLimit: ButtonFunction = {
-	customId: 'setNumTeamLimit',
+const setMaxNumTeams: ButtonFunction = {
+	customId: 'setMaxNumTeams',
 	run: async (client: Client, interaction: ButtonInteraction) => {
 		try {
 			const eventId: string | any =
 				interaction.message?.embeds[0].footer?.text.split(': ')[1];
 
-			const numTeamLimit: any = await getColumnValueById({
+			const maxNumTeams: any = await getColumnValueById({
 				id: eventId,
-				columnName: 'numTeamLimit',
+				columnName: 'maxNumTeams',
 			});
 
 			const modal = new Modal()
-				.setCustomId(`numTeamLimitModalSubmit-${interaction.id}`)
+				.setCustomId(`setMaxNumTeamsModalSubmit-${interaction.id}`)
 				.setTitle('Create Team');
 
-			const teamLimitNumInput = new TextInputComponent()
-				.setCustomId('numTeamLimit')
-				.setLabel('Num of team limit')
+			const maxNumTeamsInput = new TextInputComponent()
+				.setCustomId('maxNumTeams')
+				.setLabel('Max num of teams')
 				.setStyle('SHORT')
 				// .setValue('123')
-				.setPlaceholder('Enter limit for num of team')
+				.setPlaceholder('Enter max num of teams')
 				.setValue(
-					numTeamLimit[0]['numTeamLimit']
-						? numTeamLimit[0]['numTeamLimit'].toString()
+					maxNumTeams[0]['maxNumTeams']
+						? maxNumTeams[0]['maxNumTeams'].toString()
 						: '',
 				);
 
-			const teamLimitNumActionRow =
+			const maxNumTeamsLimitActionRow =
 				new MessageActionRow<ModalActionRowComponent>().addComponents(
-					teamLimitNumInput,
+					maxNumTeamsInput,
 				);
 
-			modal.addComponents(teamLimitNumActionRow);
+			modal.addComponents(maxNumTeamsLimitActionRow);
 
 			await interaction.showModal(modal);
 		} catch (err) {
@@ -65,4 +65,4 @@ const setNumTeamLimit: ButtonFunction = {
 	},
 };
 
-export default setNumTeamLimit;
+export default setMaxNumTeams;

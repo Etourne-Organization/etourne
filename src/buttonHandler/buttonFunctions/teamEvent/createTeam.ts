@@ -21,15 +21,15 @@ const createTeam: ButtonFunction = {
 			const eventId: string | any =
 				interaction.message.embeds[0].footer?.text.split(': ')[1];
 
-			const numTeamLimit: any = await getColumnValueById({
+			const maxNumTeams: any = await getColumnValueById({
 				id: eventId,
-				columnName: 'numTeamLimit',
+				columnName: 'maxNumTeams',
 			});
 
 			if (
-				numTeamLimit.length > 0 &&
+				maxNumTeams.length > 0 &&
 				(await getNumOfTeams({ eventId: eventId })) ===
-					numTeamLimit[0]['numTeamLimit']
+					maxNumTeams[0]['maxNumTeams']
 			) {
 				return await interaction.reply({
 					embeds: [

@@ -43,11 +43,11 @@ const teamEventModal: ModalFunction = {
 					},
 					{ name: 'Game name', value: gameName, inline: true },
 					{
-						name: 'Num of team limit',
+						name: 'Max num of teams',
 						value: 'Unlimited',
 					},
 					{
-						name: 'Num of team member limit',
+						name: 'Max num of team players',
 						value: 'Unlimited',
 					},
 					{ name: 'Hosted by', value: `${interaction.user.tag}` },
@@ -62,12 +62,12 @@ const teamEventModal: ModalFunction = {
 
 			const setMaxNumButtons = new MessageActionRow().addComponents(
 				new MessageButton()
-					.setCustomId('setNumTeamLimit')
-					.setLabel('Set num of team limit')
+					.setCustomId('setMaxNumTeams')
+					.setLabel('Set max num of teams')
 					.setStyle('SECONDARY'),
 				new MessageButton()
-					.setCustomId('setNumTeamMemberLimit')
-					.setLabel('Set num of team member limit')
+					.setCustomId('setMaxNumTeamPlayers')
+					.setLabel('Set max num of team players')
 					.setStyle('SECONDARY'),
 			);
 

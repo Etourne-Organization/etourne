@@ -6,29 +6,29 @@ import { ModalFunction } from '../../ModalSubmitStructure';
 import { setColumnValue } from '../../../supabase/supabaseFunctions/events';
 import updateAllTeamInfo from './utils/updateAllTeamInfo';
 
-const setNumTeamMemberLimitModal: ModalFunction = {
-	customId: 'numTeamMemberLimitModalSubmit',
+const setMaxNumTeamPlayersModal: ModalFunction = {
+	customId: 'setMaxNumTeamPlayersModalSubmit',
 	run: async (client: Client, interaction: ModalSubmitInteraction) => {
 		try {
 			const eventId: string | any =
 				interaction.message?.embeds[0].footer?.text.split(': ')[1];
 
-			const numTeamMemberLimit: string =
-				interaction.fields.getTextInputValue('numTeamMemberLimit');
+			const maxNumTeamPlayers: string =
+				interaction.fields.getTextInputValue('maxNumTeamPlayers');
 
 			setColumnValue({
 				data: [
 					{
-						key: 'numTeamMemberLimit',
-						value: parseInt(numTeamMemberLimit),
+						key: 'maxNumTeamPlayers',
+						value: parseInt(maxNumTeamPlayers),
 						id: parseInt(eventId),
 					},
 				],
 			});
 
 			interaction.message?.embeds[0].fields?.find((r) => {
-				if (r.name === 'Num of team member limit') {
-					r.value = numTeamMemberLimit;
+				if (r.name === 'Max num of team players') {
+					r.value = maxNumTeamPlayers;
 				}
 			});
 
@@ -60,4 +60,4 @@ const setNumTeamMemberLimitModal: ModalFunction = {
 	},
 };
 
-export default setNumTeamMemberLimitModal;
+export default setMaxNumTeamPlayersModal;

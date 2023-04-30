@@ -21,9 +21,9 @@ const registerTeamMember: ButtonFunction = {
 			const eventId: string | any =
 				interaction.message.embeds[0].footer?.text.split(' ')[5];
 
-			const numTeamPlayerLimit: any = await getColumnValueById({
+			const maxNumTeamPlayers: any = await getColumnValueById({
 				id: eventId,
-				columnName: 'numTeamMemberLimit',
+				columnName: 'maxNumTeamPlayers',
 			});
 
 			if (!(await checkTeamExists({ teamId: parseInt(teamId) }))) {
@@ -39,9 +39,9 @@ const registerTeamMember: ButtonFunction = {
 			}
 
 			if (
-				numTeamPlayerLimit.length > 0 &&
+				maxNumTeamPlayers.length > 0 &&
 				(await getNumOfTeamPlayers({ teamId: teamId })) ===
-					numTeamPlayerLimit[0]['numTeamMemberLimit']
+					maxNumTeamPlayers[0]['maxNumTeamPlayers']
 			) {
 				return await interaction.reply({
 					embeds: [

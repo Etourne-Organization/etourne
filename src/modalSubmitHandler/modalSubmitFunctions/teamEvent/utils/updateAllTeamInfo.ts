@@ -53,7 +53,7 @@ const updateAllTeamInfo = async (props: updateAllTeamInfo) => {
 					const eventInfo: any = await getColumnValueById({
 						id: eventId,
 						columnName:
-							'eventName, dateTime, timezone, numTeamMemberLimit',
+							'eventName, dateTime, timezone, maxNumTeamPlayers',
 					});
 
 					const date = new Date(
@@ -94,7 +94,7 @@ const updateAllTeamInfo = async (props: updateAllTeamInfo) => {
 									.unix()}:F>`,
 							},
 							{
-								name: `Registered players ${numRegisteredPlayers}/${eventInfo[0]['numTeamMemberLimit']}`,
+								name: `Registered players ${numRegisteredPlayers}/${eventInfo[0]['maxNumTeamPlayers']}`,
 								value:
 									registeredPlayers.value.length <= 0
 										? ' '

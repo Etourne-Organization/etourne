@@ -23,9 +23,9 @@ const teamModal: ModalFunction = {
 			const eventId: string | any =
 				interaction.message?.embeds[0].footer?.text.split(': ')[1];
 
-			const maxNumOfTeamPlayers: any = await getColumnValueById({
+			const maxNumTeamPlayers: any = await getColumnValueById({
 				id: eventId,
-				columnName: 'numTeamMemberLimit',
+				columnName: 'maxNumTeamPlayers',
 			});
 
 			const eventName: any = interaction.message?.embeds[0].title;
@@ -83,8 +83,8 @@ const teamModal: ModalFunction = {
 					},
 					{
 						name: `Registered players 0/${
-							maxNumOfTeamPlayers.length > 0
-								? maxNumOfTeamPlayers[0]['numTeamMemberLimit']
+							maxNumTeamPlayers.length > 0
+								? maxNumTeamPlayers[0]['maxNumTeamPlayers']
 								: 'unlimited'
 						}`,
 						value: ` `,

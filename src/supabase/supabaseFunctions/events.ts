@@ -20,10 +20,7 @@ interface addEvent {
 	isTeamEvent: boolean;
 	discordServerId: string;
 	timezone: string;
-	numTeamLimit?: number;
-	numTeamMemberLimit?: number;
 	serverName: string;
-	messageId?: string;
 }
 
 interface setColumnValue {
@@ -64,10 +61,7 @@ export const addEvent = async (props: addEvent) => {
 		isTeamEvent,
 		discordServerId,
 		timezone,
-		numTeamLimit,
-		numTeamMemberLimit,
 		serverName,
-		messageId,
 	} = props;
 
 	const isServerExist: boolean = await checkServerExists({
@@ -104,8 +98,6 @@ export const addEvent = async (props: addEvent) => {
 				isTeamEvent: isTeamEvent,
 				serverId: dbServerId,
 				timezone: timezone,
-				numTeamLimit: numTeamLimit,
-				numTeamMemberLimit: numTeamMemberLimit,
 			},
 		])
 		.select();

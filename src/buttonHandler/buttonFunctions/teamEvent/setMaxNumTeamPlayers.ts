@@ -13,39 +13,39 @@ import {
 import { ButtonFunction } from '../../ButtonStructure';
 import { getColumnValueById } from '../../../supabase/supabaseFunctions/events';
 
-const setNumTeamMemberLimit: ButtonFunction = {
-	customId: 'setNumTeamMemberLimit',
+const setMaxNumTeamPlayers: ButtonFunction = {
+	customId: 'setMaxNumTeamPlayers',
 	run: async (client: Client, interaction: ButtonInteraction) => {
 		try {
 			const eventId: string | any =
 				interaction.message?.embeds[0].footer?.text.split(': ')[1];
 
-			const numTeamMemberLimit: any = await getColumnValueById({
+			const maxNumTeamPlayers: any = await getColumnValueById({
 				id: eventId,
-				columnName: 'numTeamMemberLimit',
+				columnName: 'maxNumTeamPlayers',
 			});
 
 			const modal = new Modal()
-				.setCustomId(`numTeamMemberLimitModalSubmit-${interaction.id}`)
+				.setCustomId(`setMaxNumTeamPlayersModalSubmit-${interaction.id}`)
 				.setTitle('Create Team');
 
-			const teamMemberLimitNumInput = new TextInputComponent()
-				.setCustomId('numTeamMemberLimit')
-				.setLabel('Num of team member limit')
+			const maxNumTeamPlayersInput = new TextInputComponent()
+				.setCustomId('maxNumTeamPlayers')
+				.setLabel('Max num of team players')
 				.setStyle('SHORT')
-				.setPlaceholder('Enter limit for num of team members in each team')
+				.setPlaceholder('Enter max num of team players in each team')
 				.setValue(
-					numTeamMemberLimit[0]['numTeamMemberLimit']
-						? numTeamMemberLimit[0]['numTeamMemberLimit'].toString()
+					maxNumTeamPlayers[0]['maxNumTeamPlayers']
+						? maxNumTeamPlayers[0]['maxNumTeamPlayers'].toString()
 						: '',
 				);
 
-			const teamMemberLimitNumActionRow =
+			const maxNumTeamPlayersActionRow =
 				new MessageActionRow<ModalActionRowComponent>().addComponents(
-					teamMemberLimitNumInput,
+					maxNumTeamPlayersInput,
 				);
 
-			modal.addComponents(teamMemberLimitNumActionRow);
+			modal.addComponents(maxNumTeamPlayersActionRow);
 
 			await interaction.showModal(modal);
 		} catch (err) {
@@ -64,4 +64,4 @@ const setNumTeamMemberLimit: ButtonFunction = {
 	},
 };
 
-export default setNumTeamMemberLimit;
+export default setMaxNumTeamPlayers;

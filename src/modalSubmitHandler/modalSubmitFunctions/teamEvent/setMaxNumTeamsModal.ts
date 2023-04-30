@@ -11,19 +11,19 @@ import { ModalFunction } from '../../ModalSubmitStructure';
 import { setColumnValue } from '../../../supabase/supabaseFunctions/events';
 import { getNumOfTeams } from '../../../supabase/supabaseFunctions/teams';
 
-const setNumTeamLimitModal: ModalFunction = {
-	customId: 'numTeamLimitModalSubmit',
+const setMaxNumTeamsModal: ModalFunction = {
+	customId: 'setMaxNumTeamsModalSubmit',
 	run: async (client: Client, interaction: ModalSubmitInteraction) => {
 		try {
 			const eventId: string | any =
 				interaction.message?.embeds[0].footer?.text.split(': ')[1];
 
-			const numTeamLimit: string =
-				interaction.fields.getTextInputValue('numTeamLimit');
+			const maxNumTeams: string =
+				interaction.fields.getTextInputValue('maxNumTeams');
 
 			const numOfTeams: number = await getNumOfTeams({ eventId: eventId });
 
-			if (numOfTeams > parseInt(numTeamLimit)) {
+			if (numOfTeams > parseInt(maxNumTeams)) {
 				const replyEmbed: MessageEmbed = new MessageEmbed()
 					.setColor('#D83C3E')
 					.setTitle(
@@ -43,16 +43,16 @@ const setNumTeamLimitModal: ModalFunction = {
 			setColumnValue({
 				data: [
 					{
-						key: 'numTeamLimit',
-						value: parseInt(numTeamLimit),
+						key: 'maxNumTeams',
+						value: parseInt(maxNumTeams),
 						id: parseInt(eventId),
 					},
 				],
 			});
 
 			interaction.message?.embeds[0].fields?.find((r) => {
-				if (r.name === 'Num of team limit') {
-					r.value = numTeamLimit;
+				if (r.name === 'Max num of teams') {
+					r.value = maxNumTeams;
 				}
 			});
 
@@ -82,4 +82,4 @@ const setNumTeamLimitModal: ModalFunction = {
 	},
 };
 
-export default setNumTeamLimitModal;
+export default setMaxNumTeamsModal;
