@@ -41,11 +41,11 @@ const teamModal: ModalFunction = {
 
 			const buttons = new MessageActionRow().addComponents(
 				new MessageButton()
-					.setCustomId('registerTeamMember')
+					.setCustomId('registerTeamPlayer')
 					.setLabel('Register')
 					.setStyle('PRIMARY'),
 				new MessageButton()
-					.setCustomId('unregisterTeamMember')
+					.setCustomId('unregisterTeamPlayer')
 					.setLabel('Unregister')
 					.setStyle('DANGER'),
 			);

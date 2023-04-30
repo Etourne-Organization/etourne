@@ -2,8 +2,8 @@ import { ButtonFunction } from './ButtonStructure';
 import register from './buttonFunctions/normalEvent/register';
 import unregister from './buttonFunctions/normalEvent/unregister';
 import createTeam from './buttonFunctions/teamEvent/createTeam';
-import registerTeamMember from './buttonFunctions/teamEvent/registerTeamMember';
-import unregisterTeamMember from './buttonFunctions/teamEvent/unregisterTeamMember';
+import registerTeamPlayer from './buttonFunctions/teamEvent/registerTeamPlayer';
+import unregisterTeamPlayer from './buttonFunctions/teamEvent/unregisterTeamPlayer';
 import deleteTeam from './buttonFunctions/teamEvent/deleteTeam';
 import setMaxNumTeamPlayers from './buttonFunctions/teamEvent/setMaxNumTeamPlayers';
 import setMaxNumTeams from './buttonFunctions/teamEvent/setMaxNumTeams';
@@ -19,8 +19,8 @@ const buttonList: ButtonFunction[] = [
 	register,
 	unregister,
 	createTeam,
-	registerTeamMember,
-	unregisterTeamMember,
+	registerTeamPlayer,
+	unregisterTeamPlayer,
 	deleteTeam,
 	setMaxNumTeams,
 	setMaxNumTeamPlayers,

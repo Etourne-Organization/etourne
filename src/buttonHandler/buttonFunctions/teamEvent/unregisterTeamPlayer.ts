@@ -7,8 +7,8 @@ import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
 import { removePlayer } from '../../../supabase/supabaseFunctions/teamPlayers';
 import { checkTeamExists } from '../../../supabase/supabaseFunctions/teams';
 
-const unregisterTeamMember: ButtonFunction = {
-	customId: 'unregisterTeamMember',
+const unregisterTeamPlayer: ButtonFunction = {
+	customId: 'unregisterTeamPlayer',
 	run: async (client: Client, interaction: ButtonInteraction) => {
 		try {
 			const footer = interaction.message.embeds[0].footer?.text;
@@ -93,7 +93,7 @@ const unregisterTeamMember: ButtonFunction = {
 			try {
 				fs.appendFile(
 					'logs/crash_logs.txt',
-					`${new Date()} : Something went wrong in buttonFunctions/teamEvent/registerTeamMember.ts \n Actual error: ${err} \n \n`,
+					`${new Date()} : Something went wrong in buttonFunctions/teamEvent/unregisterTeamPlayer.ts \n Actual error: ${err} \n \n`,
 					(err) => {
 						if (err) throw err;
 					},
@@ -105,4 +105,4 @@ const unregisterTeamMember: ButtonFunction = {
 	},
 };
 
-export default unregisterTeamMember;
+export default unregisterTeamPlayer;

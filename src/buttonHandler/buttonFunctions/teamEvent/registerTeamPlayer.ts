@@ -11,8 +11,8 @@ import {
 import { getColumnValueById } from '../../../supabase/supabaseFunctions/events';
 import { checkTeamExists } from '../../../supabase/supabaseFunctions/teams';
 
-const registerTeamMember: ButtonFunction = {
-	customId: 'registerTeamMember',
+const registerTeamPlayer: ButtonFunction = {
+	customId: 'registerTeamPlayer',
 	run: async (client: Client, interaction: ButtonInteraction) => {
 		try {
 			const footer = interaction.message.embeds[0].footer?.text;
@@ -119,7 +119,7 @@ const registerTeamMember: ButtonFunction = {
 			try {
 				fs.appendFile(
 					'logs/crash_logs.txt',
-					`${new Date()} : Something went wrong in buttonFunctions/teamEvent/registerTeamMember.ts \n Actual error: ${err} \n \n`,
+					`${new Date()} : Something went wrong in buttonFunctions/teamEvent/registerTeamPlayer.ts \n Actual error: ${err} \n \n`,
 					(err) => {
 						if (err) throw err;
 					},
@@ -131,4 +131,4 @@ const registerTeamMember: ButtonFunction = {
 	},
 };
 
-export default registerTeamMember;
+export default registerTeamPlayer;
