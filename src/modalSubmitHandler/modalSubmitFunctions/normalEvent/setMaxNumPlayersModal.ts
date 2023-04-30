@@ -5,21 +5,21 @@ import { Client, ModalSubmitInteraction, MessageEmbed } from 'discord.js';
 import { ModalFunction } from '../../ModalSubmitStructure';
 import { setColumnValue } from '../../../supabase/supabaseFunctions/events';
 
-const setMaxNumPlayerModal: ModalFunction = {
-	customId: 'maxNumPlayerModalSubmit',
+const setMaxNumPlayersModal: ModalFunction = {
+	customId: 'maxNumPlayersModalSubmit',
 	run: async (client: Client, interaction: ModalSubmitInteraction) => {
 		try {
 			const eventId: string | any =
 				interaction.message?.embeds[0].footer?.text.split(': ')[1];
 
-			const maxNumPlayer: string =
-				interaction.fields.getTextInputValue('maxNumPlayerInput');
+			const maxNumPlayers: string =
+				interaction.fields.getTextInputValue('maxNumPlayersInput');
 
 			setColumnValue({
 				data: [
 					{
-						key: 'maxNumPlayer',
-						value: parseInt(maxNumPlayer),
+						key: 'maxNumPlayers',
+						value: parseInt(maxNumPlayers),
 						id: parseInt(eventId),
 					},
 				],
@@ -28,7 +28,7 @@ const setMaxNumPlayerModal: ModalFunction = {
 			interaction.message?.embeds[0].fields?.find((r) => {
 				if (r.name.includes('Registered players')) {
 					const numRegisteredPlayers = r.name.split(' ')[2].split('/')[0];
-					r.name = `Registered players ${numRegisteredPlayers}/${maxNumPlayer}`;
+					r.name = `Registered players ${numRegisteredPlayers}/${maxNumPlayers}`;
 
 					if (!r.value) {
 						r.value = ' ';
@@ -62,4 +62,4 @@ const setMaxNumPlayerModal: ModalFunction = {
 	},
 };
 
-export default setMaxNumPlayerModal;
+export default setMaxNumPlayersModal;

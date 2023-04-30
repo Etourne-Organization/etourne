@@ -106,13 +106,13 @@ const removeTeamPlayer: SelectMenu = {
 									let numRegisteredPlayers: number = parseInt(
 										r.name.split(' ')[2].split('/')[0],
 									);
-									const maxNumPlayer = r.name
+									const maxNumPlayers = r.name
 										.split(' ')[2]
 										.split('/')[1];
 
 									numRegisteredPlayers -= 1;
 
-									r.name = `Registered players ${numRegisteredPlayers}/${maxNumPlayer}`;
+									r.name = `Registered players ${numRegisteredPlayers}/${maxNumPlayers}`;
 									r.value =
 										playersSplitted.length >= 1
 											? '>>> ' + playersSplitted.join('\n')

@@ -13,30 +13,30 @@ import {
 import { ButtonFunction } from '../../ButtonStructure';
 import { getColumnValueById } from '../../../supabase/supabaseFunctions/events';
 
-const setMaxNumPlayer: ButtonFunction = {
-	customId: 'setMaxNumPlayer',
+const setMaxNumPlayers: ButtonFunction = {
+	customId: 'setMaxNumPlayers',
 	run: async (client: Client, interaction: ButtonInteraction) => {
 		try {
 			const eventId: string | any =
 				interaction.message.embeds[0].footer?.text.split(': ')[1];
 
-			const maxNumPlayer: any = await getColumnValueById({
+			const maxNumPlayers: any = await getColumnValueById({
 				id: eventId,
-				columnName: 'maxNumPlayer',
+				columnName: 'maxNumPlayers',
 			});
 
 			const modal = new Modal()
-				.setCustomId(`maxNumPlayerModalSubmit-${interaction.id}`)
+				.setCustomId(`maxNumPlayersModalSubmit-${interaction.id}`)
 				.setTitle('Create Team');
 
 			const input = new TextInputComponent()
-				.setCustomId('maxNumPlayerInput')
+				.setCustomId('maxNumPlayersInput')
 				.setLabel('Num of team member limit')
 				.setStyle('SHORT')
 				.setPlaceholder('Enter limit for num of team members in each team')
 				.setValue(
-					maxNumPlayer[0]['maxNumPlayer']
-						? maxNumPlayer[0]['maxNumPlayer'].toString()
+					maxNumPlayers[0]['maxNumPlayers']
+						? maxNumPlayers[0]['maxNumPlayers'].toString()
 						: '',
 				);
 
@@ -52,7 +52,7 @@ const setMaxNumPlayer: ButtonFunction = {
 			try {
 				fs.appendFile(
 					'logs/crash_logs.txt',
-					`${new Date()} : Something went wrong in buttonFunctions/normalEvent/setMaxNumPlayer.ts \n Actual error: ${err} \n \n`,
+					`${new Date()} : Something went wrong in buttonFunctions/normalEvent/setMaxNumPlayers.ts \n Actual error: ${err} \n \n`,
 					(err) => {
 						if (err) throw err;
 					},
@@ -64,4 +64,4 @@ const setMaxNumPlayer: ButtonFunction = {
 	},
 };
 
-export default setMaxNumPlayer;
+export default setMaxNumPlayers;

@@ -17,15 +17,15 @@ const register: ButtonFunction = {
 			const eventId: string | any =
 				interaction.message.embeds[0].footer?.text.split(': ')[1];
 
-			const maxNumPlayer: any = await getColumnValueById({
+			const maxNumPlayers: any = await getColumnValueById({
 				id: eventId,
-				columnName: 'maxNumPlayer',
+				columnName: 'maxNumPlayers',
 			});
 
 			if (
-				maxNumPlayer.length > 0 &&
+				maxNumPlayers.length > 0 &&
 				(await getNumOfPlayers({ eventId: eventId })) ===
-					maxNumPlayer[0]['maxNumPlayer']
+					maxNumPlayers[0]['maxNumPlayers']
 			) {
 				return await interaction.reply({
 					embeds: [
@@ -70,11 +70,13 @@ const register: ButtonFunction = {
 						let numRegisteredPlayers: number = parseInt(
 							r.name.split(' ')[2].split('/')[0],
 						);
-						const maxNumPlayer = r.name.split(' ')[2].split('/')[1];
+						const maxNumPlayersEmbedValue = r.name
+							.split(' ')[2]
+							.split('/')[1];
 
 						numRegisteredPlayers += 1;
 
-						r.name = `Registered players ${numRegisteredPlayers}/${maxNumPlayer}`;
+						r.name = `Registered players ${numRegisteredPlayers}/${maxNumPlayersEmbedValue}`;
 						r.value = Array.isArray(tempSplit)
 							? '>>> ' + tempSplit.join('\n')
 							: '>>> ' + tempSplit;

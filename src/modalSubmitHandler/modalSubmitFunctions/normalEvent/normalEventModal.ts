@@ -60,7 +60,7 @@ const normalEventModal: ModalFunction = {
 
 			const managePlayerButtons = new MessageActionRow().addComponents(
 				new MessageButton()
-					.setCustomId('setMaxNumPlayer')
+					.setCustomId('setMaxNumPlayers')
 					.setLabel('Set max num of players')
 					.setStyle('SECONDARY'),
 				new MessageButton()
