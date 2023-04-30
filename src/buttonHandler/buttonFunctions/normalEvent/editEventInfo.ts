@@ -3,16 +3,14 @@ import fs from 'fs';
 import {
 	Client,
 	ButtonInteraction,
-	MessageEmbed,
 	Modal,
 	TextInputComponent,
 	MessageActionRow,
 	ModalActionRowComponent,
 } from 'discord.js';
-import momentTimezone, { min } from 'moment-timezone';
+import momentTimezone from 'moment-timezone';
 
 import { ButtonFunction } from '../../ButtonStructure';
-import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
 import { getAllColumnValueById } from '../../../supabase/supabaseFunctions/events';
 
 const editEventInfo: ButtonFunction = {
