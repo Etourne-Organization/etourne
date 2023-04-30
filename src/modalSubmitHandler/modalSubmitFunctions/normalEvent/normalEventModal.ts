@@ -43,7 +43,7 @@ const normalEventModal: ModalFunction = {
 					},
 					{ name: 'Game name', value: gameName, inline: true },
 					{ name: 'Hosted by', value: `${interaction.user.tag}` },
-					{ name: 'Registered players', value: ` ` },
+					{ name: `Registered players 0/unlimited`, value: ` ` },
 				]);
 
 			/* buttons */

@@ -41,6 +41,8 @@ const deleteEvent: ButtonFunction = {
 				interaction.message.id,
 			);
 
+			console.log(fetchedMessage);
+
 			if (fetchedMessage) {
 				const confirmationButtons = new MessageActionRow().addComponents(
 					new MessageButton()

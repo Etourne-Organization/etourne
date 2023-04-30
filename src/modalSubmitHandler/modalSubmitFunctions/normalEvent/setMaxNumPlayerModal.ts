@@ -5,29 +5,31 @@ import { Client, ModalSubmitInteraction, MessageEmbed } from 'discord.js';
 import { ModalFunction } from '../../ModalSubmitStructure';
 import { setColumnValue } from '../../../supabase/supabaseFunctions/events';
 
-const setNumTeamMemberLimitModal: ModalFunction = {
-	customId: 'numTeamMemberLimitModalSubmit',
+const setMaxNumPlayerModal: ModalFunction = {
+	customId: 'maxNumPlayerModalSubmit',
 	run: async (client: Client, interaction: ModalSubmitInteraction) => {
 		try {
 			const eventId: string | any =
 				interaction.message?.embeds[0].footer?.text.split(': ')[1];
 
-			const numTeamMemberLimit: string =
-				interaction.fields.getTextInputValue('numTeamMemberLimit');
+			const maxNumPlayer: string =
+				interaction.fields.getTextInputValue('maxNumPlayerInput');
 
 			setColumnValue({
 				data: [
 					{
-						key: 'numTeamMemberLimit',
-						value: parseInt(numTeamMemberLimit),
+						key: 'maxNumPlayer',
+						value: parseInt(maxNumPlayer),
 						id: parseInt(eventId),
 					},
 				],
 			});
 
 			interaction.message?.embeds[0].fields?.find((r) => {
-				if (r.name === 'Num of team member limit') {
-					r.value = numTeamMemberLimit;
+				if (r.name.includes('Registered players')) {
+					const numRegisteredPlayers = r.name.split(' ')[2].split('/')[0];
+					r.name = `Registered players ${numRegisteredPlayers}/${maxNumPlayer}`;
+					r.value = ' ';
 				}
 			});
 
@@ -57,4 +59,4 @@ const setNumTeamMemberLimitModal: ModalFunction = {
 	},
 };
 
-export default setNumTeamMemberLimitModal;
+export default setMaxNumPlayerModal;

@@ -44,7 +44,7 @@ const setNumTeamLimitModal: ModalFunction = {
 				data: [
 					{
 						key: 'numTeamLimit',
-						value: numTeamLimit,
+						value: parseInt(numTeamLimit),
 						id: parseInt(eventId),
 					},
 				],
