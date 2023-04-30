@@ -37,9 +37,17 @@ const unregister: ButtonFunction = {
 			if (playerIndex !== -1) {
 				playersSplitted.splice(playerIndex, 1);
 
-				/* assigning updated player list back to the orignal embed field */
+				/* assigning updated player list back to the orignal embed field AND update player count */
 				interaction.message.embeds[0].fields?.find((r) => {
 					if (r.name.includes('Registered players')) {
+						let numRegisteredPlayers: number = parseInt(
+							r.name.split(' ')[2].split('/')[0],
+						);
+						const maxNumPlayer = r.name.split(' ')[2].split('/')[1];
+
+						numRegisteredPlayers -= 1;
+
+						r.name = `Registered players ${numRegisteredPlayers}/${maxNumPlayer}`;
 						r.value =
 							playersSplitted.length >= 1
 								? '>>> ' + playersSplitted.join('\n')

@@ -29,7 +29,10 @@ const setMaxNumPlayerModal: ModalFunction = {
 				if (r.name.includes('Registered players')) {
 					const numRegisteredPlayers = r.name.split(' ')[2].split('/')[0];
 					r.name = `Registered players ${numRegisteredPlayers}/${maxNumPlayer}`;
-					r.value = ' ';
+
+					if (!r.value) {
+						r.value = ' ';
+					}
 				}
 			});
 
