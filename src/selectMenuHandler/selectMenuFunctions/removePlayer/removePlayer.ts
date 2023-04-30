@@ -127,14 +127,8 @@ const removePlayer: SelectMenu = {
 
 							FOUND = true;
 
-							const fetchedMessageButtons =
-								new MessageActionRow().addComponents(
-									fetchedMessage.components[0].components,
-								);
-
 							await fetchedMessage.edit({
 								embeds: [editedEmbed],
-								components: [fetchedMessageButtons],
 							});
 						}
 					}
