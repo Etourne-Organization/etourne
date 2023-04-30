@@ -9,8 +9,8 @@ import {
 	ModalActionRowComponent,
 } from 'discord.js';
 
-import infoMessageEmbed from '../../globalUtils/infoMessageEmbed';
-import { Command } from '../CommandStructure';
+import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
+import { Command } from '../../CommandStructure';
 // import timezone from '../../resources/timezone';
 // import botConfig from '../../botConfig/botConfig.json';
 

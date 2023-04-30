@@ -1,7 +1,7 @@
 import { Command } from './CommandStructure';
 
 import hello from './commands/hello';
-import createEvent from './commands/createEvent';
+import createEvent from './commands/createEvent/createEvent';
 import selectTimezone from './commands/selectTimezone';
 import help from './commands/help';
 import botInfo from './commands/botInfo';
