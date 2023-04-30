@@ -6,6 +6,7 @@ import {
 	MessageEmbed,
 	MessageButton,
 	MessageActionRow,
+	Message,
 } from 'discord.js';
 
 import { ModalFunction } from '../../ModalSubmitStructure';
@@ -49,11 +50,14 @@ const teamModal: ModalFunction = {
 					.setStyle('DANGER'),
 			);
 
-			const manageTeamButtons = new MessageActionRow().addComponents(
+			const manageTeamPlayersButtons = new MessageActionRow().addComponents(
 				new MessageButton()
 					.setCustomId('removeTeamPlayer')
 					.setLabel('❌  Remove team player')
 					.setStyle('SECONDARY'),
+			);
+
+			const manageTeamButtons = new MessageActionRow().addComponents(
 				new MessageButton()
 					.setCustomId('editTeamInfo')
 					.setLabel('⚙️  Edit team info')
@@ -103,7 +107,7 @@ const teamModal: ModalFunction = {
 
 			const reply = await interaction.channel?.send({
 				embeds: [teamEmbed],
-				components: [buttons, manageTeamButtons],
+				components: [buttons, manageTeamPlayersButtons, manageTeamButtons],
 			});
 
 			await setColumnValue({
