@@ -26,8 +26,8 @@ const editEventInfoModal: ModalFunction = {
 						value: string;
 						inline: boolean;
 				  }
-				| any = interaction.message?.embeds[0].fields?.find(
-				(r) => r.name === 'Registered players',
+				| any = interaction.message?.embeds[0].fields?.find((r) =>
+				r.name.includes('Registered players'),
 			);
 
 			const eventName = interaction.fields.getTextInputValue('eventName');
@@ -54,7 +54,7 @@ const editEventInfoModal: ModalFunction = {
 					{ name: 'Game name', value: gameName, inline: true },
 					{ name: 'Hosted by', value: `${interaction.user.tag}` },
 					{
-						name: 'Registered players',
+						name: registeredPlayers.name,
 						value:
 							registeredPlayers.value.length <= 0
 								? ' '
@@ -64,30 +64,6 @@ const editEventInfoModal: ModalFunction = {
 				.setFooter({
 					text: `Event ID: ${eventId}`,
 				});
-
-			/* buttons */
-			const buttons = new MessageActionRow().addComponents(
-				new MessageButton()
-					.setCustomId('normalEventRegister')
-					.setLabel('Register')
-					.setStyle('PRIMARY'),
-				new MessageButton()
-					.setCustomId('normalEventUnregister')
-					.setLabel('Unregister')
-					.setStyle('DANGER'),
-				new MessageButton()
-					.setCustomId('removePlayer')
-					.setLabel('❌  Remove player')
-					.setStyle('SECONDARY'),
-				new MessageButton()
-					.setCustomId('editEventInfo')
-					.setLabel('⚙️  Edit event info')
-					.setStyle('SECONDARY'),
-				new MessageButton()
-					.setCustomId('deleteEvent')
-					.setLabel('🗑️  Delete event')
-					.setStyle('DANGER'),
-			);
 
 			if (!interaction.inCachedGuild()) return;
 
@@ -108,7 +84,6 @@ const editEventInfoModal: ModalFunction = {
 
 			return await interaction.update({
 				embeds: [editedEmbed],
-				components: [buttons],
 			});
 		} catch (err) {
 			try {
