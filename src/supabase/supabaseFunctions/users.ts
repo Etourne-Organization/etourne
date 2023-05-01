@@ -35,6 +35,18 @@ interface getMultipleUsernames {
 	userIds: [number];
 }
 
+interface getUserRole {
+	discordUserId: string;
+	discordServerId: string;
+}
+
+interface setUserRole {
+	discordUserId: string;
+	discordServerId: string;
+	roleId: number;
+	username: string;
+}
+
 export const addUser = async (props: addUser) => {
 	const { username, discordUserId, discordServerId, roleId } = props;
 
@@ -61,6 +73,14 @@ export const addUser = async (props: addUser) => {
 
 export const checkAddUser = async (props: checkAddUser) => {
 	const { username, discordUserId, discordServerId } = props;
+	console.log(props);
+
+	// get server column id from supabase
+	const { data: getServerIdData, error: getServerIdError } = await getServerId(
+		{
+			discordServerId: discordServerId,
+		},
+	);
 
 	// check whether user exists in DB
 	const { data: checkUserExistsData, error: checkUserExistsError } =
@@ -68,9 +88,9 @@ export const checkAddUser = async (props: checkAddUser) => {
 			.from('Users')
 			.select('id')
 			.eq('userId', discordUserId)
-			.eq('serverId', discordServerId);
+			.eq('serverId', getServerIdData![0]['id']);
 
-	if (checkUserExistsData?.length === 0) {
+	if (checkUserExistsData!.length === 0) {
 		const { data: superAdminUserData, error: superAdminUserError } =
 			await supabase
 				.from('SuperAdminUsers')
@@ -115,6 +135,53 @@ export const getMultipleUsernames = async (props: getMultipleUsernames) => {
 		.from('Users')
 		.select('username')
 		.in('id', userIds);
+
+	return data;
+};
+
+export const getUserRole = async (props: getUserRole) => {
+	const { discordUserId, discordServerId } = props;
+
+	const { data: getServerIdData, error: getServerIdError } = await getServerId(
+		{
+			discordServerId: discordServerId,
+		},
+	);
+
+	const { data, error } = await supabase
+		.from('Users')
+		.select('roleId')
+		.eq('userId', discordUserId)
+		.eq('serverId', getServerIdData![0]['id']);
+
+	return data;
+};
+
+export const setUserRole = async (props: setUserRole) => {
+	const { discordUserId, discordServerId, roleId, username } = props;
+
+	// get server column id from supabase
+	const { data: getServerIdData, error: getServerIdError } = await getServerId(
+		{
+			discordServerId: discordServerId,
+		},
+	);
+
+	await checkAddUser({
+		discordServerId: discordServerId,
+		discordUserId: discordUserId,
+		username: username,
+	});
+
+	const { data, error } = await supabase
+		.from('Users')
+		.update([
+			{
+				roleId: roleId,
+			},
+		])
+		.eq('userId', discordUserId)
+		.eq('serverId', getServerIdData![0]['id']);
 
 	return data;
 };

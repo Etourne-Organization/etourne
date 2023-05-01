@@ -7,6 +7,7 @@ import help from './commands/help';
 import botInfo from './commands/botInfo';
 import createTeamEvent from './commands/createTeamEvent/createTeamEvent';
 import testAdd from './commands/testAdd';
+import setUserRole from './commands/setUserRole/setUserRole';
 
 const allSlashCommands: Command[] = [
 	hello,
@@ -16,6 +17,7 @@ const allSlashCommands: Command[] = [
 	botInfo,
 	createTeamEvent,
 	testAdd,
+	setUserRole,
 ];
 
 export default allSlashCommands;
