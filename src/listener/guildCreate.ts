@@ -1,6 +1,7 @@
 import { Guild, Client } from 'discord.js';
 
 import { checkAddUser } from '../supabase/supabaseFunctions/users';
+import { checkAddServer } from '../supabase/supabaseFunctions/servers';
 
 export default (client: Client): void => {
 	client.on('guildCreate', async (guild: Guild) => {
@@ -10,7 +11,12 @@ export default (client: Client): void => {
 		});
 		const log = fetchedLog.entries.first();
 
-		checkAddUser({
+		await checkAddServer({
+			discordServerId: guild.id,
+			name: guild.name,
+		});
+
+		await checkAddUser({
 			username: log!.executor!.tag,
 			discordServerId: guild.id,
 			discordUserId: log!.executor!.id,

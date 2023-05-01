@@ -7,7 +7,7 @@
 */
 
 import { supabase } from '../supabase';
-import { addServer, checkServerExists, getServerId } from './servers';
+import { checkServerExists, getServerId } from './servers';
 import psqlErrorCodes from '../../data/psqlErrorCodes.json';
 
 interface addEvent {
@@ -70,21 +70,13 @@ export const addEvent = async (props: addEvent) => {
 
 	let dbServerId: number;
 
-	if (!isServerExist) {
-		const { data: addServerData, error: addServerError } = await addServer({
-			serverId: discordServerId,
-			name: serverName,
-		});
+	const { data: getServerIdData, error: getServerIdError } = await getServerId(
+		{
+			discordServerId: discordServerId,
+		},
+	);
 
-		dbServerId = addServerData![0]['id'];
-	} else {
-		const { data: getServerIdData, error: getServerIdError } =
-			await getServerId({
-				discordServerId: discordServerId,
-			});
-
-		dbServerId = getServerIdData![0]['id'];
-	}
+	dbServerId = getServerIdData![0]['id'];
 
 	const { data, error } = await supabase
 		.from('Events')

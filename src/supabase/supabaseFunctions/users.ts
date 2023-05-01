@@ -12,14 +12,14 @@ import { getServerId } from './servers';
 interface addUser {
 	discordUserId: string;
 	username: string;
-	roleName?: string;
+	roleId?: number;
 	discordServerId: string;
 }
 
 interface checkAddUser {
 	discordUserId: string;
 	username: string;
-	roleName?: string;
+	roleId?: number;
 	discordServerId: string;
 }
 
@@ -36,7 +36,7 @@ interface getMultipleUsernames {
 }
 
 export const addUser = async (props: addUser) => {
-	const { username, discordUserId, discordServerId } = props;
+	const { username, discordUserId, discordServerId, roleId } = props;
 
 	const { data: getServerIdData, error: getServerIdError } = await getServerId(
 		{
@@ -51,6 +51,7 @@ export const addUser = async (props: addUser) => {
 				userId: discordUserId,
 				username: username,
 				serverId: getServerIdData![0]['id'],
+				roleId: roleId,
 			},
 		])
 		.select();
@@ -69,13 +70,18 @@ export const checkAddUser = async (props: checkAddUser) => {
 			.eq('userId', discordUserId)
 			.eq('serverId', discordServerId);
 
-	console.log(checkUserExistsData);
-
 	if (checkUserExistsData?.length === 0) {
+		const { data: superAdminUserData, error: superAdminUserError } =
+			await supabase
+				.from('SuperAdminUsers')
+				.select('id')
+				.eq('id', discordUserId);
+
 		await addUser({
 			username: username,
 			discordUserId: discordUserId,
 			discordServerId: discordServerId,
+			roleId: superAdminUserData!.length > 0 ? 5454 : 4,
 		});
 	}
 };

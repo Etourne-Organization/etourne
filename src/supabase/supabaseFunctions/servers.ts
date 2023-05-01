@@ -14,7 +14,12 @@ interface checkServerExists {
 }
 
 interface addServer {
-	serverId: string;
+	discordServerId: string;
+	name: string;
+}
+
+interface checkAddServer {
+	discordServerId: string;
 	name: string;
 }
 
@@ -38,14 +43,25 @@ export const checkServerExists = async (props: checkServerExists) => {
 };
 
 export const addServer = async (props: addServer) => {
-	const { serverId, name } = props;
+	const { discordServerId, name } = props;
 
 	const { data, error } = await supabase
 		.from('DiscordServers')
-		.insert([{ serverId: serverId, name: name }])
+		.insert([{ serverId: discordServerId, name: name }])
 		.select();
 
 	return { data, error };
+};
+
+export const checkAddServer = async (props: checkAddServer) => {
+	const { discordServerId, name } = props;
+
+	if (!(await checkServerExists({ discordServerId: discordServerId }))) {
+		const { data: addServerData, error: addServerError } = await addServer({
+			discordServerId: discordServerId,
+			name: name,
+		});
+	}
 };
 
 export const getServerId = async (props: getServer) => {
