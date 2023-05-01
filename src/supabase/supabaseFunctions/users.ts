@@ -16,6 +16,13 @@ interface addUser {
 	discordServerId: string;
 }
 
+interface checkAddUser {
+	discordUserId: string;
+	username: string;
+	roleName?: string;
+	discordServerId: string;
+}
+
 interface getUserId {
 	discordUserId: string;
 }
@@ -49,6 +56,28 @@ export const addUser = async (props: addUser) => {
 		.select();
 
 	return { data, error };
+};
+
+export const checkAddUser = async (props: checkAddUser) => {
+	const { username, discordUserId, discordServerId } = props;
+
+	// check whether user exists in DB
+	const { data: checkUserExistsData, error: checkUserExistsError } =
+		await supabase
+			.from('Users')
+			.select('id')
+			.eq('userId', discordUserId)
+			.eq('serverId', discordServerId);
+
+	console.log(checkUserExistsData);
+
+	if (checkUserExistsData?.length === 0) {
+		await addUser({
+			username: username,
+			discordUserId: discordUserId,
+			discordServerId: discordServerId,
+		});
+	}
 };
 
 export const getUserId = async (props: getUserId) => {

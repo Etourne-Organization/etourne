@@ -6,6 +6,7 @@ import { Client, Intents, Constants, Message } from 'discord.js';
 import commandHandler from './legacy-commands/commands';
 import interactionCreate from './listener/interactionCreate';
 import allSlashCommands from './slash-commands/allSlashCommands';
+import guildCreate from './listener/guildCreate';
 
 const client = new Client({
 	partials: ['MESSAGE', 'REACTION'],
@@ -70,6 +71,8 @@ client.on('messageCreate', (message: Message) =>
 );
 
 interactionCreate(client);
+
+guildCreate(client);
 
 client.login(process.env.DISCORDJS_BOT_TOKEN);
 

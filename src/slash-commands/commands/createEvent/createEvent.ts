@@ -97,7 +97,7 @@ const createEvent: Command = {
 			try {
 				fs.appendFile(
 					'logs/crash_logs.txt',
-					`${new Date()} : Something went wrong in slashcommands/createEvent.ts \n Actual error: ${err} \n \n`,
+					`${new Date()} : Something went wrong in slashcommands/createEvent/createEvent.ts \n Actual error: ${err} \n \n`,
 					(err) => {
 						if (err) throw err;
 					},
