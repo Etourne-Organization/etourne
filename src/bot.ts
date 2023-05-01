@@ -7,6 +7,7 @@ import commandHandler from './legacy-commands/commands';
 import interactionCreate from './listener/interactionCreate';
 import allSlashCommands from './slash-commands/allSlashCommands';
 import guildCreate from './listener/guildCreate';
+import guildDelete from './listener/guildDelete';
 
 const client = new Client({
 	partials: ['MESSAGE', 'REACTION'],
@@ -71,8 +72,8 @@ client.on('messageCreate', (message: Message) =>
 );
 
 interactionCreate(client);
-
 guildCreate(client);
+// guildDelete(client);
 
 client.login(process.env.DISCORDJS_BOT_TOKEN);
 
