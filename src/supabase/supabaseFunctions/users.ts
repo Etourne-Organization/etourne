@@ -47,6 +47,10 @@ interface setUserRole {
 	username: string;
 }
 
+interface isUserSuperAdmin {
+	discordUserId: string;
+}
+
 export const addUser = async (props: addUser) => {
 	const { username, discordUserId, discordServerId, roleId } = props;
 
@@ -183,4 +187,19 @@ export const setUserRole = async (props: setUserRole) => {
 		.eq('serverId', getServerIdData![0]['id']);
 
 	return data;
+};
+
+export const isUserSuperAdmin = async (props: isUserSuperAdmin) => {
+	const { discordUserId } = props;
+
+	const { data, error } = await supabase
+		.from('SuperAdminUsers')
+		.select('id')
+		.eq('id', discordUserId);
+
+	if (data!.length > 0) {
+		return true;
+	} else {
+		return false;
+	}
 };
