@@ -13,7 +13,7 @@ import momentTimzone from 'moment-timezone';
 
 import { Command } from '../../CommandStructure';
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
-import teamEventInfoData from '../../../data/teamEventInfo';
+import { getUserRole } from '../../../supabase/supabaseFunctions/users';
 
 const createTeamEvent: Command = {
 	name: 'createteamevent',
@@ -22,6 +22,26 @@ const createTeamEvent: Command = {
 
 	run: async (client: Client, interaction: BaseCommandInteraction) => {
 		try {
+			const userRoleDB: any = await getUserRole({
+				discordUserId: interaction.user.id,
+				discordServerId: interaction.guild!.id,
+			});
+
+			if (
+				userRoleDB.length === 0 ||
+				(userRoleDB[0]['roleId'] !== 4 && userRoleDB[0]['roleId'] !== 3)
+			) {
+				return await interaction.reply({
+					embeds: [
+						infoMessageEmbed(
+							':warning: You are not allowed to run this command!',
+							'WARNING',
+						),
+					],
+					ephemeral: true,
+				});
+			}
+
 			/* modal */
 			const modal = new Modal()
 				.setCustomId(`teamEventModalSubmit-${interaction.id}`)

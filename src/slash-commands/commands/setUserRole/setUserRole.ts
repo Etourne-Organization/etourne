@@ -7,7 +7,6 @@ import { Command } from '../../CommandStructure';
 import {
 	getUserRole,
 	setUserRole as setUserRoleSupabase,
-	isUserSuperAdmin,
 } from '../../../supabase/supabaseFunctions/users';
 
 const setUserRole: Command = {
@@ -56,35 +55,14 @@ const setUserRole: Command = {
 			// only the creator of the bot can run this command with no restriction
 			/*
 				Checks:
-					- If the executor is admin/super admin or not: reject if not
-					- If the target is super admin: reject if yes
+					- If the executor is admin or not: reject if not
 			*/
 			if (interaction.user.id !== '374230181889572876') {
-				if (
-					userRoleDB.length === 0 ||
-					(userRoleDB[0]['roleId'] !== 4 &&
-						userRoleDB[0]['roleId'] !== 5454)
-				) {
+				if (userRoleDB.length === 0 || userRoleDB[0]['roleId'] !== 4) {
 					return await interaction.reply({
 						embeds: [
 							infoMessageEmbed(
 								':warning: You are not allowed to run this command!',
-								'WARNING',
-							),
-						],
-						ephemeral: true,
-					});
-				}
-
-				const isTargetUserSuperAdmin: any = await isUserSuperAdmin({
-					discordUserId: user!.id,
-				});
-
-				if (isTargetUserSuperAdmin) {
-					return await interaction.reply({
-						embeds: [
-							infoMessageEmbed(
-								":x: Please contact mz10ah#0054 or Etourne support as this user's role cannot be changed.",
 								'WARNING',
 							),
 						],

@@ -11,6 +11,7 @@ import {
 
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
 import { Command } from '../../CommandStructure';
+import { getUserRole } from '../../../supabase/supabaseFunctions/users';
 // import timezone from '../../resources/timezone';
 // import botConfig from '../../botConfig/botConfig.json';
 
@@ -20,6 +21,26 @@ const createEvent: Command = {
 	type: 'CHAT_INPUT',
 	run: async (client: Client, interaction: BaseCommandInteraction) => {
 		try {
+			const userRoleDB: any = await getUserRole({
+				discordUserId: interaction.user.id,
+				discordServerId: interaction.guild!.id,
+			});
+
+			if (
+				userRoleDB.length === 0 ||
+				(userRoleDB[0]['roleId'] !== 4 && userRoleDB[0]['roleId'] !== 3)
+			) {
+				return await interaction.reply({
+					embeds: [
+						infoMessageEmbed(
+							':warning: You are not allowed to run this command!',
+							'WARNING',
+						),
+					],
+					ephemeral: true,
+				});
+			}
+
 			/* modal */
 			const modal = new Modal()
 				.setCustomId(`normalEventModalSubmit-${interaction.id}`)

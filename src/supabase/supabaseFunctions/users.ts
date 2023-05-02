@@ -94,17 +94,11 @@ export const checkAddUser = async (props: checkAddUser) => {
 			.eq('serverId', getServerIdData![0]['id']);
 
 	if (checkUserExistsData!.length === 0) {
-		const { data: superAdminUserData, error: superAdminUserError } =
-			await supabase
-				.from('SuperAdminUsers')
-				.select('id')
-				.eq('id', discordUserId);
-
 		await addUser({
 			username: username,
 			discordUserId: discordUserId,
 			discordServerId: discordServerId,
-			roleId: superAdminUserData!.length > 0 ? 5454 : 4,
+			roleId: 1,
 		});
 	}
 };
