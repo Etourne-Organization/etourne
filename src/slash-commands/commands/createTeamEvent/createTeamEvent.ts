@@ -29,7 +29,7 @@ const createTeamEvent: Command = {
 
 			if (
 				userRoleDB.length === 0 ||
-				(userRoleDB[0]['roleId'] !== 4 && userRoleDB[0]['roleId'] !== 3)
+				(userRoleDB[0]['roleId'] !== 3 && userRoleDB[0]['roleId'] !== 2)
 			) {
 				return await interaction.reply({
 					embeds: [

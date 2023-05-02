@@ -21,6 +21,7 @@ const createEvent: Command = {
 	type: 'CHAT_INPUT',
 	run: async (client: Client, interaction: BaseCommandInteraction) => {
 		try {
+			// check user role in DB
 			const userRoleDB: any = await getUserRole({
 				discordUserId: interaction.user.id,
 				discordServerId: interaction.guild!.id,
@@ -28,7 +29,7 @@ const createEvent: Command = {
 
 			if (
 				userRoleDB.length === 0 ||
-				(userRoleDB[0]['roleId'] !== 4 && userRoleDB[0]['roleId'] !== 3)
+				(userRoleDB[0]['roleId'] !== 3 && userRoleDB[0]['roleId'] !== 2)
 			) {
 				return await interaction.reply({
 					embeds: [

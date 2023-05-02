@@ -58,7 +58,7 @@ const setUserRole: Command = {
 					- If the executor is admin or not: reject if not
 			*/
 			if (interaction.user.id !== '374230181889572876') {
-				if (userRoleDB.length === 0 || userRoleDB[0]['roleId'] !== 4) {
+				if (userRoleDB.length === 0 || userRoleDB[0]['roleId'] !== 3) {
 					return await interaction.reply({
 						embeds: [
 							infoMessageEmbed(

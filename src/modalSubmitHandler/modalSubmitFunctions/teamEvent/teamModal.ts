@@ -99,6 +99,9 @@ const teamModal: ModalFunction = {
 				eventId: eventId,
 				teamName: teamName,
 				teamDescription: teamShortDescription,
+				teamLeaderDiscordUserId: interaction.user.id,
+				teamLeaderUsername: interaction.user.tag,
+				discordServerId: interaction.guild!.id,
 			});
 
 			teamEmbed.setFooter({

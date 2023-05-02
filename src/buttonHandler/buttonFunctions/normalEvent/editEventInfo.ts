@@ -12,11 +12,34 @@ import momentTimezone from 'moment-timezone';
 
 import { ButtonFunction } from '../../ButtonStructure';
 import { getAllColumnValueById } from '../../../supabase/supabaseFunctions/events';
+import { getUserRole } from '../../../supabase/supabaseFunctions/users';
+import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
 
 const editEventInfo: ButtonFunction = {
 	customId: 'editEventInfo',
 	run: async (client: Client, interaction: ButtonInteraction) => {
 		try {
+			// check user role in DB
+			const userRoleDB: any = await getUserRole({
+				discordUserId: interaction.user.id,
+				discordServerId: interaction.guild!.id,
+			});
+
+			if (
+				userRoleDB.length === 0 ||
+				(userRoleDB[0]['roleId'] !== 3 && userRoleDB[0]['roleId'] !== 2)
+			) {
+				return await interaction.reply({
+					embeds: [
+						infoMessageEmbed(
+							':warning: You are not allowed to run this command!',
+							'WARNING',
+						),
+					],
+					ephemeral: true,
+				});
+			}
+
 			const eventId: string | any =
 				interaction.message.embeds[0].footer?.text.split(': ')[1];
 
