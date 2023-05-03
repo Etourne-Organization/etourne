@@ -8,7 +8,7 @@
 
 import { supabase } from '../supabase';
 
-import { checkAddUser, getUserId } from './users';
+import { checkAddUser, getUserId, getUsernameAndDiscordId } from './users';
 
 interface addTeam {
 	eventId: number;
@@ -53,6 +53,10 @@ interface getNumOfTeam {
 
 interface getAllColumnValueById {
 	id: number;
+}
+
+interface getTeamLeader {
+	teamId: number;
 }
 
 export const addTeam = async (props: addTeam) => {
@@ -203,4 +207,19 @@ export const getAllColumnValueById = async (props: getAllColumnValueById) => {
 	if (error) throw error;
 
 	return data;
+};
+
+export const getTeamLeaderUsernameDiscordId = async (props: getTeamLeader) => {
+	const { teamId } = props;
+
+	const { data: teamLeaderIdData, error: teamLeaderIdError } = await supabase
+		.from('Teams')
+		.select('teamLeader')
+		.eq('id', teamId);
+
+	const discordId = await getUsernameAndDiscordId({
+		userId: teamLeaderIdData![0]['teamLeader'],
+	});
+
+	return discordId;
 };

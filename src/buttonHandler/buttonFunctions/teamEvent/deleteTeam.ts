@@ -13,6 +13,7 @@ import {
 	deleteTeam as deleteTeamSupabase,
 	checkTeamExists,
 } from '../../../supabase/supabaseFunctions/teams';
+import { getUserRole } from '../../../supabase/supabaseFunctions/users';
 
 const deleteTeam: ButtonFunction = {
 	customId: 'deleteTeam',
@@ -23,7 +24,17 @@ const deleteTeam: ButtonFunction = {
 					(r) => r.name === 'Team Leader',
 				)?.value;
 
-			if (teamLeaderUsername !== interaction.user.tag) {
+			// check user role in DB
+			const userRoleDB: any = await getUserRole({
+				discordUserId: interaction.user.id,
+				discordServerId: interaction.guild!.id,
+			});
+
+			if (
+				interaction.user.tag !== teamLeaderUsername.value &&
+				(userRoleDB.length === 0 ||
+					(userRoleDB[0]['roleId'] !== 3 && userRoleDB[0]['roleId'] !== 2))
+			) {
 				return interaction.reply({
 					embeds: [
 						infoMessageEmbed(

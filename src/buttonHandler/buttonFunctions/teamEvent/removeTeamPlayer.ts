@@ -12,6 +12,7 @@ import { ButtonFunction } from '../../ButtonStructure';
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
 import { checkTeamExists } from '../../../supabase/supabaseFunctions/teams';
 import { getAllTeamPlayers } from '../../../supabase/supabaseFunctions/teamPlayers';
+import { getUserRole } from '../../../supabase/supabaseFunctions/users';
 
 const removeTeamPlayer: ButtonFunction = {
 	customId: 'removeTeamPlayer',
@@ -43,7 +44,17 @@ const removeTeamPlayer: ButtonFunction = {
 				(r) => r.name === 'Team Leader',
 			);
 
-			if (interaction.user.tag !== teamLeader.value) {
+			// check user role in DB
+			const userRoleDB: any = await getUserRole({
+				discordUserId: interaction.user.id,
+				discordServerId: interaction.guild!.id,
+			});
+
+			if (
+				interaction.user.tag !== teamLeader.value &&
+				(userRoleDB.length === 0 ||
+					(userRoleDB[0]['roleId'] !== 3 && userRoleDB[0]['roleId'] !== 2))
+			) {
 				return interaction.reply({
 					embeds: [
 						infoMessageEmbed(
