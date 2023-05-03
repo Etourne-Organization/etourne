@@ -5,9 +5,9 @@ const fs_1 = tslib_1.__importDefault(require("fs"));
 const discord_js_1 = require("discord.js");
 const infoMessageEmbed_1 = tslib_1.__importDefault(require("../../../globalUtils/infoMessageEmbed"));
 const users_1 = require("../../../supabase/supabaseFunctions/users");
-const createTeamEvent = {
-    name: 'createteamevent',
-    description: 'Create team event',
+const createEvent = {
+    name: 'createevent',
+    description: 'Create event',
     type: 'CHAT_INPUT',
     run: async (client, interaction) => {
         try {
@@ -25,8 +25,8 @@ const createTeamEvent = {
                 });
             }
             const modal = new discord_js_1.Modal()
-                .setCustomId(`teamEventModalSubmit-${interaction.id}`)
-                .setTitle('Create Team Event');
+                .setCustomId(`normalEventModalSubmit-${interaction.id}`)
+                .setTitle('Create Event');
             const eventNameInput = new discord_js_1.TextInputComponent()
                 .setCustomId('eventName')
                 .setLabel('Event name')
@@ -65,7 +65,7 @@ const createTeamEvent = {
                 embeds: [(0, infoMessageEmbed_1.default)(':x: There has been an error', 'ERROR')],
             });
             try {
-                fs_1.default.appendFile('logs/crash_logs.txt', `${new Date()} : Something went wrong in slashcommands/createTeamEvent/createTeamEvent.ts \n Actual error: ${err} \n \n`, (err) => {
+                fs_1.default.appendFile('logs/crash_logs.txt', `${new Date()} : Something went wrong in slashcommands/createEvent/createEvent.ts \n Actual error: ${err} \n \n`, (err) => {
                     if (err)
                         throw err;
                 });
@@ -76,4 +76,4 @@ const createTeamEvent = {
         }
     },
 };
-exports.default = createTeamEvent;
+exports.default = createEvent;

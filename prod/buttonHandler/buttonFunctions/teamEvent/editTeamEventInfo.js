@@ -3,12 +3,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const fs_1 = tslib_1.__importDefault(require("fs"));
 const discord_js_1 = require("discord.js");
-const infoMessageEmbed_1 = tslib_1.__importDefault(require("../../../globalUtils/infoMessageEmbed"));
+const moment_timezone_1 = tslib_1.__importDefault(require("moment-timezone"));
+const events_1 = require("../../../supabase/supabaseFunctions/events");
 const users_1 = require("../../../supabase/supabaseFunctions/users");
-const createTeamEvent = {
-    name: 'createteamevent',
-    description: 'Create team event',
-    type: 'CHAT_INPUT',
+const infoMessageEmbed_1 = tslib_1.__importDefault(require("../../../globalUtils/infoMessageEmbed"));
+const editTeamEventInfo = {
+    customId: 'editTeamEventInfo',
     run: async (client, interaction) => {
         try {
             const userRoleDB = await (0, users_1.getUserRole)({
@@ -24,34 +24,51 @@ const createTeamEvent = {
                     ephemeral: true,
                 });
             }
+            const eventId = interaction.message.embeds[0].footer?.text.split(': ')[1];
+            const allColumnValue = await (0, events_1.getAllColumnValueById)({ id: eventId });
+            const date = new Date(moment_timezone_1.default
+                .tz(allColumnValue[0]['dateTime'], allColumnValue[0]['timezone'])
+                .format());
+            const [day, month, year, hour, minute] = [
+                date.getDate(),
+                date.getMonth() + 1,
+                date.getFullYear(),
+                date.getHours(),
+                date.getMinutes(),
+            ];
             const modal = new discord_js_1.Modal()
-                .setCustomId(`teamEventModalSubmit-${interaction.id}`)
-                .setTitle('Create Team Event');
+                .setCustomId(`editTeamEventInfoModal-${interaction.id}`)
+                .setTitle('Edit event');
             const eventNameInput = new discord_js_1.TextInputComponent()
                 .setCustomId('eventName')
                 .setLabel('Event name')
                 .setStyle('SHORT')
-                .setPlaceholder('Event name');
+                .setPlaceholder('Event name')
+                .setValue(allColumnValue[0]['eventName']);
             const gameNameInput = new discord_js_1.TextInputComponent()
                 .setCustomId('gameName')
                 .setLabel('Game name')
                 .setStyle('SHORT')
-                .setPlaceholder('Game name');
+                .setPlaceholder('Game name')
+                .setValue(allColumnValue[0]['gameName']);
             const eventDateTimeInput = new discord_js_1.TextInputComponent()
                 .setCustomId('date')
                 .setLabel('Date (format: DD/MM/YYYY hour:minute)')
                 .setStyle('SHORT')
-                .setPlaceholder('Event date');
+                .setPlaceholder('Event date')
+                .setValue(`${day}/${month}/${year} ${hour}:${minute}`);
             const eventTimezoneInput = new discord_js_1.TextInputComponent()
                 .setCustomId('timezone')
                 .setLabel('Your timezone: timezones.etourne.xyz')
                 .setStyle('SHORT')
-                .setPlaceholder('Your timezone');
+                .setPlaceholder('Your timezone')
+                .setValue(allColumnValue[0]['timezone']);
             const eventDescriptionInput = new discord_js_1.TextInputComponent()
                 .setCustomId('eventDescription')
                 .setLabel('Event description')
                 .setStyle('PARAGRAPH')
-                .setPlaceholder('Event description');
+                .setPlaceholder('Event description')
+                .setValue(allColumnValue[0]['description']);
             const eventNameActionRow = new discord_js_1.MessageActionRow().addComponents(eventNameInput);
             const gameNameActionRow = new discord_js_1.MessageActionRow().addComponents(gameNameInput);
             const eventTimezoneActionRow = new discord_js_1.MessageActionRow().addComponents(eventTimezoneInput);
@@ -61,11 +78,9 @@ const createTeamEvent = {
             await interaction.showModal(modal);
         }
         catch (err) {
-            interaction.reply({
-                embeds: [(0, infoMessageEmbed_1.default)(':x: There has been an error', 'ERROR')],
-            });
             try {
-                fs_1.default.appendFile('logs/crash_logs.txt', `${new Date()} : Something went wrong in slashcommands/createTeamEvent/createTeamEvent.ts \n Actual error: ${err} \n \n`, (err) => {
+                console.log(err);
+                fs_1.default.appendFile('logs/crash_logs.txt', `${new Date()} : Something went wrong in buttonFunctions/teamEvent/editTeamEventInfo.ts \n Actual error: ${err} \n \n`, (err) => {
                     if (err)
                         throw err;
                 });
@@ -76,4 +91,4 @@ const createTeamEvent = {
         }
     },
 };
-exports.default = createTeamEvent;
+exports.default = editTeamEventInfo;

@@ -5,8 +5,9 @@ const fs_1 = tslib_1.__importDefault(require("fs"));
 require('dotenv').config();
 const discord_js_1 = require("discord.js");
 const commands_1 = tslib_1.__importDefault(require("./legacy-commands/commands"));
-const interactionCreate_1 = tslib_1.__importDefault(require("./slash-commands/listener/interactionCreate"));
+const interactionCreate_1 = tslib_1.__importDefault(require("./listener/interactionCreate"));
 const allSlashCommands_1 = tslib_1.__importDefault(require("./slash-commands/allSlashCommands"));
+const guildCreate_1 = tslib_1.__importDefault(require("./listener/guildCreate"));
 const client = new discord_js_1.Client({
     partials: ['MESSAGE', 'REACTION'],
     intents: [
@@ -52,5 +53,6 @@ client.on('ready', async () => {
 });
 client.on('messageCreate', (message) => (0, commands_1.default)(message, client));
 (0, interactionCreate_1.default)(client);
+(0, guildCreate_1.default)(client);
 client.login(process.env.DISCORDJS_BOT_TOKEN);
 module.exports = { client };
