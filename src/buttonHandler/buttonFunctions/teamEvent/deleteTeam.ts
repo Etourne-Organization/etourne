@@ -19,10 +19,15 @@ const deleteTeam: ButtonFunction = {
 	customId: 'deleteTeam',
 	run: async (client: Client, interaction: ButtonInteraction) => {
 		try {
-			const teamLeaderUsername: any =
-				interaction.message.embeds[0].fields?.find(
-					(r) => r.name === 'Team Leader',
-				)?.value;
+			const teamLeader:
+				| {
+						name: string;
+						value: string;
+						inline: boolean;
+				  }
+				| any = interaction.message?.embeds[0].fields?.find(
+				(r) => r.name === 'Team Leader',
+			);
 
 			// check user role in DB
 			const userRoleDB: any = await getUserRole({
@@ -31,7 +36,7 @@ const deleteTeam: ButtonFunction = {
 			});
 
 			if (
-				interaction.user.tag !== teamLeaderUsername.value &&
+				interaction.user.tag !== teamLeader.value &&
 				(userRoleDB.length === 0 ||
 					(userRoleDB[0]['roleId'] !== 3 && userRoleDB[0]['roleId'] !== 2))
 			) {
