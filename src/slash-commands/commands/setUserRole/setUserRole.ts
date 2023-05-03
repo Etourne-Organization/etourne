@@ -32,11 +32,11 @@ const setUserRole: Command = {
 				},
 				{
 					name: 'Manager',
-					value: '3',
+					value: '2',
 				},
 				{
 					name: 'Admin',
-					value: '4',
+					value: '3',
 				},
 			],
 		},
