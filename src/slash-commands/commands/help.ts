@@ -3,8 +3,8 @@ import fs from 'fs';
 import { BaseCommandInteraction, Client, MessageEmbed } from 'discord.js';
 
 import { Command } from '../CommandStructure';
-import testCommandIDs from '../../TEST_BOT_IDS/commandIDs.json';
-import originalCommandIDs from '../../ORIGINAL_BOT_IDS/commandIDs.json';
+import testCommandIDs from '../../TEST_COMMAND_IDS/commandIDs.json';
+import originalCommandIDs from '../../ORIGINAL_COMMAND_IDS/commandIDs.json';
 
 const help: Command = {
 	name: 'help',

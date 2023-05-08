@@ -5,10 +5,20 @@
 **Note for Windows:** This was tested on powershell which works properly.
 
 1. Create an account on [Doppler](https://www.doppler.com/). This is going to be used for storing `.env` secrets (most of them).
-2. Create a project in Doppler.
-3. Login into your Doppler account from CLI using `doppler login`. Follow the steps on your terminal.
-4. **Windows BUG with scoop:** Scoop needs to be added to the system user variable so that you can use scoop and the installed apps. Read this [GitHub issue](https://github.com/ScoopInstaller/Scoop/issues/3951) to learn more.
-5. Go to `etourne` directory and setup your doppler project locally using `doppler setup`.
+2. Secrets required are:
+   1. COMMAND_ID
+   2. DISCORD_CLIENT_ID
+   3. DISCORD_CLIENT_SECRET
+   4. DISCORDJS_BOT_TOKEN
+   5. GUILD_ID
+   6. PREFIX
+   7. SUPABASE_ANON_KEY
+   8. SUPABASE_SERVICE_ROLE_KEY
+   9. SUPABASE_URL
+3. Create a project in Doppler.
+4. Login into your Doppler account from CLI using `doppler login`. Follow the steps on your terminal.
+5. **Windows BUG with scoop:** Scoop needs to be added to the system user variable so that you can use scoop and the installed apps. Read this [GitHub issue](https://github.com/ScoopInstaller/Scoop/issues/3951) to learn more.
+6. Go to `etourne` directory and setup your doppler project locally using `doppler setup`.
 
 ## Instruction to setup the test version of the bot
 
@@ -21,7 +31,8 @@
 1. Install all the packages using: `npm install`.
 1. Make sure to have [NodeJS](https://nodejs.org/en/) (v16.6.0 and above) and [nodemon](https://www.npmjs.com/package/nodemon) installed.
 1. Make sure to have [Doppler CLI](https://docs.doppler.com/docs/install-cli) installed. See [prerequisite](#prerequisite).
-1. To start the bot, run: `nodemon src/bot.ts` (make sure to be in the directory).
+1. Make sure to setup the credentials in your Doppler account. See [prerequisite](#prerequisite).
+1. To start the bot, run: `npm run start-doppler` (make sure to be in the directory).
 
 ## Instruction to setup the bot in production (server)
 
@@ -31,7 +42,7 @@
    2. `crash_logs.txt`
 3. Follow the template in `.env.example` and create `.env` file (`GUILD_ID` is not needed).
 4. Install all the packages using: `npm install`.
-5. To start the bot, run: `pm2 start ecosystem.config.js`. **Make sure to setup [PM2](https://pm2.io/) beforehand**.
+5. To start the bot, run: `pm2 start bin/doppler-run.sh`. **Make sure to setup [PM2](https://pm2.io/) beforehand**.
 
 ## Instruction to self host Supabase
 
