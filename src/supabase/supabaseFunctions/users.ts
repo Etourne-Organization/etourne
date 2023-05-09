@@ -76,7 +76,7 @@ export const addUser = async (props: addUser) => {
 };
 
 export const checkAddUser = async (props: checkAddUser) => {
-	const { username, discordUserId, discordServerId } = props;
+	const { username, discordUserId, discordServerId, roleId } = props;
 
 	// get server column id from supabase
 	const { data: getServerIdData, error: getServerIdError } = await getServerId(
@@ -98,7 +98,7 @@ export const checkAddUser = async (props: checkAddUser) => {
 			username: username,
 			discordUserId: discordUserId,
 			discordServerId: discordServerId,
-			roleId: 1,
+			roleId: roleId,
 		});
 	}
 };
