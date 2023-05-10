@@ -134,6 +134,7 @@ const teamModal: ModalFunction = {
 			});
 		} catch (err) {
 			try {
+				console.log(err);
 				fs.appendFile(
 					'logs/crash_logs.txt',
 					`${new Date()} : Something went wrong in modalFunctions/teamEvent/teamModal.ts \n Actual error: ${err} \n \n`,
