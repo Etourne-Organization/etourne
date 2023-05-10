@@ -18,15 +18,25 @@ const help = {
                 .setDescription('Here is the list of commands you can use')
                 .setThumbnail(`${client.user?.displayAvatarURL()}`)
                 .addFields({
+                name: ':information_source:  Bot Info',
+                value: process.env.BOT_IDS === 'TEST_BOT_IDS'
+                    ? `</botinfo:${commandIDs_json_1.default.BOT_INFO}>`
+                    : `</botinfo:${commandIDs_json_2.default.BOT_INFO}>`,
+            }, {
                 name: ':calendar_spiral:  Create event',
                 value: process.env.BOT_IDS === 'TEST_BOT_IDS'
                     ? `</createevent:${commandIDs_json_1.default.CREATE_EVENT}>`
                     : `</createvent:${commandIDs_json_2.default.CREATE_EVENT}>`,
             }, {
-                name: ':information_source:  Bot Info',
+                name: ':calendar_spiral:  Create team event',
                 value: process.env.BOT_IDS === 'TEST_BOT_IDS'
-                    ? `</botinfo:${commandIDs_json_1.default.BOT_INFO}>`
-                    : `</botinfo:${commandIDs_json_2.default.BOT_INFO}>`,
+                    ? `</createteamevent:${commandIDs_json_1.default.CREATE_TEAM_EVENT}>`
+                    : `</createteamevent:${commandIDs_json_2.default.CREATE_TEAM_EVENT}>`,
+            }, {
+                name: ':pencil2:  Set user role',
+                value: process.env.BOT_IDS === 'TEST_BOT_IDS'
+                    ? `</setuserrole:${commandIDs_json_1.default.SET_USER_ROLE}>`
+                    : `</setuserrole:${commandIDs_json_2.default.SET_USER_ROLE}>`,
             })
                 .setTimestamp()
                 .setFooter({ text: `Requested by: ${member}` });
