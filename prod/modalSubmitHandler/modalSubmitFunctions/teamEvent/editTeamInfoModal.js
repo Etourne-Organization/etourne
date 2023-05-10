@@ -10,8 +10,8 @@ const editTeamInfoModal = {
         try {
             const teamId = interaction.message?.embeds[0].footer?.text.split(' ')[2];
             const eventId = interaction.message?.embeds[0].footer?.text.split(' ')[5];
-            const registeredPlayers = interaction.message?.embeds[0].fields?.find((r) => r.name === 'Registered players');
-            const eventDateTime = interaction.message?.embeds[0].fields?.find((r) => r.name.includes('Registered players'));
+            const registeredPlayers = interaction.message?.embeds[0].fields?.find((r) => r.name.includes('Registered players'));
+            const eventDateTime = interaction.message?.embeds[0].fields?.find((r) => r.name === 'Event Date and Time');
             const eventName = interaction.message?.embeds[0].fields?.find((r) => r.name === 'Event Name');
             const teamName = interaction.fields.getTextInputValue('teamName');
             const teamShortDescription = interaction.fields.getTextInputValue('teamShortDescription');

@@ -20,8 +20,8 @@ const editTeamInfoModal: ModalFunction = {
 						value: string;
 						inline: boolean;
 				  }
-				| any = interaction.message?.embeds[0].fields?.find(
-				(r) => r.name === 'Registered players',
+				| any = interaction.message?.embeds[0].fields?.find((r) =>
+				r.name.includes('Registered players'),
 			);
 
 			const eventDateTime:
@@ -30,8 +30,8 @@ const editTeamInfoModal: ModalFunction = {
 						value: string;
 						inline: boolean;
 				  }
-				| any = interaction.message?.embeds[0].fields?.find((r) =>
-				r.name.includes('Registered players'),
+				| any = interaction.message?.embeds[0].fields?.find(
+				(r) => r.name === 'Event Date and Time',
 			);
 
 			const eventName:
