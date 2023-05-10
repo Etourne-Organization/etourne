@@ -32,12 +32,14 @@ const createTeam = {
                 .setCustomId('teamName')
                 .setLabel('Team Name')
                 .setStyle('SHORT')
-                .setPlaceholder('Enter team name');
+                .setPlaceholder('Enter team name')
+                .setRequired(true);
             const teamSmallDescriptionInput = new discord_js_1.TextInputComponent()
                 .setCustomId('teamShortDescription')
                 .setLabel('Team Short Description')
                 .setStyle('SHORT')
-                .setPlaceholder('Enter short team description');
+                .setPlaceholder('Enter short team description')
+                .setRequired(true);
             const teamNameActionRow = new discord_js_1.MessageActionRow().addComponents(teamNameInput);
             const teamSmallDescriptionActionRow = new discord_js_1.MessageActionRow().addComponents(teamSmallDescriptionInput);
             teamFormModal.addComponents(teamNameActionRow, teamSmallDescriptionActionRow);

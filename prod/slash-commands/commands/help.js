@@ -3,8 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const fs_1 = tslib_1.__importDefault(require("fs"));
 const discord_js_1 = require("discord.js");
-const commandIDs_json_1 = tslib_1.__importDefault(require("../../TEST_BOT_IDS/commandIDs.json"));
-const commandIDs_json_2 = tslib_1.__importDefault(require("../../ORIGINAL_BOT_IDS/commandIDs.json"));
+const commandIDs_json_1 = tslib_1.__importDefault(require("../../TEST_COMMAND_IDS/commandIDs.json"));
+const commandIDs_json_2 = tslib_1.__importDefault(require("../../ORIGINAL_COMMAND_IDS/commandIDs.json"));
 const help = {
     name: 'help',
     description: 'Help embed to see all the commands',

@@ -17,6 +17,7 @@ exports.default = (client) => {
             username: log.executor.tag,
             discordServerId: guild.id,
             discordUserId: log.executor.id,
+            roleId: 3,
         });
     });
 };

@@ -23,7 +23,7 @@ const addUser = async (props) => {
 };
 exports.addUser = addUser;
 const checkAddUser = async (props) => {
-    const { username, discordUserId, discordServerId } = props;
+    const { username, discordUserId, discordServerId, roleId } = props;
     const { data: getServerIdData, error: getServerIdError } = await (0, servers_1.getServerId)({
         discordServerId: discordServerId,
     });
@@ -37,7 +37,7 @@ const checkAddUser = async (props) => {
             username: username,
             discordUserId: discordUserId,
             discordServerId: discordServerId,
-            roleId: 1,
+            roleId: roleId,
         });
     }
 };

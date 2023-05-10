@@ -34,13 +34,12 @@ const deleteEvent = {
             }
             const eventId = interaction.message.embeds[0].footer?.text.split(': ')[1];
             const fetchedMessage = await interaction.channel?.messages.fetch(interaction.message.id);
-            console.log(fetchedMessage);
             if (fetchedMessage) {
                 const confirmationButtons = new discord_js_1.MessageActionRow().addComponents(new discord_js_1.MessageButton()
-                    .setCustomId('deleteYes')
+                    .setCustomId(`deleteYes-${interaction.id}`)
                     .setLabel('✔')
                     .setStyle('PRIMARY'), new discord_js_1.MessageButton()
-                    .setCustomId('deleteNo')
+                    .setCustomId(`deleteNo-${interaction.id}`)
                     .setLabel('✖')
                     .setStyle('SECONDARY'));
                 await interaction.reply({
@@ -50,14 +49,15 @@ const deleteEvent = {
                     components: [confirmationButtons],
                     ephemeral: true,
                 });
-                const filter = (i) => (i.customId === 'deleteYes' || i.customId === 'deleteNo') &&
+                const filter = (i) => (i.customId === `deleteYes-${interaction.id}` ||
+                    i.customId === `deleteNo-${interaction.id}`) &&
                     i.user.id === interaction.user.id;
                 const collector = interaction.channel?.createMessageComponentCollector({
                     filter,
                     time: 15000,
                 });
                 collector?.on('collect', async (i) => {
-                    if (i.customId === 'deleteYes') {
+                    if (i.customId.includes('deleteYes')) {
                         await fetchedMessage.delete();
                         await (0, events_1.deleteEvent)({ eventId: parseInt(eventId) });
                         await interaction.deleteReply();
@@ -68,7 +68,7 @@ const deleteEvent = {
                             ephemeral: true,
                         });
                     }
-                    else if (i.customId === 'deleteNo') {
+                    else if (i.customId.includes('deleteNo')) {
                         await interaction.deleteReply();
                         await i.reply({
                             embeds: [(0, infoMessageEmbed_1.default)(':x: Event not deleted')],
