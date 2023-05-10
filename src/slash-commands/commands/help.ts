@@ -21,6 +21,13 @@ const help: Command = {
 				.setThumbnail(`${client.user?.displayAvatarURL()}`)
 				.addFields(
 					{
+						name: ':information_source:  Bot Info',
+						value:
+							process.env.BOT_IDS === 'TEST_BOT_IDS'
+								? `</botinfo:${testCommandIDs.BOT_INFO}>`
+								: `</botinfo:${originalCommandIDs.BOT_INFO}>`,
+					},
+					{
 						name: ':calendar_spiral:  Create event',
 						value:
 							process.env.BOT_IDS === 'TEST_BOT_IDS'
@@ -28,13 +35,19 @@ const help: Command = {
 								: `</createvent:${originalCommandIDs.CREATE_EVENT}>`,
 					},
 					{
-						name: ':information_source:  Bot Info',
+						name: ':calendar_spiral:  Create team event',
 						value:
 							process.env.BOT_IDS === 'TEST_BOT_IDS'
-								? `</botinfo:${testCommandIDs.BOT_INFO}>`
-								: `</botinfo:${originalCommandIDs.BOT_INFO}>`,
+								? `</createteamevent:${testCommandIDs.CREATE_TEAM_EVENT}>`
+								: `</createteamevent:${originalCommandIDs.CREATE_TEAM_EVENT}>`,
 					},
-
+					{
+						name: ':pencil2:  Set user role',
+						value:
+							process.env.BOT_IDS === 'TEST_BOT_IDS'
+								? `</setuserrole:${testCommandIDs.SET_USER_ROLE}>`
+								: `</setuserrole:${originalCommandIDs.SET_USER_ROLE}>`,
+					},
 					// { name: '\u200B', value: '\u200B' },
 				)
 				.setTimestamp()
