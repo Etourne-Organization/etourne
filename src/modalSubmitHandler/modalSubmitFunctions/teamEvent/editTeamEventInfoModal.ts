@@ -66,13 +66,13 @@ const editTeamEventInfoModal: ModalFunction = {
 					},
 					{ name: 'Game name', value: gameName, inline: true },
 					{
-						name: 'Num of team limit',
+						name: 'Max num of teams',
 						value: maxNumTeams[0]['maxNumTeams']
 							? maxNumTeams[0]['maxNumTeams'].toString()
 							: 'Unlimited',
 					},
 					{
-						name: 'Num of team member limit',
+						name: 'Max num of team players',
 						value: maxNumTeamPlayers[0]['maxNumTeamPlayers']
 							? maxNumTeamPlayers[0]['maxNumTeamPlayers'].toString()
 							: 'Unlimited',
