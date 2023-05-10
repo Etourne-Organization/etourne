@@ -3,6 +3,7 @@ import fs from 'fs';
 import { BaseCommandInteraction, Client, MessageEmbed } from 'discord.js';
 
 import { Command } from '../CommandStructure';
+import formatProcessUptime from '../utilities/formatProcessUptime';
 
 const botInfo: Command = {
 	name: 'botinfo',
@@ -20,7 +21,7 @@ const botInfo: Command = {
 				.addFields(
 					// { name: '\u200B', value: '\u200B' },
 					{ name: 'Bot Tag', value: `${client.user!.tag}` },
-					{ name: 'Bot version', value: `1.0.0-beta` },
+					{ name: 'Bot version', value: `1.0.0` },
 					{
 						name: 'Bot command prefix',
 						value: `\`${process.env.PREFIX}\``,
@@ -31,20 +32,23 @@ const botInfo: Command = {
 						value: `${client.guilds.cache.size}`,
 					},
 					// {
-					// 	name: 'Currently being hosted on',
-					// 	value: `https://crvt.co/b`,
+					// 	name: 'Status of the app/bot',
+					// 	value: `Work in progress`,
 					// },
-					{
-						name: 'Status of the app/bot',
-						value: `Work in progress`,
-					},
-					{
-						name: 'Time since last restart',
-						value: `${process.uptime().toFixed(2)}s`,
-					},
 				)
 				.setFooter({ text: 'Creator: mz10ah#0054' })
 				.setTimestamp();
+
+			if (interaction.user.id === process.env.OWNER_ID) {
+				botInfoEmbed.addFields([
+					{
+						name: 'Time since last restart',
+						value: `${formatProcessUptime({
+							uptime: process.uptime(),
+						})}`,
+					},
+				]);
+			}
 
 			await interaction.reply({
 				embeds: [botInfoEmbed],
