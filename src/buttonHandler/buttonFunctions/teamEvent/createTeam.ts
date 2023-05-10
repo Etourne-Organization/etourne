@@ -78,6 +78,7 @@ const createTeam: ButtonFunction = {
 			await interaction.showModal(teamFormModal);
 		} catch (err) {
 			try {
+				console.log(err);
 				fs.appendFile(
 					'logs/crash_logs.txt',
 					`${new Date()} : Something went wrong in buttonFunctions/teamEvent/createTeam.ts \n Actual error: ${err} \n \n`,
