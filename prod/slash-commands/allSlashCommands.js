@@ -7,6 +7,7 @@ const botInfo_1 = tslib_1.__importDefault(require("./commands/botInfo"));
 const createTeamEvent_1 = tslib_1.__importDefault(require("./commands/createTeamEvent/createTeamEvent"));
 const setUserRole_1 = tslib_1.__importDefault(require("./commands/setUserRole/setUserRole"));
 const getStarted_1 = tslib_1.__importDefault(require("./commands/getStarted"));
+const feedback_1 = tslib_1.__importDefault(require("./commands/feedback"));
 const allSlashCommands = [
     createEvent_1.default,
     help_1.default,
@@ -14,5 +15,6 @@ const allSlashCommands = [
     createTeamEvent_1.default,
     setUserRole_1.default,
     getStarted_1.default,
+    feedback_1.default,
 ];
 exports.default = allSlashCommands;

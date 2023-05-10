@@ -79,6 +79,7 @@ const registerTeamPlayer = {
             return await interaction.update({ embeds: [editedEmbed] });
         }
         catch (err) {
+            console.log(err);
             try {
                 fs_1.default.appendFile('logs/crash_logs.txt', `${new Date()} : Something went wrong in buttonFunctions/teamEvent/registerTeamPlayer.ts \n Actual error: ${err} \n \n`, (err) => {
                     if (err)

@@ -4,7 +4,7 @@ exports.isUserSuperAdmin = exports.setUserRole = exports.getUserRole = exports.g
 const supabase_1 = require("../supabase");
 const servers_1 = require("./servers");
 const addUser = async (props) => {
-    const { username, discordUserId, discordServerId, roleId } = props;
+    const { username, discordUserId, discordServerId, roleId = 1 } = props;
     const { data: getServerIdData, error: getServerIdError } = await (0, servers_1.getServerId)({
         discordServerId: discordServerId,
     });
@@ -23,7 +23,7 @@ const addUser = async (props) => {
 };
 exports.addUser = addUser;
 const checkAddUser = async (props) => {
-    const { username, discordUserId, discordServerId, roleId } = props;
+    const { username, discordUserId, discordServerId, roleId = 1 } = props;
     const { data: getServerIdData, error: getServerIdError } = await (0, servers_1.getServerId)({
         discordServerId: discordServerId,
     });

@@ -52,7 +52,7 @@ interface isUserSuperAdmin {
 }
 
 export const addUser = async (props: addUser) => {
-	const { username, discordUserId, discordServerId, roleId } = props;
+	const { username, discordUserId, discordServerId, roleId = 1 } = props;
 
 	const { data: getServerIdData, error: getServerIdError } = await getServerId(
 		{
@@ -76,7 +76,7 @@ export const addUser = async (props: addUser) => {
 };
 
 export const checkAddUser = async (props: checkAddUser) => {
-	const { username, discordUserId, discordServerId, roleId } = props;
+	const { username, discordUserId, discordServerId, roleId = 1 } = props;
 
 	// get server column id from supabase
 	const { data: getServerIdData, error: getServerIdError } = await getServerId(

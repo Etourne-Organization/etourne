@@ -16,7 +16,7 @@ const getStarted: Command = {
 				.setThumbnail(`${client.user?.displayAvatarURL()}`)
 				.setTitle(':rocket: Get started')
 				.setDescription(
-					`Thank you for choosing Etourne. \n \n In summary, Etourne aims to create and manage events and tournaments much easier. \n \n To get started: \n • Use ${
+					`Thank you for choosing Etourne. \n \n In summary, Etourne aims to create and manage events and tournaments much easier. \n \n Etourne has 3 roles: \n • __Player__: Default role of every user in the sever. \n • __Manager__: Event managers with the permission to create and manage events. Roles of the users can be set by an Etourne Admin using  \n \n To get started: \n • Use ${
 						process.env.BOT_IDS === 'TEST_BOT_IDS'
 							? `</createevent:${testCommandIDs.CREATE_EVENT}>`
 							: `</createvent:${originalCommandIDs.CREATE_EVENT}>`
