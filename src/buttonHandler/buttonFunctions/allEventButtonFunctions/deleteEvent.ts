@@ -62,16 +62,14 @@ const deleteEvent: ButtonFunction = {
 				interaction.message.id,
 			);
 
-			console.log(fetchedMessage);
-
 			if (fetchedMessage) {
 				const confirmationButtons = new MessageActionRow().addComponents(
 					new MessageButton()
-						.setCustomId('deleteYes')
+						.setCustomId(`deleteYes-${interaction.id}`)
 						.setLabel('✔')
 						.setStyle('PRIMARY'),
 					new MessageButton()
-						.setCustomId('deleteNo')
+						.setCustomId(`deleteNo-${interaction.id}`)
 						.setLabel('✖')
 						.setStyle('SECONDARY'),
 				);
@@ -87,7 +85,8 @@ const deleteEvent: ButtonFunction = {
 				});
 
 				const filter: any = (i: ButtonInteraction) =>
-					(i.customId === 'deleteYes' || i.customId === 'deleteNo') &&
+					(i.customId === `deleteYes-${interaction.id}` ||
+						i.customId === `deleteNo-${interaction.id}`) &&
 					i.user.id === interaction.user.id;
 
 				const collector =
@@ -99,7 +98,7 @@ const deleteEvent: ButtonFunction = {
 					});
 
 				collector?.on('collect', async (i: ButtonInteraction) => {
-					if (i.customId === 'deleteYes') {
+					if (i.customId.includes('deleteYes')) {
 						await fetchedMessage.delete();
 
 						await deleteEventSupabase({ eventId: parseInt(eventId) });
@@ -115,7 +114,7 @@ const deleteEvent: ButtonFunction = {
 							],
 							ephemeral: true,
 						});
-					} else if (i.customId === 'deleteNo') {
+					} else if (i.customId.includes('deleteNo')) {
 						await interaction.deleteReply();
 
 						await i.reply({
