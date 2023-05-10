@@ -23,6 +23,11 @@ const help = {
                     ? `</botinfo:${commandIDs_json_1.default.BOT_INFO}>`
                     : `</botinfo:${commandIDs_json_2.default.BOT_INFO}>`,
             }, {
+                name: ':rocket:  Get started',
+                value: process.env.BOT_IDS === 'TEST_BOT_IDS'
+                    ? `</getstarted:${commandIDs_json_1.default.GET_STARTED}>`
+                    : `</getstarted:${commandIDs_json_2.default.GET_STARTED}>`,
+            }, {
                 name: ':calendar_spiral:  Create event',
                 value: process.env.BOT_IDS === 'TEST_BOT_IDS'
                     ? `</createevent:${commandIDs_json_1.default.CREATE_EVENT}>`

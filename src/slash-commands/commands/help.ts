@@ -28,6 +28,13 @@ const help: Command = {
 								: `</botinfo:${originalCommandIDs.BOT_INFO}>`,
 					},
 					{
+						name: ':rocket:  Get started',
+						value:
+							process.env.BOT_IDS === 'TEST_BOT_IDS'
+								? `</getstarted:${testCommandIDs.GET_STARTED}>`
+								: `</getstarted:${originalCommandIDs.GET_STARTED}>`,
+					},
+					{
 						name: ':calendar_spiral:  Create event',
 						value:
 							process.env.BOT_IDS === 'TEST_BOT_IDS'
