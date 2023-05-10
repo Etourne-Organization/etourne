@@ -50,13 +50,15 @@ const createTeam: ButtonFunction = {
 				.setCustomId('teamName')
 				.setLabel('Team Name')
 				.setStyle('SHORT')
-				.setPlaceholder('Enter team name');
+				.setPlaceholder('Enter team name')
+				.setRequired(true);
 
 			const teamSmallDescriptionInput = new TextInputComponent()
 				.setCustomId('teamShortDescription')
 				.setLabel('Team Short Description')
 				.setStyle('SHORT')
-				.setPlaceholder('Enter short team description');
+				.setPlaceholder('Enter short team description')
+				.setRequired(true);
 
 			const teamNameActionRow =
 				new MessageActionRow<ModalActionRowComponent>().addComponents(
