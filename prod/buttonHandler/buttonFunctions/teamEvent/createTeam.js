@@ -47,6 +47,7 @@ const createTeam = {
         }
         catch (err) {
             try {
+                console.log(err);
                 fs_1.default.appendFile('logs/crash_logs.txt', `${new Date()} : Something went wrong in buttonFunctions/teamEvent/createTeam.ts \n Actual error: ${err} \n \n`, (err) => {
                     if (err)
                         throw err;
