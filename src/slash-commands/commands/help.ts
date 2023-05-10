@@ -16,7 +16,7 @@ const help: Command = {
 
 			const helpEmbed = new MessageEmbed()
 				.setColor('#3a9ce2')
-				.setTitle(`${client.user?.username}`)
+				.setTitle(`:question: Help`)
 				.setDescription('Here is the list of commands you can use')
 				.setThumbnail(`${client.user?.displayAvatarURL()}`)
 				.addFields(

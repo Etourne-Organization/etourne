@@ -14,7 +14,6 @@ const formatProcessUptime = (props) => {
     if (seconds > 0)
         segments.push(seconds + ' second' + (seconds == 1 ? '' : 's'));
     const dateString = segments.join(', ');
-    console.log('Uptime: ' + dateString);
     return dateString;
 };
 exports.default = formatProcessUptime;

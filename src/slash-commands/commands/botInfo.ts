@@ -42,7 +42,7 @@ const botInfo: Command = {
 			if (interaction.user.id === process.env.OWNER_ID) {
 				botInfoEmbed.addFields([
 					{
-						name: 'Time since last restart',
+						name: 'Time elapsed since last restart',
 						value: `${formatProcessUptime({
 							uptime: process.uptime(),
 						})}`,

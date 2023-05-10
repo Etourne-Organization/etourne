@@ -14,7 +14,7 @@ const help = {
             const member = interaction.user.tag;
             const helpEmbed = new discord_js_1.MessageEmbed()
                 .setColor('#3a9ce2')
-                .setTitle(`${client.user?.username}`)
+                .setTitle(`:question: Help`)
                 .setDescription('Here is the list of commands you can use')
                 .setThumbnail(`${client.user?.displayAvatarURL()}`)
                 .addFields({

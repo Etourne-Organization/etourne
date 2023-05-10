@@ -56,7 +56,7 @@ client.on('ready', async () => {
 
 	// set bot status
 	client.user.setPresence({
-		activities: [{ name: `/help` }],
+		activities: [{ name: `/getstarted` }],
 	});
 
 	// run every 6 hours again to make sure it stays visible

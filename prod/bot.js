@@ -43,7 +43,7 @@ client.on('ready', async () => {
         console.log('Logging failed');
     }
     client.user.setPresence({
-        activities: [{ name: `/help` }],
+        activities: [{ name: `/getstarted` }],
     });
     setInterval(() => {
         client.user?.setPresence({
