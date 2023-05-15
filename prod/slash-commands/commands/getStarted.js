@@ -18,7 +18,7 @@ const getStarted = {
                 ? `</setuserrole:${commandIDs_json_1.default.SET_USER_ROLE}>`
                 : `</setuserrole:${commandIDs_json_2.default.SET_USER_ROLE}>`}. User who adds the bot gets this role by default. \n \n To get started: \n • Use ${process.env.BOT_IDS === 'TEST_BOT_IDS'
                 ? `</createevent:${commandIDs_json_1.default.CREATE_EVENT}>`
-                : `</createvent:${commandIDs_json_2.default.CREATE_EVENT}>`} to start creating events. \n • Use ${process.env.BOT_IDS === 'TEST_BOT_IDS'
+                : `</createevent:${commandIDs_json_2.default.CREATE_EVENT}>`} to start creating events. \n • Use ${process.env.BOT_IDS === 'TEST_BOT_IDS'
                 ? `</createteamevent:${commandIDs_json_1.default.CREATE_TEAM_EVENT}>`
                 : `</createteamevent:${commandIDs_json_2.default.CREATE_TEAM_EVENT}>`} to start creating team events. \n • Use ${process.env.BOT_IDS === 'TEST_BOT_IDS'
                 ? `</help:${commandIDs_json_1.default.HELP}>`
