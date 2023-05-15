@@ -23,7 +23,7 @@ const getStarted: Command = {
 					}. User who adds the bot gets this role by default. \n \n To get started: \n • Use ${
 						process.env.BOT_IDS === 'TEST_BOT_IDS'
 							? `</createevent:${testCommandIDs.CREATE_EVENT}>`
-							: `</createvent:${originalCommandIDs.CREATE_EVENT}>`
+							: `</createevent:${originalCommandIDs.CREATE_EVENT}>`
 					} to start creating events. \n • Use ${
 						process.env.BOT_IDS === 'TEST_BOT_IDS'
 							? `</createteamevent:${testCommandIDs.CREATE_TEAM_EVENT}>`

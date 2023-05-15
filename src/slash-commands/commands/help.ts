@@ -39,7 +39,7 @@ const help: Command = {
 						value:
 							process.env.BOT_IDS === 'TEST_BOT_IDS'
 								? `</createevent:${testCommandIDs.CREATE_EVENT}>`
-								: `</createvent:${originalCommandIDs.CREATE_EVENT}>`,
+								: `</createevent:${originalCommandIDs.CREATE_EVENT}>`,
 					},
 					{
 						name: ':calendar_spiral:  Create team event',
