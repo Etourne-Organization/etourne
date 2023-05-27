@@ -10,8 +10,8 @@ const removePlayer = {
     customId: 'removePlayer',
     run: async (client, interaction) => {
         try {
-            const username = interaction.values[0].split('|')[0];
-            const userId = interaction.values[0].split('|')[1];
+            const username = interaction.values[0].split('||')[0];
+            const userId = interaction.values[0].split('||')[1];
             const eventId = interaction.message.embeds[0].footer?.text.split(': ')[1];
             const confirmationButtons = new discord_js_1.MessageActionRow().addComponents(new discord_js_1.MessageButton()
                 .setCustomId('deleteYes')
@@ -46,44 +46,37 @@ const removePlayer = {
                         const footer = fetchedMessage.embeds[0].footer?.text;
                         let FOUND = false;
                         const registeredPlayers = fetchedMessage.embeds[0].fields?.find((r) => r.name.includes('Registered players'));
-                        const tempSplit = registeredPlayers.value.split(' ');
-                        const playersSplitted = tempSplit.length <= 1 && tempSplit[0].length < 1
-                            ? ['']
-                            : tempSplit[1].includes('\n')
-                                ? tempSplit[1].split('\n')
-                                : [tempSplit[1]];
-                        const playerIndex = playersSplitted.indexOf(username);
-                        if (playerIndex !== -1) {
-                            playersSplitted.splice(playerIndex, 1);
-                            fetchedMessage.embeds[0].fields?.find((r) => {
-                                if (r.name.includes('Registered players')) {
-                                    let numRegisteredPlayers = parseInt(r.name.split(' ')[2].split('/')[0]);
-                                    const maxNumPlayers = r.name
-                                        .split(' ')[2]
-                                        .split('/')[1];
-                                    numRegisteredPlayers -= 1;
-                                    r.name = `Registered players ${numRegisteredPlayers}/${maxNumPlayers}`;
-                                    r.value =
-                                        playersSplitted.length >= 1
-                                            ? '>>> ' + playersSplitted.join('\n')
-                                            : ' ';
-                                }
-                            });
-                            await (0, singlePlayers_1.removePlayer)({
-                                discordUserId: userId,
-                                eventId: eventId,
-                            });
-                            const editedEmbed = new discord_js_1.MessageEmbed()
-                                .setColor('#3a9ce2')
-                                .setTitle(fetchedMessage.embeds[0].title || 'Undefined')
-                                .setDescription(fetchedMessage.embeds[0].description || 'Undefined')
-                                .addFields(fetchedMessage.embeds[0].fields || [])
-                                .setFooter({ text: `${footer}` });
-                            FOUND = true;
-                            await fetchedMessage.edit({
-                                embeds: [editedEmbed],
-                            });
-                        }
+                        const oldPlayersList = registeredPlayers.value
+                            .split('>>> ')[1]
+                            .split('\n');
+                        const index = oldPlayersList.indexOf(username);
+                        oldPlayersList.splice(index, 1);
+                        const newPlayersList = oldPlayersList.join('\n');
+                        fetchedMessage.embeds[0].fields?.find((r) => {
+                            if (r.name.includes('Registered players')) {
+                                let numRegisteredPlayers = parseInt(r.name.split(' ')[2].split('/')[0]);
+                                const maxNumPlayersEmbedValue = r.name
+                                    .split(' ')[2]
+                                    .split('/')[1];
+                                numRegisteredPlayers -= 1;
+                                r.name = `Registered players ${numRegisteredPlayers}/${maxNumPlayersEmbedValue}`;
+                                r.value = `${newPlayersList.length > 0 ? '>>>' : ' '} ${newPlayersList}`;
+                            }
+                        });
+                        await (0, singlePlayers_1.removePlayer)({
+                            discordUserId: userId,
+                            eventId: eventId,
+                        });
+                        const editedEmbed = new discord_js_1.MessageEmbed()
+                            .setColor('#3a9ce2')
+                            .setTitle(fetchedMessage.embeds[0].title || 'Undefined')
+                            .setDescription(fetchedMessage.embeds[0].description || 'Undefined')
+                            .addFields(fetchedMessage.embeds[0].fields || [])
+                            .setFooter({ text: `${footer}` });
+                        FOUND = true;
+                        await fetchedMessage.edit({
+                            embeds: [editedEmbed],
+                        });
                     }
                     await i.reply({
                         embeds: [

@@ -47,7 +47,7 @@ client.on('ready', async () => {
     });
     setInterval(() => {
         client.user?.setPresence({
-            activities: [{ name: `/help` }],
+            activities: [{ name: `/getstarted` }],
         });
     }, 1000 * 60 * 360);
 });

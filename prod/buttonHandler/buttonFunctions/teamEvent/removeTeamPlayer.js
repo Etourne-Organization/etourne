@@ -53,7 +53,7 @@ const removeTeamPlayer = {
                 selectMenuOptions[i] = {
                     label: tp.username,
                     description: `Remove ${tp.username}`,
-                    value: `${tp.username}|${tp.userId}`,
+                    value: `${tp.username}||${tp.userId}`,
                 };
             });
             const selectMenu = new discord_js_1.MessageActionRow().addComponents(new discord_js_1.MessageSelectMenu()

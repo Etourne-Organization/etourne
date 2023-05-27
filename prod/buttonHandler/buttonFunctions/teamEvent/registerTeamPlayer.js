@@ -37,31 +37,39 @@ const registerTeamPlayer = {
                 });
             }
             const registeredPlayers = interaction.message.embeds[0].fields?.find((r) => r.name.includes('Registered players'));
-            const tempSplit = registeredPlayers.value.split(' ');
-            const playersSplitted = tempSplit.length <= 1 && tempSplit[0].length < 1
-                ? ['']
-                : tempSplit[1].includes('\n')
-                    ? tempSplit[1].split('\n')
-                    : [tempSplit[1]];
-            if (playersSplitted.indexOf(interaction.user.tag) !== -1) {
-                return await interaction.reply({
-                    embeds: [
-                        (0, infoMessageEmbed_1.default)('You are already registered!', 'WARNING'),
-                    ],
-                    ephemeral: true,
-                });
+            let newPlayersList = ' ';
+            if (registeredPlayers.value.length === 0) {
+                newPlayersList = `${interaction.user.tag}\n`;
             }
-            tempSplit.push(`${interaction.user.tag}\n`);
-            tempSplit.shift();
+            else {
+                if (registeredPlayers.value
+                    .split('>>> ')[1]
+                    .split('\n')
+                    .indexOf(interaction.user.tag) !== -1) {
+                    return await interaction.reply({
+                        embeds: [
+                            (0, infoMessageEmbed_1.default)('You are already registered!', 'WARNING'),
+                        ],
+                        ephemeral: true,
+                    });
+                }
+                else {
+                    const oldPlayersList = registeredPlayers.value
+                        .split('>>> ')[1]
+                        .split('\n');
+                    oldPlayersList.push(interaction.user.tag);
+                    newPlayersList = oldPlayersList.join('\n');
+                }
+            }
             interaction.message.embeds[0].fields?.find((r) => {
                 if (r.name.includes('Registered players')) {
                     let numRegisteredPlayers = parseInt(r.name.split(' ')[2].split('/')[0]);
-                    const maxNumTeamPlayers = r.name.split(' ')[2].split('/')[1];
+                    const maxNumPlayersEmbedValue = r.name
+                        .split(' ')[2]
+                        .split('/')[1];
                     numRegisteredPlayers += 1;
-                    r.name = `Registered players ${numRegisteredPlayers}/${maxNumTeamPlayers}`;
-                    r.value = Array.isArray(tempSplit)
-                        ? '>>> ' + tempSplit.join('\n')
-                        : '>>> ' + tempSplit;
+                    r.name = `Registered players ${numRegisteredPlayers}/${maxNumPlayersEmbedValue}`;
+                    r.value = `>>> ${newPlayersList}`;
                 }
             });
             await (0, teamPlayers_1.addPlayer)({
