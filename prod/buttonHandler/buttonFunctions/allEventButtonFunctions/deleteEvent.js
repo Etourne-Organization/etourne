@@ -18,16 +18,7 @@ const deleteEvent = {
                 (userRoleDB[0]['roleId'] !== 3 && userRoleDB[0]['roleId'] !== 2)) {
                 return await interaction.reply({
                     embeds: [
-                        (0, infoMessageEmbed_1.default)(':warning: You are not allowed to run this command!', 'WARNING'),
-                    ],
-                    ephemeral: true,
-                });
-            }
-            const eventHostUsername = interaction.message.embeds[0].fields?.find((r) => r.name === 'Hosted by')?.value;
-            if (eventHostUsername !== interaction.user.tag) {
-                return interaction.reply({
-                    embeds: [
-                        (0, infoMessageEmbed_1.default)('You are not allowed to use this button!', 'WARNING'),
+                        (0, infoMessageEmbed_1.default)(':warning: You are not allowed to use this button!', 'WARNING'),
                     ],
                     ephemeral: true,
                 });

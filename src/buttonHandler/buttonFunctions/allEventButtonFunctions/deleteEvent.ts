@@ -30,7 +30,7 @@ const deleteEvent: ButtonFunction = {
 				return await interaction.reply({
 					embeds: [
 						infoMessageEmbed(
-							':warning: You are not allowed to run this command!',
+							':warning: You are not allowed to use this button!',
 							'WARNING',
 						),
 					],
@@ -38,22 +38,25 @@ const deleteEvent: ButtonFunction = {
 				});
 			}
 
-			const eventHostUsername: any =
-				interaction.message.embeds[0].fields?.find(
-					(r) => r.name === 'Hosted by',
-				)?.value;
+			// const eventHostUsername: any =
+			// 	interaction.message.embeds[0].fields?.find(
+			// 		(r) => r.name === 'Hosted by',
+			// 	)?.value;
 
-			if (eventHostUsername !== interaction.user.tag) {
-				return interaction.reply({
-					embeds: [
-						infoMessageEmbed(
-							'You are not allowed to use this button!',
-							'WARNING',
-						),
-					],
-					ephemeral: true,
-				});
-			}
+			// if (
+			// 	userRoleDB[0]['roleId'] !== 3 &&
+			// 	eventHostUsername !== interaction.user.tag
+			// ) {
+			// 	return interaction.reply({
+			// 		embeds: [
+			// 			infoMessageEmbed(
+			// 				':warning: You are not allowed to use this button!',
+			// 				'WARNING',
+			// 			),
+			// 		],
+			// 		ephemeral: true,
+			// 	});
+			// }
 
 			const eventId: string | any =
 				interaction.message.embeds[0].footer?.text.split(': ')[1];
