@@ -93,7 +93,7 @@ const removeTeamPlayer: ButtonFunction = {
 					selectMenuOptions[i] = {
 						label: tp.username,
 						description: `Remove ${tp.username}`,
-						value: `${tp.username}|${tp.userId}`,
+						value: `${tp.username}||${tp.userId}`,
 					};
 				},
 			);

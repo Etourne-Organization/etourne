@@ -27,68 +27,76 @@ const unregisterTeamPlayer: ButtonFunction = {
 				});
 			}
 
-			let FOUND: boolean = false;
 			const registeredPlayers: any =
 				interaction.message.embeds[0].fields?.find((r) =>
 					r.name.includes('Registered players'),
 				);
 
-			const tempSplit: Array<string> = registeredPlayers.value.split(' ');
-
-			const playersSplitted: Array<string> =
-				tempSplit.length <= 1 && tempSplit[0].length < 1
-					? ['']
-					: tempSplit[1].includes('\n')
-					? tempSplit[1].split('\n')
-					: [tempSplit[1]];
-
-			const playerIndex = playersSplitted.indexOf(interaction.user.tag);
-
-			if (playerIndex !== -1) {
-				playersSplitted.splice(playerIndex, 1);
-
-				/* assigning updated player list back to the orignal embed field */
-				interaction.message.embeds[0].fields?.find((r) => {
-					if (r.name.includes('Registered players')) {
-						let numRegisteredPlayers: number = parseInt(
-							r.name.split(' ')[2].split('/')[0],
-						);
-						const maxNumTeamPlayers = r.name.split(' ')[2].split('/')[1];
-
-						numRegisteredPlayers -= 1;
-
-						r.name = `Registered players ${numRegisteredPlayers}/${maxNumTeamPlayers}`;
-						r.value =
-							playersSplitted.length >= 1
-								? '>>> ' + playersSplitted.join('\n')
-								: ' ';
-					}
-				});
-
-				await removePlayer({
-					discordUserId: interaction.user.id,
-					teamId: parseInt(teamId),
-				});
-
-				const editedEmbed = new MessageEmbed()
-					.setColor('#3a9ce2')
-					.setTitle(interaction.message.embeds[0].title || 'Undefined')
-					.setDescription(
-						interaction.message.embeds[0].description || 'Undefined',
-					)
-					.addFields(interaction.message.embeds[0].fields || [])
-					.setFooter({ text: `${footer}` });
-
-				FOUND = true;
-				return await interaction.update({ embeds: [editedEmbed] });
-			}
-
-			if (!FOUND) {
+			let newPlayersList: string = ' ';
+			if (registeredPlayers.value.length === 0) {
 				return await interaction.reply({
-					embeds: [infoMessageEmbed('You are not registered!', 'WARNING')],
+					embeds: [
+						infoMessageEmbed(
+							'The registration list is empty!',
+							'WARNING',
+						),
+					],
 					ephemeral: true,
 				});
+			} else {
+				const oldPlayersList: [string] = registeredPlayers.value
+					.split('>>> ')[1]
+					.split('\n');
+
+				if (oldPlayersList.indexOf(interaction.user.tag) === -1) {
+					return await interaction.reply({
+						embeds: [
+							infoMessageEmbed('You are not registered!', 'WARNING'),
+						],
+						ephemeral: true,
+					});
+				}
+
+				const index = oldPlayersList.indexOf(interaction.user.tag);
+				oldPlayersList.splice(index, 1);
+
+				newPlayersList = oldPlayersList.join('\n');
 			}
+
+			/* assigning updated player list back to the orignal embed field AND update player count */
+			interaction.message.embeds[0].fields?.find((r) => {
+				if (r.name.includes('Registered players')) {
+					let numRegisteredPlayers: number = parseInt(
+						r.name.split(' ')[2].split('/')[0],
+					);
+					const maxNumPlayersEmbedValue = r.name
+						.split(' ')[2]
+						.split('/')[1];
+
+					numRegisteredPlayers -= 1;
+
+					r.name = `Registered players ${numRegisteredPlayers}/${maxNumPlayersEmbedValue}`;
+					r.value = `${
+						newPlayersList.length > 0 ? '>>>' : ' '
+					} ${newPlayersList}`;
+				}
+			});
+
+			await removePlayer({
+				discordUserId: interaction.user.id,
+				teamId: parseInt(teamId),
+			});
+
+			const editedEmbed = new MessageEmbed()
+				.setColor('#3a9ce2')
+				.setTitle(interaction.message.embeds[0].title || 'Undefined')
+				.setDescription(
+					interaction.message.embeds[0].description || 'Undefined',
+				)
+				.addFields(interaction.message.embeds[0].fields || [])
+				.setFooter({ text: `${footer}` });
+
+			return await interaction.update({ embeds: [editedEmbed] });
 		} catch (err) {
 			try {
 				fs.appendFile(

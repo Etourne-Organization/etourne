@@ -59,42 +59,47 @@ const registerTeamPlayer: ButtonFunction = {
 					r.name.includes('Registered players'),
 				);
 
-			const tempSplit = registeredPlayers.value.split(' ');
+			let newPlayersList: string = ' ';
+			if (registeredPlayers.value.length === 0) {
+				newPlayersList = `${interaction.user.tag}\n`;
+			} else {
+				if (
+					registeredPlayers.value
+						.split('>>> ')[1]
+						.split('\n')
+						.indexOf(interaction.user.tag) !== -1
+				) {
+					return await interaction.reply({
+						embeds: [
+							infoMessageEmbed('You are already registered!', 'WARNING'),
+						],
+						ephemeral: true,
+					});
+				} else {
+					const oldPlayersList: [string] = registeredPlayers.value
+						.split('>>> ')[1]
+						.split('\n');
 
-			// will be helpful for checking if the member is already registered
-			const playersSplitted: string[] =
-				tempSplit.length <= 1 && tempSplit[0].length < 1
-					? ['']
-					: tempSplit[1].includes('\n')
-					? tempSplit[1].split('\n')
-					: [tempSplit[1]];
+					oldPlayersList.push(interaction.user.tag);
 
-			if (playersSplitted.indexOf(interaction.user.tag) !== -1) {
-				return await interaction.reply({
-					embeds: [
-						infoMessageEmbed('You are already registered!', 'WARNING'),
-					],
-					ephemeral: true,
-				});
+					newPlayersList = oldPlayersList.join('\n');
+				}
 			}
 
-			tempSplit.push(`${interaction.user.tag}\n`);
-			tempSplit.shift();
-
-			/* assigning updated player list back to the orignal embed field */
+			/* assigning updated player list back to the orignal embed field AND update player count */
 			interaction.message.embeds[0].fields?.find((r) => {
 				if (r.name.includes('Registered players')) {
 					let numRegisteredPlayers: number = parseInt(
 						r.name.split(' ')[2].split('/')[0],
 					);
-					const maxNumTeamPlayers = r.name.split(' ')[2].split('/')[1];
+					const maxNumPlayersEmbedValue = r.name
+						.split(' ')[2]
+						.split('/')[1];
 
 					numRegisteredPlayers += 1;
 
-					r.name = `Registered players ${numRegisteredPlayers}/${maxNumTeamPlayers}`;
-					r.value = Array.isArray(tempSplit)
-						? '>>> ' + tempSplit.join('\n')
-						: '>>> ' + tempSplit;
+					r.name = `Registered players ${numRegisteredPlayers}/${maxNumPlayersEmbedValue}`;
+					r.value = `>>> ${newPlayersList}`;
 				}
 			});
 
