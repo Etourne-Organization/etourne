@@ -13,7 +13,7 @@ const listServerEvents = {
             const allEvents = await (0, events_1.getAllServerEvents)({
                 discordServerId: interaction.guild.id,
             });
-            let eventString = '';
+            let eventString = allEvents.length > 0 ? '' : 'No events';
             allEvents.forEach((e) => {
                 const date = new Date(moment_timezone_1.default.tz(e['dateTime'], e['timezone']).format());
                 const [day, month, year, hour, minute] = [

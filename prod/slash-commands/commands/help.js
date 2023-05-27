@@ -38,6 +38,11 @@ const help = {
                     ? `</createteamevent:${commandIDs_json_1.default.CREATE_TEAM_EVENT}>`
                     : `</createteamevent:${commandIDs_json_2.default.CREATE_TEAM_EVENT}>`,
             }, {
+                name: ':notepad_spiral:  List server events',
+                value: process.env.BOT_IDS === 'TEST_BOT_IDS'
+                    ? `</listserverevents:${commandIDs_json_1.default.LIST_SERVER_EVENTS}>`
+                    : `</listserverevents:${commandIDs_json_2.default.LIST_SERVER_EVENTS}>`,
+            }, {
                 name: ':pencil2:  Set user role',
                 value: process.env.BOT_IDS === 'TEST_BOT_IDS'
                     ? `</setuserrole:${commandIDs_json_1.default.SET_USER_ROLE}>`

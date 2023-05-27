@@ -21,7 +21,7 @@ const listServerEvents: Command = {
 				discordServerId: interaction.guild!.id,
 			});
 
-			let eventString: string = '';
+			let eventString: string = allEvents.length > 0 ? '' : 'No events';
 
 			allEvents.forEach((e) => {
 				const date = new Date(

@@ -49,6 +49,13 @@ const help: Command = {
 								: `</createteamevent:${originalCommandIDs.CREATE_TEAM_EVENT}>`,
 					},
 					{
+						name: ':notepad_spiral:  List server events',
+						value:
+							process.env.BOT_IDS === 'TEST_BOT_IDS'
+								? `</listserverevents:${testCommandIDs.LIST_SERVER_EVENTS}>`
+								: `</listserverevents:${originalCommandIDs.LIST_SERVER_EVENTS}>`,
+					},
+					{
 						name: ':pencil2:  Set user role',
 						value:
 							process.env.BOT_IDS === 'TEST_BOT_IDS'
