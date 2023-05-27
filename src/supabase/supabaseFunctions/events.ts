@@ -51,6 +51,10 @@ interface updateEvent {
 	timezone: string;
 }
 
+interface getAllServerEvents {
+	discordServerId: string;
+}
+
 export const addEvent = async (props: addEvent) => {
 	const {
 		eventName,
@@ -181,6 +185,27 @@ export const getAllColumnValueById = async (props: getAllColumnValueById) => {
 	const { id } = props;
 
 	const { data, error } = await supabase.from('Events').select().eq('id', id);
+
+	if (error) throw error;
+
+	return data;
+};
+
+export const getAllServerEvents = async (props: getAllServerEvents) => {
+	const { discordServerId } = props;
+
+	const { data: getServerIdData, error: getServerIdError } = await getServerId(
+		{
+			discordServerId,
+		},
+	);
+
+	if (getServerIdError) throw getServerIdError;
+
+	const { data, error } = await supabase
+		.from('Events')
+		.select('*')
+		.eq('serverId', getServerIdData![0]['id']);
 
 	if (error) throw error;
 

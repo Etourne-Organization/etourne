@@ -8,6 +8,7 @@ import createTeamEvent from './commands/createTeamEvent/createTeamEvent';
 import setUserRole from './commands/setUserRole/setUserRole';
 import getStarted from './commands/getStarted';
 import feedback from './commands/feedback';
+import listServerEvents from './commands/listServerEvents';
 
 const allSlashCommands: Command[] = [
 	createEvent,
@@ -18,6 +19,7 @@ const allSlashCommands: Command[] = [
 	setUserRole,
 	getStarted,
 	feedback,
+	listServerEvents,
 ];
 
 export default allSlashCommands;
