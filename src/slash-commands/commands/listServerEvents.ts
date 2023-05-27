@@ -36,7 +36,9 @@ const listServerEvents: Command = {
 					date.getMinutes(),
 				];
 
-				eventString += `## ${e.eventName}\n**Game name:** ${
+				eventString += `## ${e.eventName}\n**ID:** ${
+					e.id
+				}\n**Game name:** ${
 					e.gameName
 				}\n**Date and Time:** <t:${momentTimezone
 					.tz(

@@ -23,7 +23,7 @@ const listServerEvents = {
                     date.getHours(),
                     date.getMinutes(),
                 ];
-                eventString += `## ${e.eventName}\n**Game name:** ${e.gameName}\n**Date and Time:** <t:${moment_timezone_1.default
+                eventString += `## ${e.eventName}\n**ID:** ${e.id}\n**Game name:** ${e.gameName}\n**Date and Time:** <t:${moment_timezone_1.default
                     .tz(`${day}/${month}/${year} ${hour}:${minute}`, 'DD/MM/YYYY hh:mm', e.timezone)
                     .unix()}:F>\n**Event type:** ${e.isTeamEvent ? 'Team' : 'Normal (no team)'}\n\n`;
             });
