@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllColumnValueById = exports.deleteEvent = exports.getColumnValueById = exports.setColumnValue = exports.updateEvent = exports.addEvent = void 0;
+exports.getAllServerEvents = exports.getAllColumnValueById = exports.deleteEvent = exports.getColumnValueById = exports.setColumnValue = exports.updateEvent = exports.addEvent = void 0;
 const supabase_1 = require("../supabase");
 const servers_1 = require("./servers");
 const addEvent = async (props) => {
@@ -100,3 +100,19 @@ const getAllColumnValueById = async (props) => {
     return data;
 };
 exports.getAllColumnValueById = getAllColumnValueById;
+const getAllServerEvents = async (props) => {
+    const { discordServerId } = props;
+    const { data: getServerIdData, error: getServerIdError } = await (0, servers_1.getServerId)({
+        discordServerId,
+    });
+    if (getServerIdError)
+        throw getServerIdError;
+    const { data, error } = await supabase_1.supabase
+        .from('Events')
+        .select('*')
+        .eq('serverId', getServerIdData[0]['id']);
+    if (error)
+        throw error;
+    return data;
+};
+exports.getAllServerEvents = getAllServerEvents;
