@@ -18,8 +18,8 @@ const removePlayer: SelectMenu = {
 	customId: 'removePlayer',
 	run: async (client: Client, interaction: SelectMenuInteraction) => {
 		try {
-			const username: string = interaction.values[0].split('|')[0];
-			const userId: string = interaction.values[0].split('|')[1];
+			const username: string = interaction.values[0].split('||')[0];
+			const userId: string = interaction.values[0].split('||')[1];
 			const eventId: string | any =
 				interaction.message.embeds[0].footer?.text.split(': ')[1];
 
@@ -80,7 +80,7 @@ const removePlayer: SelectMenu = {
 							.split('>>> ')[1]
 							.split('\n');
 
-						const index = oldPlayersList.indexOf(interaction.user.tag);
+						const index = oldPlayersList.indexOf(username);
 						oldPlayersList.splice(index, 1);
 						const newPlayersList: string = oldPlayersList.join('\n');
 
