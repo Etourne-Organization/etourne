@@ -58,7 +58,12 @@ const register: ButtonFunction = {
 						.split('\n')
 						.indexOf(interaction.user.tag) !== -1
 				) {
-					console.log('User already exists!');
+					return await interaction.reply({
+						embeds: [
+							infoMessageEmbed('You are already registered!', 'WARNING'),
+						],
+						ephemeral: true,
+					});
 				} else {
 					const oldPlayersList: [string] = registeredPlayers.value
 						.split('>>> ')[1]
@@ -87,12 +92,12 @@ const register: ButtonFunction = {
 				}
 			});
 
-			// await addPlayer({
-			// 	username: interaction.user.tag,
-			// 	discordUserId: interaction.user.id,
-			// 	eventId: parseInt(eventId),
-			// 	discordServerId: interaction.guild?.id!,
-			// });
+			await addPlayer({
+				username: interaction.user.tag,
+				discordUserId: interaction.user.id,
+				eventId: parseInt(eventId),
+				discordServerId: interaction.guild?.id!,
+			});
 
 			const editedEmbed = new MessageEmbed()
 				.setColor('#3a9ce2')
