@@ -28,6 +28,8 @@ const listServerEvents: Command = {
 					momentTimezone.tz(e['dateTime'], e['timezone']).format(),
 				);
 
+				console.log('date', date);
+
 				const [day, month, year, hour, minute] = [
 					date.getDate(),
 					date.getMonth() + 1,
@@ -35,6 +37,9 @@ const listServerEvents: Command = {
 					date.getHours(),
 					date.getMinutes(),
 				];
+
+				console.log(`${day}/${month}/${year} ${hour}:${minute}`);
+				console.log(new Date(e['dateTime']));
 
 				eventString += `## ${e.eventName}\n**ID:** ${
 					e.id
