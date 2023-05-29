@@ -50,7 +50,6 @@ const deleteEvent = {
                 collector?.on('collect', async (i) => {
                     if (i.customId.includes('deleteYes')) {
                         await fetchedMessage.delete();
-                        console.log('deleting' + eventId);
                         await (0, events_1.deleteEvent)({ eventId: parseInt(eventId) });
                         await interaction.deleteReply();
                         await i.reply({
