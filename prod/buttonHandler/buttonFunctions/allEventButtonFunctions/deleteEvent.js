@@ -76,6 +76,7 @@ const deleteEvent = {
             }
         }
         catch (err) {
+            console.log(err);
             try {
                 fs_1.default.appendFile('logs/crash_logs.txt', `${new Date()} : Something went wrong in buttonFunctions/allEventButtonFunctions/deleteEvent.ts \n Actual error: ${err} \n \n`, (err) => {
                     if (err)

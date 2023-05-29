@@ -133,6 +133,7 @@ const deleteEvent: ButtonFunction = {
 				});
 			}
 		} catch (err) {
+			console.log(err);
 			try {
 				fs.appendFile(
 					'logs/crash_logs.txt',

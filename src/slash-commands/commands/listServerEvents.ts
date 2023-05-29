@@ -38,8 +38,8 @@ const listServerEvents: Command = {
 					date.getMinutes(),
 				];
 
-				console.log(`${day}/${month}/${year} ${hour}:${minute}`);
-				console.log(new Date(e['dateTime']));
+				// console.log(`${day}/${month}/${year} ${hour}:${minute}`);
+				// console.log(new Date(e['dateTime']));
 
 				eventString += `## ${e.eventName}\n**ID:** ${
 					e.id
