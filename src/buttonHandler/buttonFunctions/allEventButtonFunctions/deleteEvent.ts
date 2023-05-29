@@ -104,6 +104,8 @@ const deleteEvent: ButtonFunction = {
 					if (i.customId.includes('deleteYes')) {
 						await fetchedMessage.delete();
 
+						console.log('deleting' + eventId);
+
 						await deleteEventSupabase({ eventId: parseInt(eventId) });
 
 						await interaction.deleteReply();

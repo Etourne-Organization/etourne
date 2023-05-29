@@ -178,6 +178,8 @@ export const deleteEvent = async (props: deletEvent) => {
 
 	if (error) throw error;
 
+	console.log('error from supabase for deleting event', error);
+
 	return { data, error };
 };
 

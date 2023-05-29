@@ -89,6 +89,7 @@ const deleteEvent = async (props) => {
         .eq('id', eventId);
     if (error)
         throw error;
+    console.log('error from supabase for deleting event', error);
     return { data, error };
 };
 exports.deleteEvent = deleteEvent;
