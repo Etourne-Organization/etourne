@@ -25,10 +25,10 @@ const listServerEvents: Command = {
 
 			allEvents.forEach((e) => {
 				const date = new Date(
-					momentTimezone.tz(e['dateTime'], e['timezone']).format(),
+					momentTimezone.tz(e['dateTime'], 'CST6CDT').format(),
 				);
 
-				console.log('date', date);
+				const moment = momentTimezone.tz(e['dateTime'], 'CST6CDT').format();
 
 				const [day, month, year, hour, minute] = [
 					date.getDate(),
@@ -39,7 +39,8 @@ const listServerEvents: Command = {
 				];
 
 				// console.log(`${day}/${month}/${year} ${hour}:${minute}`);
-				// console.log(new Date(e['dateTime']));
+				console.log(momentTimezone.tz(e['dateTime'], 'CST6CDT').format());
+				console.log('dates', date);
 
 				eventString += `## ${e.eventName}\n**ID:** ${
 					e.id
