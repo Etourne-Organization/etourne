@@ -1,7 +1,6 @@
 import fs from 'fs';
 
 import { BaseCommandInteraction, Client, MessageEmbed } from 'discord.js';
-import momentTimezone from 'moment-timezone';
 import dayjs from 'dayjs';
 
 import { Command } from '../CommandStructure';
@@ -20,10 +19,6 @@ const listServerEvents: Command = {
 			let eventString: string = allEvents.length > 0 ? '' : 'No events';
 
 			allEvents.forEach((e) => {
-				const date = new Date(
-					momentTimezone.tz(e['dateTime'], 'CST6CDT').format(),
-				);
-
 				eventString += `## ${e.eventName}\n**ID:** ${
 					e.id
 				}\n**Game name:** ${e.gameName}\n**Date and Time:** <t:${dayjs(

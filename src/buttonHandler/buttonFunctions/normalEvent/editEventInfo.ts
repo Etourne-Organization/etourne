@@ -9,6 +9,8 @@ import {
 	ModalActionRowComponent,
 } from 'discord.js';
 import momentTimezone from 'moment-timezone';
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 
 import { ButtonFunction } from '../../ButtonStructure';
 import { getAllColumnValueById } from '../../../supabase/supabaseFunctions/events';
@@ -19,6 +21,8 @@ const editEventInfo: ButtonFunction = {
 	customId: 'editEventInfo',
 	run: async (client: Client, interaction: ButtonInteraction) => {
 		try {
+			dayjs.extend(customParseFormat);
+
 			// check user role in DB
 			const userRoleDB: any = await getUserRole({
 				discordUserId: interaction.user.id,
@@ -58,6 +62,8 @@ const editEventInfo: ButtonFunction = {
 				date.getHours(),
 				date.getMinutes(),
 			];
+
+			console.log(dayjs(allColumnValue[0]['dateTime'], 'DD/MM/YYYY HH:mm'));
 
 			const modal = new Modal()
 				.setCustomId(`editEventInfoModal-${interaction.id}`)
