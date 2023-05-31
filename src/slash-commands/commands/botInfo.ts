@@ -19,7 +19,6 @@ const botInfo: Command = {
 					iconURL: `${client.user!.displayAvatarURL()}`,
 				})
 				.addFields(
-					// { name: '\u200B', value: '\u200B' },
 					{ name: 'Bot Tag', value: `${client.user!.tag}` },
 					{ name: 'Bot version', value: `1.0.0` },
 					{
@@ -31,10 +30,6 @@ const botInfo: Command = {
 						name: 'Server Count',
 						value: `${client.guilds.cache.size}`,
 					},
-					// {
-					// 	name: 'Status of the app/bot',
-					// 	value: `Work in progress`,
-					// },
 				)
 				.setFooter({ text: 'Creator: mz10ah#0054' })
 				.setTimestamp();

@@ -1,12 +1,8 @@
 import fs from 'fs';
 
-import {
-	BaseCommandInteraction,
-	Client,
-	Message,
-	MessageEmbed,
-} from 'discord.js';
+import { BaseCommandInteraction, Client, MessageEmbed } from 'discord.js';
 import momentTimezone from 'moment-timezone';
+import dayjs from 'dayjs';
 
 import { Command } from '../CommandStructure';
 import { getAllServerEvents } from '../../supabase/supabaseFunctions/events';
@@ -28,31 +24,11 @@ const listServerEvents: Command = {
 					momentTimezone.tz(e['dateTime'], 'CST6CDT').format(),
 				);
 
-				const moment = momentTimezone.tz(e['dateTime'], 'CST6CDT').format();
-
-				const [day, month, year, hour, minute] = [
-					date.getDate(),
-					date.getMonth() + 1,
-					date.getFullYear(),
-					date.getHours(),
-					date.getMinutes(),
-				];
-
-				// console.log(`${day}/${month}/${year} ${hour}:${minute}`);
-				console.log(momentTimezone.tz(e['dateTime'], 'CST6CDT').format());
-				console.log('dates', date);
-
 				eventString += `## ${e.eventName}\n**ID:** ${
 					e.id
-				}\n**Game name:** ${
-					e.gameName
-				}\n**Date and Time:** <t:${momentTimezone
-					.tz(
-						`${day}/${month}/${year} ${hour}:${minute}`,
-						'DD/MM/YYYY hh:mm',
-						e.timezone,
-					)
-					.unix()}:F>\n**Event type:** ${
+				}\n**Game name:** ${e.gameName}\n**Date and Time:** <t:${dayjs(
+					e['dateTime'],
+				).unix()}:F>\n**Event type:** ${
 					e.isTeamEvent ? 'Team' : 'Normal (no team)'
 				}\n\n`;
 			});
