@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const fs_1 = tslib_1.__importDefault(require("fs"));
 const discord_js_1 = require("discord.js");
-const moment_timezone_1 = tslib_1.__importDefault(require("moment-timezone"));
 const events_1 = require("../../../supabase/supabaseFunctions/events");
 const users_1 = require("../../../supabase/supabaseFunctions/users");
 const infoMessageEmbed_1 = tslib_1.__importDefault(require("../../../globalUtils/infoMessageEmbed"));
@@ -26,16 +25,6 @@ const editTeamEventInfo = {
             }
             const eventId = interaction.message.embeds[0].footer?.text.split(': ')[1];
             const allColumnValue = await (0, events_1.getAllColumnValueById)({ id: eventId });
-            const date = new Date(moment_timezone_1.default
-                .tz(allColumnValue[0]['dateTime'], allColumnValue[0]['timezone'])
-                .format());
-            const [day, month, year, hour, minute] = [
-                date.getDate(),
-                date.getMonth() + 1,
-                date.getFullYear(),
-                date.getHours(),
-                date.getMinutes(),
-            ];
             const modal = new discord_js_1.Modal()
                 .setCustomId(`editTeamEventInfoModal-${interaction.id}`)
                 .setTitle('Edit event');
@@ -55,8 +44,7 @@ const editTeamEventInfo = {
                 .setCustomId('date')
                 .setLabel('Date (format: DD/MM/YYYY hour:minute)')
                 .setStyle('SHORT')
-                .setPlaceholder('Event date')
-                .setValue(`${day}/${month}/${year} ${hour}:${minute}`);
+                .setPlaceholder('Event date and time');
             const eventTimezoneInput = new discord_js_1.TextInputComponent()
                 .setCustomId('timezone')
                 .setLabel('Your timezone: timezones.etourne.xyz')

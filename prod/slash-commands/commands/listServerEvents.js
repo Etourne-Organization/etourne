@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const fs_1 = tslib_1.__importDefault(require("fs"));
 const discord_js_1 = require("discord.js");
-const moment_timezone_1 = tslib_1.__importDefault(require("moment-timezone"));
 const dayjs_1 = tslib_1.__importDefault(require("dayjs"));
 const events_1 = require("../../supabase/supabaseFunctions/events");
 const listServerEvents = {
@@ -16,7 +15,6 @@ const listServerEvents = {
             });
             let eventString = allEvents.length > 0 ? '' : 'No events';
             allEvents.forEach((e) => {
-                const date = new Date(moment_timezone_1.default.tz(e['dateTime'], 'CST6CDT').format());
                 eventString += `## ${e.eventName}\n**ID:** ${e.id}\n**Game name:** ${e.gameName}\n**Date and Time:** <t:${(0, dayjs_1.default)(e['dateTime']).unix()}:F>\n**Event type:** ${e.isTeamEvent ? 'Team' : 'Normal (no team)'}\n\n`;
             });
             const embed = new discord_js_1.MessageEmbed()

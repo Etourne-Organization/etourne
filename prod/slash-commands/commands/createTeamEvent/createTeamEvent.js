@@ -43,7 +43,7 @@ const createTeamEvent = {
                 .setCustomId('date')
                 .setLabel('Date (format: DD/MM/YYYY hour:minute)')
                 .setStyle('SHORT')
-                .setPlaceholder('Event date')
+                .setPlaceholder('Event date and time')
                 .setRequired(true);
             const eventTimezoneInput = new discord_js_1.TextInputComponent()
                 .setCustomId('timezone')
