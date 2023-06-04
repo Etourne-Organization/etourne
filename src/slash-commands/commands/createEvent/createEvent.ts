@@ -65,7 +65,7 @@ const createEvent: Command = {
 				.setCustomId('date')
 				.setLabel('Date (format: DD/MM/YYYY hour:minute)')
 				.setStyle('SHORT')
-				.setPlaceholder('Event date')
+				.setPlaceholder('Event date and time')
 				.setRequired(true);
 
 			const eventTimezoneInput = new TextInputComponent()

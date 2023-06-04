@@ -3,13 +3,11 @@ import fs from 'fs';
 import {
 	Client,
 	ButtonInteraction,
-	MessageEmbed,
 	Modal,
 	TextInputComponent,
 	MessageActionRow,
 	ModalActionRowComponent,
 } from 'discord.js';
-import momentTimezone, { min } from 'moment-timezone';
 
 import { ButtonFunction } from '../../ButtonStructure';
 import { getAllColumnValueById } from '../../../supabase/supabaseFunctions/events';
@@ -46,20 +44,6 @@ const editTeamEventInfo: ButtonFunction = {
 
 			const allColumnValue = await getAllColumnValueById({ id: eventId });
 
-			const date = new Date(
-				momentTimezone
-					.tz(allColumnValue[0]['dateTime'], allColumnValue[0]['timezone'])
-					.format(),
-			);
-
-			const [day, month, year, hour, minute] = [
-				date.getDate(),
-				date.getMonth() + 1,
-				date.getFullYear(),
-				date.getHours(),
-				date.getMinutes(),
-			];
-
 			const modal = new Modal()
 				.setCustomId(`editTeamEventInfoModal-${interaction.id}`)
 				.setTitle('Edit event');
@@ -82,8 +66,7 @@ const editTeamEventInfo: ButtonFunction = {
 				.setCustomId('date')
 				.setLabel('Date (format: DD/MM/YYYY hour:minute)')
 				.setStyle('SHORT')
-				.setPlaceholder('Event date')
-				.setValue(`${day}/${month}/${year} ${hour}:${minute}`);
+				.setPlaceholder('Event date and time');
 
 			const eventTimezoneInput = new TextInputComponent()
 				.setCustomId('timezone')
