@@ -45,7 +45,7 @@ interface updateEvent {
 	eventName: string;
 	gameName: string;
 	description: string;
-	dateTime: string;
+	dateTime: string | null;
 	isTeamEvent: boolean;
 	discordServerId: string;
 	timezone: string;
@@ -128,7 +128,6 @@ export const updateEvent = async (props: updateEvent) => {
 				eventName: eventName,
 				gameName: gameName,
 				description: description,
-				dateTime: dateTime,
 				isTeamEvent: isTeamEvent,
 				serverId: getServerIdData![0]['id'],
 				timezone: timezone,
@@ -136,6 +135,19 @@ export const updateEvent = async (props: updateEvent) => {
 		])
 		.eq('id', eventId)
 		.select();
+
+	if (dateTime) {
+		const { data, error } = await supabase
+			.from('Events')
+			.update([
+				{
+					dateTime: dateTime,
+				},
+			])
+			.eq('id', eventId);
+
+		if (error) throw error;
+	}
 
 	if (error) throw error;
 

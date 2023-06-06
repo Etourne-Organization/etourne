@@ -50,6 +50,16 @@ const editTeamEventInfoModal: ModalFunction = {
 				(r) => r.name === 'Hosted by',
 			);
 
+			const eventDateTimeEmbedValue:
+				| {
+						name: string;
+						value: string;
+						inline: boolean;
+				  }
+				| any = interaction.message?.embeds[0].fields?.find((r) =>
+				r.name.includes('Event date & time'),
+			);
+
 			const editedEmbed = new MessageEmbed()
 				.setColor('#3a9ce2')
 				.setTitle(eventName)
@@ -59,10 +69,11 @@ const editTeamEventInfoModal: ModalFunction = {
 				.addFields([
 					{
 						name: 'Event date & time',
-						value: `<t:${momentTimezone
-							.tz(eventDateTime, 'DD/MM/YYYY hh:mm', timezone)
-							.unix()}:F>`,
-						inline: true,
+						value: eventDateTime
+							? `<t:${momentTimezone
+									.tz(eventDateTime, 'DD/MM/YYYY hh:mm', timezone)
+									.unix()}:F>`
+							: eventDateTimeEmbedValue['value'],
 					},
 					{ name: 'Game name', value: gameName, inline: true },
 					{
@@ -90,11 +101,13 @@ const editTeamEventInfoModal: ModalFunction = {
 				eventName: eventName,
 				gameName: gameName,
 				description: description,
-				dateTime: new Date(
-					momentTimezone
-						.tz(eventDateTime, 'DD/MM/YYYY hh:mm', timezone)
-						.format(),
-				).toISOString(),
+				dateTime: eventDateTime
+					? new Date(
+							momentTimezone
+								.tz(eventDateTime, 'DD/MM/YYYY hh:mm', timezone)
+								.format(),
+					  ).toISOString()
+					: null,
 				isTeamEvent: false,
 				discordServerId: interaction.guild.id,
 				timezone: timezone,
@@ -110,6 +123,7 @@ const editTeamEventInfoModal: ModalFunction = {
 			});
 		} catch (err) {
 			try {
+				console.log(err);
 				fs.appendFile(
 					'logs/crash_logs.txt',
 					`${new Date()} : Something went wrong in modalFunctions/teamEvent/editTeamEventInfoModal.ts \n Actual error: ${err} \n \n`,

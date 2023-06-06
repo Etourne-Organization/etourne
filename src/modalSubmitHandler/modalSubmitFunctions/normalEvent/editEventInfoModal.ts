@@ -23,6 +23,16 @@ const editEventInfoModal: ModalFunction = {
 				r.name.includes('Registered players'),
 			);
 
+			const eventDateTimeEmbedValue:
+				| {
+						name: string;
+						value: string;
+						inline: boolean;
+				  }
+				| any = interaction.message?.embeds[0].fields?.find((r) =>
+				r.name.includes('Event date & time'),
+			);
+
 			const eventName = interaction.fields.getTextInputValue('eventName');
 			const gameName = interaction.fields.getTextInputValue('gameName');
 			const timezone = interaction.fields.getTextInputValue('timezone');
@@ -39,9 +49,11 @@ const editEventInfoModal: ModalFunction = {
 				.addFields([
 					{
 						name: 'Event date & time',
-						value: `<t:${momentTimezone
-							.tz(eventDateTime, 'DD/MM/YYYY hh:mm', timezone)
-							.unix()}:F>`,
+						value: eventDateTime
+							? `<t:${momentTimezone
+									.tz(eventDateTime, 'DD/MM/YYYY hh:mm', timezone)
+									.unix()}:F>`
+							: eventDateTimeEmbedValue['value'],
 						inline: true,
 					},
 					{ name: 'Game name', value: gameName, inline: true },
@@ -65,11 +77,13 @@ const editEventInfoModal: ModalFunction = {
 				eventName: eventName,
 				gameName: gameName,
 				description: description,
-				dateTime: new Date(
-					momentTimezone
-						.tz(eventDateTime, 'DD/MM/YYYY hh:mm', timezone)
-						.format(),
-				).toISOString(),
+				dateTime: eventDateTime
+					? new Date(
+							momentTimezone
+								.tz(eventDateTime, 'DD/MM/YYYY hh:mm', timezone)
+								.format(),
+					  ).toISOString()
+					: null,
 				isTeamEvent: false,
 				discordServerId: interaction.guild.id,
 				timezone: timezone,
