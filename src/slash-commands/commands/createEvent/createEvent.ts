@@ -63,7 +63,7 @@ const createEvent: Command = {
 
 			const eventDateTimeInput = new TextInputComponent()
 				.setCustomId('dateTime')
-				.setLabel('Date (format: YYYY-MM-DD HH:mm)')
+				.setLabel('Date (format: DD/MM/YYYY HH:mm)')
 				.setStyle('SHORT')
 				.setPlaceholder('Event date and time')
 				.setRequired(true);

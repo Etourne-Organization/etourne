@@ -16,12 +16,8 @@ import {
 	setColumnValue,
 } from '../../../supabase/supabaseFunctions/events';
 import {
-	getSortedNormalizedTimezoneNames,
-	getTimezoneValue,
-	isoFormattingDateFormat,
 	isoParsingDateFormat,
 	isoTimeFormat,
-	momentToTimeInputValue,
 } from '../../../utilities/timezone';
 
 const normalEventModal: ModalFunction = {
@@ -35,18 +31,6 @@ const normalEventModal: ModalFunction = {
 			const description =
 				interaction.fields.getTextInputValue('eventDescription');
 
-			console.log(
-				`<t:${moment
-					.tz(
-						`${eventDateTime.split(' ')[0]}T${
-							eventDateTime.split(' ')[1]
-						}`,
-						`${isoParsingDateFormat}T${isoTimeFormat}`,
-						timezone,
-					)
-					.unix()}:F>`,
-			);
-
 			const eventEmbed = new MessageEmbed()
 				.setColor('#3a9ce2')
 				.setTitle(eventName)
@@ -57,7 +41,13 @@ const normalEventModal: ModalFunction = {
 					{
 						name: 'Event date & time',
 						value: `<t:${moment
-							.tz('12/12/2023 12:12', 'DD/MM/YYYY hh:mm', timezone)
+							.tz(
+								`${eventDateTime.split(' ')[0]}T${
+									eventDateTime.split(' ')[1]
+								}`,
+								`${isoParsingDateFormat}T${isoTimeFormat}`,
+								timezone,
+							)
 							.unix()}:F>`,
 						inline: true,
 					},
