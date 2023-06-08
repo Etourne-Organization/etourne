@@ -18,6 +18,7 @@ import {
 import {
 	isoParsingDateFormat,
 	isoTimeFormat,
+	getTimzeonValueFromLabel,
 } from '../../../utilities/timezone';
 
 const normalEventModal: ModalFunction = {
@@ -46,7 +47,7 @@ const normalEventModal: ModalFunction = {
 									eventDateTime.split(' ')[1]
 								}`,
 								`${isoParsingDateFormat}T${isoTimeFormat}`,
-								timezone,
+								getTimzeonValueFromLabel(timezone),
 							)
 							.unix()}:F>`,
 						inline: true,
@@ -98,7 +99,11 @@ const normalEventModal: ModalFunction = {
 				description: description,
 				dateTime: new Date(
 					moment
-						.tz('12/12/2023 12:12', 'DD/MM/YYYY hh:mm', timezone)
+						.tz(
+							'12/12/2023 12:12',
+							'DD/MM/YYYY hh:mm',
+							getTimzeonValueFromLabel(timezone),
+						)
 						.format(),
 				).toISOString(),
 				isTeamEvent: false,

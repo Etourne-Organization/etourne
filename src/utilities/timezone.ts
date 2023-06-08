@@ -7,6 +7,18 @@ export const isoParsingDateFormat = 'DD/MM/YYYY';
 
 export const gmtZoneRegex = /^Etc\/(GMT([+-]\d+)?)$/;
 
+export const getTimzeonValueFromLabel = (label: string) => {
+	/*
+		maps timezone labels with values by creating an object
+	*/
+
+	const tzs = getSortedNormalizedTimezoneNames().map((tz) =>
+		getTimezoneValue(tz),
+	);
+
+	return tzs.filter((tz) => tz.label === label.trim())[0]['value'];
+};
+
 const formatGmtZoneLabel = (offset = '') => `GMT${offset} (UTC${offset})`;
 
 export const transformGmtZoneName = (value: string): string =>
