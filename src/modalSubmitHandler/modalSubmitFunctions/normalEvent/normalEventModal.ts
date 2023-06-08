@@ -100,8 +100,10 @@ const normalEventModal: ModalFunction = {
 				dateTime: new Date(
 					moment
 						.tz(
-							'12/12/2023 12:12',
-							'DD/MM/YYYY hh:mm',
+							`${eventDateTime.split(' ')[0]}T${
+								eventDateTime.split(' ')[1]
+							}`,
+							`${isoParsingDateFormat}T${isoTimeFormat}`,
 							getTimzeonValueFromLabel(timezone),
 						)
 						.format(),

@@ -66,7 +66,7 @@ const editTeamEventInfo: ButtonFunction = {
 				.setCustomId('date')
 				.setLabel('Date (format: DD/MM/YYYY hour:minute)')
 				.setStyle('SHORT')
-				.setPlaceholder('Event date and time');
+				.setPlaceholder('Leave empty if changing not required');
 
 			const eventTimezoneInput = new TextInputComponent()
 				.setCustomId('timezone')

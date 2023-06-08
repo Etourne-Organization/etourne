@@ -1,10 +1,15 @@
 import fs from 'fs';
 
 import { Client, ModalSubmitInteraction, MessageEmbed } from 'discord.js';
-import momentTimezone from 'moment-timezone';
+import moment from 'moment-timezone';
 
 import { ModalFunction } from '../../ModalSubmitStructure';
 import { updateEvent } from '../../../supabase/supabaseFunctions/events';
+import {
+	isoParsingDateFormat,
+	isoTimeFormat,
+	getTimzeonValueFromLabel,
+} from '../../../utilities/timezone';
 
 const editEventInfoModal: ModalFunction = {
 	customId: 'editEventInfoModal',
@@ -50,8 +55,14 @@ const editEventInfoModal: ModalFunction = {
 					{
 						name: 'Event date & time',
 						value: eventDateTime
-							? `<t:${momentTimezone
-									.tz(eventDateTime, 'DD/MM/YYYY hh:mm', timezone)
+							? `<t:${moment
+									.tz(
+										`${eventDateTime.split(' ')[0]}T${
+											eventDateTime.split(' ')[1]
+										}`,
+										`${isoParsingDateFormat}T${isoTimeFormat}`,
+										getTimzeonValueFromLabel(timezone),
+									)
 									.unix()}:F>`
 							: eventDateTimeEmbedValue['value'],
 						inline: true,
@@ -79,8 +90,14 @@ const editEventInfoModal: ModalFunction = {
 				description: description,
 				dateTime: eventDateTime
 					? new Date(
-							momentTimezone
-								.tz(eventDateTime, 'DD/MM/YYYY hh:mm', timezone)
+							moment
+								.tz(
+									`${eventDateTime.split(' ')[0]}T${
+										eventDateTime.split(' ')[1]
+									}`,
+									`${isoParsingDateFormat}T${isoTimeFormat}`,
+									getTimzeonValueFromLabel(timezone),
+								)
 								.format(),
 					  ).toISOString()
 					: null,
