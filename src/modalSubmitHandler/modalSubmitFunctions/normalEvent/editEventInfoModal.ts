@@ -38,6 +38,16 @@ const editEventInfoModal: ModalFunction = {
 				r.name.includes('Event date & time'),
 			);
 
+			const eventHost:
+				| {
+						name: string;
+						value: string;
+						inline: boolean;
+				  }
+				| any = interaction.message?.embeds[0].fields?.find((r) =>
+				r.name.includes('Hosted by'),
+			);
+
 			const eventName = interaction.fields.getTextInputValue('eventName');
 			const gameName = interaction.fields.getTextInputValue('gameName');
 			const timezone = interaction.fields.getTextInputValue('timezone');
@@ -68,7 +78,7 @@ const editEventInfoModal: ModalFunction = {
 						inline: true,
 					},
 					{ name: 'Game name', value: gameName, inline: true },
-					{ name: 'Hosted by', value: `${interaction.user.tag}` },
+					{ name: 'Hosted by', value: `${eventHost.value}` },
 					{
 						name: registeredPlayers.name,
 						value:

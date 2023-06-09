@@ -13,6 +13,7 @@ const editTeamInfoModal = {
             const registeredPlayers = interaction.message?.embeds[0].fields?.find((r) => r.name.includes('Registered players'));
             const eventDateTime = interaction.message?.embeds[0].fields?.find((r) => r.name === 'Event Date and Time');
             const eventName = interaction.message?.embeds[0].fields?.find((r) => r.name === 'Event Name');
+            const teamLeader = interaction.message?.embeds[0].fields?.find((r) => r.name === 'Team Leader');
             const teamName = interaction.fields.getTextInputValue('teamName');
             const teamShortDescription = interaction.fields.getTextInputValue('teamShortDescription');
             const editedEmbed = new discord_js_1.MessageEmbed()
@@ -22,7 +23,7 @@ const editTeamInfoModal = {
                 .addFields([
                 {
                     name: 'Team Leader',
-                    value: interaction.user.tag,
+                    value: teamLeader.value,
                 },
                 {
                     name: 'Event Name',

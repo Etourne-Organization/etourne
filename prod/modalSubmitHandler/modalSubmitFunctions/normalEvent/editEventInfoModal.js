@@ -13,6 +13,7 @@ const editEventInfoModal = {
             const eventId = interaction.message?.embeds[0].footer?.text.split(': ')[1];
             const registeredPlayers = interaction.message?.embeds[0].fields?.find((r) => r.name.includes('Registered players'));
             const eventDateTimeEmbedValue = interaction.message?.embeds[0].fields?.find((r) => r.name.includes('Event date & time'));
+            const eventHost = interaction.message?.embeds[0].fields?.find((r) => r.name.includes('Hosted by'));
             const eventName = interaction.fields.getTextInputValue('eventName');
             const gameName = interaction.fields.getTextInputValue('gameName');
             const timezone = interaction.fields.getTextInputValue('timezone');
@@ -33,7 +34,7 @@ const editEventInfoModal = {
                     inline: true,
                 },
                 { name: 'Game name', value: gameName, inline: true },
-                { name: 'Hosted by', value: `${interaction.user.tag}` },
+                { name: 'Hosted by', value: `${eventHost.value}` },
                 {
                     name: registeredPlayers.name,
                     value: registeredPlayers.value.length <= 0

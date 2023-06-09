@@ -44,6 +44,16 @@ const editTeamInfoModal: ModalFunction = {
 				(r) => r.name === 'Event Name',
 			);
 
+			const teamLeader:
+				| {
+						name: string;
+						value: string;
+						inline: boolean;
+				  }
+				| any = interaction.message?.embeds[0].fields?.find(
+				(r) => r.name === 'Team Leader',
+			);
+
 			const teamName: string =
 				interaction.fields.getTextInputValue('teamName');
 			const teamShortDescription: string =
@@ -56,7 +66,7 @@ const editTeamInfoModal: ModalFunction = {
 				.addFields([
 					{
 						name: 'Team Leader',
-						value: interaction.user.tag,
+						value: teamLeader.value,
 					},
 					{
 						name: 'Event Name',
