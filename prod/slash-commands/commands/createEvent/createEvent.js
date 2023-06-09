@@ -40,8 +40,8 @@ const createEvent = {
                 .setPlaceholder('Game name')
                 .setRequired(true);
             const eventDateTimeInput = new discord_js_1.TextInputComponent()
-                .setCustomId('date')
-                .setLabel('Date (format: DD/MM/YYYY hour:minute)')
+                .setCustomId('dateTime')
+                .setLabel('Date (format: DD/MM/YYYY HH:mm)')
                 .setStyle('SHORT')
                 .setPlaceholder('Event date and time')
                 .setRequired(true);

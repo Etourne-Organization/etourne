@@ -6,6 +6,7 @@ const discord_js_1 = require("discord.js");
 const moment_timezone_1 = tslib_1.__importDefault(require("moment-timezone"));
 const events_1 = require("../../../supabase/supabaseFunctions/events");
 const updateAllTeamInfo_1 = tslib_1.__importDefault(require("./utils/updateAllTeamInfo"));
+const timezone_1 = require("../../../utilities/timezone");
 const editTeamEventInfoModal = {
     customId: 'editTeamEventInfoModal',
     run: async (client, interaction) => {
@@ -25,6 +26,7 @@ const editTeamEventInfoModal = {
                 columnName: 'maxNumTeamPlayers',
             });
             const eventHost = interaction.message?.embeds[0].fields?.find((r) => r.name === 'Hosted by');
+            const eventDateTimeEmbedValue = interaction.message?.embeds[0].fields?.find((r) => r.name.includes('Event date & time'));
             const editedEmbed = new discord_js_1.MessageEmbed()
                 .setColor('#3a9ce2')
                 .setTitle(eventName)
@@ -32,9 +34,11 @@ const editTeamEventInfoModal = {
                 .addFields([
                 {
                     name: 'Event date & time',
-                    value: `<t:${moment_timezone_1.default
-                        .tz(eventDateTime, 'DD/MM/YYYY hh:mm', timezone)
-                        .unix()}:F>`,
+                    value: eventDateTime
+                        ? `<t:${moment_timezone_1.default
+                            .tz(`${eventDateTime.split(' ')[0]}T${eventDateTime.split(' ')[1]}`, `${timezone_1.isoParsingDateFormat}T${timezone_1.isoTimeFormat}`, (0, timezone_1.getTimzeonValueFromLabel)(timezone))
+                            .unix()}:F>`
+                        : eventDateTimeEmbedValue['value'],
                     inline: true,
                 },
                 { name: 'Game name', value: gameName, inline: true },
@@ -62,9 +66,11 @@ const editTeamEventInfoModal = {
                 eventName: eventName,
                 gameName: gameName,
                 description: description,
-                dateTime: new Date(moment_timezone_1.default
-                    .tz(eventDateTime, 'DD/MM/YYYY hh:mm', timezone)
-                    .format()).toISOString(),
+                dateTime: eventDateTime
+                    ? new Date(moment_timezone_1.default
+                        .tz(`${eventDateTime.split(' ')[0]}T${eventDateTime.split(' ')[1]}`, `${timezone_1.isoParsingDateFormat}T${timezone_1.isoTimeFormat}`, (0, timezone_1.getTimzeonValueFromLabel)(timezone))
+                        .format()).toISOString()
+                    : null,
                 isTeamEvent: false,
                 discordServerId: interaction.guild.id,
                 timezone: timezone,
@@ -79,6 +85,7 @@ const editTeamEventInfoModal = {
         }
         catch (err) {
             try {
+                console.log(err);
                 fs_1.default.appendFile('logs/crash_logs.txt', `${new Date()} : Something went wrong in modalFunctions/teamEvent/editTeamEventInfoModal.ts \n Actual error: ${err} \n \n`, (err) => {
                     if (err)
                         throw err;

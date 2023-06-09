@@ -44,7 +44,7 @@ const editTeamEventInfo = {
                 .setCustomId('date')
                 .setLabel('Date (format: DD/MM/YYYY hour:minute)')
                 .setStyle('SHORT')
-                .setPlaceholder('Event date and time');
+                .setPlaceholder('Leave empty if changing not required');
             const eventTimezoneInput = new discord_js_1.TextInputComponent()
                 .setCustomId('timezone')
                 .setLabel('Your timezone: timezones.etourne.xyz')

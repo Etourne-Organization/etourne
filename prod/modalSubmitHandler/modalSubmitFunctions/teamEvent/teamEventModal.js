@@ -6,6 +6,7 @@ const discord_js_1 = require("discord.js");
 const moment_timezone_1 = tslib_1.__importDefault(require("moment-timezone"));
 const infoMessageEmbed_1 = tslib_1.__importDefault(require("../../../globalUtils/infoMessageEmbed"));
 const events_1 = require("../../../supabase/supabaseFunctions/events");
+const timezone_1 = require("../../../utilities/timezone");
 const teamEventModal = {
     customId: 'teamEventModalSubmit',
     run: async (client, interaction) => {
@@ -23,7 +24,7 @@ const teamEventModal = {
                 {
                     name: 'Event date & time',
                     value: `<t:${moment_timezone_1.default
-                        .tz(eventDateTime, 'DD/MM/YYYY hh:mm', timezone)
+                        .tz(`${eventDateTime.split(' ')[0]}T${eventDateTime.split(' ')[1]}`, `${timezone_1.isoParsingDateFormat}T${timezone_1.isoTimeFormat}`, (0, timezone_1.getTimzeonValueFromLabel)(timezone))
                         .unix()}:F>`,
                     inline: true,
                 },
@@ -64,7 +65,7 @@ const teamEventModal = {
                 gameName: gameName,
                 description: description,
                 dateTime: new Date(moment_timezone_1.default
-                    .tz(eventDateTime, 'DD/MM/YYYY hh:mm', timezone)
+                    .tz(`${eventDateTime.split(' ')[0]}T${eventDateTime.split(' ')[1]}`, `${timezone_1.isoParsingDateFormat}T${timezone_1.isoTimeFormat}`, (0, timezone_1.getTimzeonValueFromLabel)(timezone))
                     .format()).toISOString(),
                 isTeamEvent: true,
                 discordServerId: interaction.guild.id,

@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const fs_1 = tslib_1.__importDefault(require("fs"));
 const discord_js_1 = require("discord.js");
-const moment_timezone_1 = tslib_1.__importDefault(require("moment-timezone"));
+const dayjs_1 = tslib_1.__importDefault(require("dayjs"));
 const teams_1 = require("../../../../supabase/supabaseFunctions/teams");
 const events_1 = require("../../../../supabase/supabaseFunctions/events");
 const updateAllTeamInfo = async (props) => {
@@ -23,16 +23,6 @@ const updateAllTeamInfo = async (props) => {
                         id: eventId,
                         columnName: 'eventName, dateTime, timezone, maxNumTeamPlayers',
                     });
-                    const date = new Date(moment_timezone_1.default
-                        .tz(eventInfo[0]['dateTime'], eventInfo[0]['timezone'])
-                        .format());
-                    const [day, month, year, hour, minute] = [
-                        date.getDate(),
-                        date.getMonth() + 1,
-                        date.getFullYear(),
-                        date.getHours(),
-                        date.getMinutes(),
-                    ];
                     const editedEmbed = new discord_js_1.MessageEmbed()
                         .setColor('#3a9ce2')
                         .setTitle(value['name'])
@@ -48,9 +38,7 @@ const updateAllTeamInfo = async (props) => {
                         },
                         {
                             name: 'Event Date and Time',
-                            value: `<t:${moment_timezone_1.default
-                                .tz(`${day}/${month}/${year} ${hour}:${minute}`, 'DD/MM/YYYY hh:mm', eventInfo[0]['timezone'])
-                                .unix()}:F>`,
+                            value: `<t:${(0, dayjs_1.default)(eventInfo[0]['dateTime']).unix()}:F>`,
                         },
                         {
                             name: `Registered players ${numRegisteredPlayers}/${eventInfo[0]['maxNumTeamPlayers']}`,
