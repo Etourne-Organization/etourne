@@ -1,17 +1,9 @@
 import fs from 'fs';
 
-import {
-	ModalSubmitInteraction,
-	MessageEmbed,
-	MessageButton,
-	MessageActionRow,
-} from 'discord.js';
-import momentTimezone from 'moment-timezone';
+import { ModalSubmitInteraction, MessageEmbed } from 'discord.js';
+import dayjs from 'dayjs';
 
-import {
-	getAllColumnValueById,
-	getColumnValueByEventId,
-} from '../../../../supabase/supabaseFunctions/teams';
+import { getColumnValueByEventId } from '../../../../supabase/supabaseFunctions/teams';
 import { getColumnValueById } from '../../../../supabase/supabaseFunctions/events';
 
 interface updateAllTeamInfo {
@@ -56,20 +48,6 @@ const updateAllTeamInfo = async (props: updateAllTeamInfo) => {
 							'eventName, dateTime, timezone, maxNumTeamPlayers',
 					});
 
-					const date = new Date(
-						momentTimezone
-							.tz(eventInfo[0]['dateTime'], eventInfo[0]['timezone'])
-							.format(),
-					);
-
-					const [day, month, year, hour, minute] = [
-						date.getDate(),
-						date.getMonth() + 1,
-						date.getFullYear(),
-						date.getHours(),
-						date.getMinutes(),
-					];
-
 					const editedEmbed = new MessageEmbed()
 						.setColor('#3a9ce2')
 						.setTitle(value['name'])
@@ -85,13 +63,9 @@ const updateAllTeamInfo = async (props: updateAllTeamInfo) => {
 							},
 							{
 								name: 'Event Date and Time',
-								value: `<t:${momentTimezone
-									.tz(
-										`${day}/${month}/${year} ${hour}:${minute}`,
-										'DD/MM/YYYY hh:mm',
-										eventInfo[0]['timezone'],
-									)
-									.unix()}:F>`,
+								value: `<t:${dayjs(
+									eventInfo[0]['dateTime'],
+								).unix()}:F>`,
 							},
 							{
 								name: `Registered players ${numRegisteredPlayers}/${eventInfo[0]['maxNumTeamPlayers']}`,

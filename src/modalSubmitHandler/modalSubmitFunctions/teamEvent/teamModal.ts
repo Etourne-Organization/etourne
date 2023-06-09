@@ -6,7 +6,6 @@ import {
 	MessageEmbed,
 	MessageButton,
 	MessageActionRow,
-	Message,
 } from 'discord.js';
 
 import { ModalFunction } from '../../ModalSubmitStructure';
