@@ -20,9 +20,6 @@ const client = new Client({
 	],
 });
 
-// console.log(moment.tz.countries());
-// console.log(moment('15/10/2022 15:00', 'DD/MM/YYYY hh:mm').unix());
-
 client.on('ready', async () => {
 	if (!client.user || !client.application) {
 		return;
