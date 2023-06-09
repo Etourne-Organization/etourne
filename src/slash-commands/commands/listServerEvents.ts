@@ -5,7 +5,6 @@ import dayjs from 'dayjs';
 
 import { Command } from '../CommandStructure';
 import { getAllServerEvents } from '../../supabase/supabaseFunctions/events';
-import infoMessageEmbed from '../../globalUtils/infoMessageEmbed';
 
 const listServerEvents: Command = {
 	name: 'listserverevents',

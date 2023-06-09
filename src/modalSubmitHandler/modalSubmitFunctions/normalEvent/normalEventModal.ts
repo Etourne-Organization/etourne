@@ -7,7 +7,7 @@ import {
 	MessageButton,
 	MessageActionRow,
 } from 'discord.js';
-import momentTimezone from 'moment-timezone';
+import moment from 'moment-timezone';
 
 import { ModalFunction } from '../../ModalSubmitStructure';
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
@@ -15,6 +15,11 @@ import {
 	addEvent,
 	setColumnValue,
 } from '../../../supabase/supabaseFunctions/events';
+import {
+	isoParsingDateFormat,
+	isoTimeFormat,
+	getTimzeonValueFromLabel,
+} from '../../../utilities/timezone';
 
 const normalEventModal: ModalFunction = {
 	customId: 'normalEventModalSubmit',
@@ -23,7 +28,7 @@ const normalEventModal: ModalFunction = {
 			const eventName = interaction.fields.getTextInputValue('eventName');
 			const gameName = interaction.fields.getTextInputValue('gameName');
 			const timezone = interaction.fields.getTextInputValue('timezone');
-			const eventDateTime = interaction.fields.getTextInputValue('date');
+			const eventDateTime = interaction.fields.getTextInputValue('dateTime');
 			const description =
 				interaction.fields.getTextInputValue('eventDescription');
 
@@ -36,8 +41,14 @@ const normalEventModal: ModalFunction = {
 				.addFields([
 					{
 						name: 'Event date & time',
-						value: `<t:${momentTimezone
-							.tz(eventDateTime, 'DD/MM/YYYY hh:mm', timezone)
+						value: `<t:${moment
+							.tz(
+								`${eventDateTime.split(' ')[0]}T${
+									eventDateTime.split(' ')[1]
+								}`,
+								`${isoParsingDateFormat}T${isoTimeFormat}`,
+								getTimzeonValueFromLabel(timezone),
+							)
 							.unix()}:F>`,
 						inline: true,
 					},
@@ -87,8 +98,14 @@ const normalEventModal: ModalFunction = {
 				gameName: gameName,
 				description: description,
 				dateTime: new Date(
-					momentTimezone
-						.tz(eventDateTime, 'DD/MM/YYYY hh:mm', timezone)
+					moment
+						.tz(
+							`${eventDateTime.split(' ')[0]}T${
+								eventDateTime.split(' ')[1]
+							}`,
+							`${isoParsingDateFormat}T${isoTimeFormat}`,
+							getTimzeonValueFromLabel(timezone),
+						)
 						.format(),
 				).toISOString(),
 				isTeamEvent: false,

@@ -3,9 +3,21 @@ import moment from 'moment-timezone';
 
 export const isoTimeFormat = 'HH:mm:ss';
 export const isoFormattingDateFormat = 'YYYY-MM-DD';
-export const isoParsingDateFormat = 'Y-MM-DD';
+export const isoParsingDateFormat = 'DD/MM/YYYY';
 
 export const gmtZoneRegex = /^Etc\/(GMT([+-]\d+)?)$/;
+
+export const getTimzeonValueFromLabel = (label: string) => {
+	/*
+		maps timezone labels with values by creating an object
+	*/
+
+	const tzs = getSortedNormalizedTimezoneNames().map((tz) =>
+		getTimezoneValue(tz),
+	);
+
+	return tzs.filter((tz) => tz.label === label.trim())[0]['value'];
+};
 
 const formatGmtZoneLabel = (offset = '') => `GMT${offset} (UTC${offset})`;
 

@@ -1,13 +1,7 @@
 import fs from 'fs';
 
-import {
-	Client,
-	ModalSubmitInteraction,
-	MessageEmbed,
-	MessageButton,
-	MessageActionRow,
-} from 'discord.js';
-import momentTimezone from 'moment-timezone';
+import { Client, ModalSubmitInteraction, MessageEmbed } from 'discord.js';
+import moment from 'moment-timezone';
 
 import { ModalFunction } from '../../ModalSubmitStructure';
 import {
@@ -15,6 +9,11 @@ import {
 	getColumnValueById,
 } from '../../../supabase/supabaseFunctions/events';
 import updateAllTeamInfo from './utils/updateAllTeamInfo';
+import {
+	getTimzeonValueFromLabel,
+	isoParsingDateFormat,
+	isoTimeFormat,
+} from '../../../utilities/timezone';
 
 const editTeamEventInfoModal: ModalFunction = {
 	customId: 'editTeamEventInfoModal',
@@ -70,10 +69,17 @@ const editTeamEventInfoModal: ModalFunction = {
 					{
 						name: 'Event date & time',
 						value: eventDateTime
-							? `<t:${momentTimezone
-									.tz(eventDateTime, 'DD/MM/YYYY hh:mm', timezone)
+							? `<t:${moment
+									.tz(
+										`${eventDateTime.split(' ')[0]}T${
+											eventDateTime.split(' ')[1]
+										}`,
+										`${isoParsingDateFormat}T${isoTimeFormat}`,
+										getTimzeonValueFromLabel(timezone),
+									)
 									.unix()}:F>`
 							: eventDateTimeEmbedValue['value'],
+						inline: true,
 					},
 					{ name: 'Game name', value: gameName, inline: true },
 					{
@@ -103,8 +109,14 @@ const editTeamEventInfoModal: ModalFunction = {
 				description: description,
 				dateTime: eventDateTime
 					? new Date(
-							momentTimezone
-								.tz(eventDateTime, 'DD/MM/YYYY hh:mm', timezone)
+							moment
+								.tz(
+									`${eventDateTime.split(' ')[0]}T${
+										eventDateTime.split(' ')[1]
+									}`,
+									`${isoParsingDateFormat}T${isoTimeFormat}`,
+									getTimzeonValueFromLabel(timezone),
+								)
 								.format(),
 					  ).toISOString()
 					: null,

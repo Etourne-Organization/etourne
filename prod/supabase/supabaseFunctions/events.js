@@ -45,7 +45,6 @@ const updateEvent = async (props) => {
             eventName: eventName,
             gameName: gameName,
             description: description,
-            dateTime: dateTime,
             isTeamEvent: isTeamEvent,
             serverId: getServerIdData[0]['id'],
             timezone: timezone,
@@ -53,6 +52,18 @@ const updateEvent = async (props) => {
     ])
         .eq('id', eventId)
         .select();
+    if (dateTime) {
+        const { data, error } = await supabase_1.supabase
+            .from('Events')
+            .update([
+            {
+                dateTime: dateTime,
+            },
+        ])
+            .eq('id', eventId);
+        if (error)
+            throw error;
+    }
     if (error)
         throw error;
     return data[0]['id'];
