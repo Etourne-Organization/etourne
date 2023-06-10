@@ -19,6 +19,7 @@ import {
 	getUserRole,
 	setUserRole as setUserRoleSupabase,
 } from '../../supabase/supabaseFunctions/users';
+import { getAllPlayers } from '../../supabase/supabaseFunctions/singlePlayers';
 
 const getEvent: Command = {
 	name: 'getevent',
@@ -82,6 +83,17 @@ const getEvent: Command = {
 						ephemeral: true,
 					});
 				} else {
+					const dbPlayers: [{ username: string; userId: string }?] =
+						await getAllPlayers({ eventId: eventId });
+
+					let players: string = '';
+
+					if (dbPlayers.length > 0) {
+						dbPlayers.forEach((p: any) => {
+							players += `${p.username}\n`;
+						});
+					}
+
 					const eventEmbed = new MessageEmbed()
 						.setColor('#3a9ce2')
 						.setTitle(eventInfo[0].eventName)
@@ -108,7 +120,7 @@ const getEvent: Command = {
 										? eventInfo[0].maxNumPlayers
 										: 'unlimited'
 								}`,
-								value: ` `,
+								value: players.length > 0 ? `>>> ${players}` : ' ',
 							},
 						])
 						.setFooter({
