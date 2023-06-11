@@ -164,8 +164,6 @@ export const setColumnValue = async (props: setColumnValue) => {
 				[d.key]: d.value,
 			})
 			.eq('id', d.id);
-
-		console.log(data, error);
 	}
 };
 

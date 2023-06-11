@@ -15,11 +15,9 @@ import {
 } from '../../supabase/supabaseFunctions/events';
 import { Command } from '../CommandStructure';
 import infoMessageEmbed from '../../globalUtils/infoMessageEmbed';
-import {
-	getUserRole,
-	setUserRole as setUserRoleSupabase,
-} from '../../supabase/supabaseFunctions/users';
+import { getUserRole } from '../../supabase/supabaseFunctions/users';
 import { getAllPlayers } from '../../supabase/supabaseFunctions/singlePlayers';
+import getMessageFromGuild from '../utilities/getMessageFromGuild';
 
 const getEvent: Command = {
 	name: 'getevent',
@@ -42,7 +40,10 @@ const getEvent: Command = {
 				discordServerId: interaction.guild!.id,
 			});
 
-			if (userRoleDB.length === 0 || userRoleDB[0]['roleId'] !== 3) {
+			if (
+				userRoleDB.length === 0 ||
+				(userRoleDB[0]['roleId'] !== 3 && userRoleDB[0]['roleId'] !== 2)
+			) {
 				return await interaction.reply({
 					embeds: [
 						infoMessageEmbed(
@@ -62,6 +63,10 @@ const getEvent: Command = {
 				const fetchedMessage = await interaction.channel?.messages
 					.fetch(eventInfo[0].messageId)
 					.catch((err) => {});
+
+				console.log(
+					await getMessageFromGuild(interaction, eventInfo[0].messageId),
+				);
 
 				if (fetchedMessage) {
 					const embed = new MessageEmbed()
