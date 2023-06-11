@@ -84,7 +84,7 @@ const getEvent: Command = {
 					});
 				} else {
 					const dbPlayers: [{ username: string; userId: string }?] =
-						await getAllPlayers({ eventId: eventId });
+						await getAllPlayers({ eventId: eventId.value });
 
 					let players: string = '';
 
@@ -115,7 +115,7 @@ const getEvent: Command = {
 							},
 							{ name: 'Hosted by', value: eventInfo[0].eventHost },
 							{
-								name: `Registered players 0/${
+								name: `Registered players ${dbPlayers.length}/${
 									eventInfo[0].maxNumPlayers
 										? eventInfo[0].maxNumPlayers
 										: 'unlimited'
@@ -127,19 +127,59 @@ const getEvent: Command = {
 							text: `Event ID: ${eventId.value}`,
 						});
 
+					/* buttons */
+					const buttons = new MessageActionRow().addComponents(
+						new MessageButton()
+							.setCustomId('normalEventRegister')
+							.setLabel('Register')
+							.setStyle('PRIMARY'),
+						new MessageButton()
+							.setCustomId('normalEventUnregister')
+							.setLabel('Unregister')
+							.setStyle('DANGER'),
+					);
+
+					const managePlayerButtons = new MessageActionRow().addComponents(
+						new MessageButton()
+							.setCustomId('setMaxNumPlayers')
+							.setLabel('Set max num of players')
+							.setStyle('SECONDARY'),
+						new MessageButton()
+							.setCustomId('removePlayer')
+							.setLabel('❌  Remove player')
+							.setStyle('SECONDARY'),
+					);
+
+					const manageEventButtons = new MessageActionRow().addComponents(
+						new MessageButton()
+							.setCustomId('editEventInfo')
+							.setLabel('⚙️  Edit event info')
+							.setStyle('SECONDARY'),
+						new MessageButton()
+							.setCustomId('deleteEvent')
+							.setLabel('🗑️  Delete event')
+							.setStyle('DANGER'),
+					);
+
 					const reply = await interaction.channel?.send({
 						embeds: [eventEmbed],
+						components: [
+							buttons,
+							managePlayerButtons,
+							manageEventButtons,
+						],
 					});
 
-					// await setColumnValue({
-					// 	data: [
-					// 		{
-					// 			id: eventId,
-					// 			key: 'messageId',
-					// 			value: reply!.id,
-					// 		},
-					// 	],
-					// });
+					console.log(reply!.id);
+					await setColumnValue({
+						data: [
+							{
+								id: eventId.value,
+								key: 'messageId',
+								value: reply!.id,
+							},
+						],
+					});
 
 					return await interaction.reply({
 						embeds: [
