@@ -17,7 +17,6 @@ import { Command } from '../CommandStructure';
 import infoMessageEmbed from '../../globalUtils/infoMessageEmbed';
 import { getUserRole } from '../../supabase/supabaseFunctions/users';
 import { getAllPlayers } from '../../supabase/supabaseFunctions/singlePlayers';
-import getMessageFromGuild from '../utilities/getMessageFromGuild';
 
 const getEvent: Command = {
 	name: 'getevent',
@@ -44,16 +43,20 @@ const getEvent: Command = {
 				userRoleDB.length === 0 ||
 				(userRoleDB[0]['roleId'] !== 3 && userRoleDB[0]['roleId'] !== 2)
 			) {
-				return await interaction.reply({
+				return await interaction.editReply({
 					embeds: [
 						infoMessageEmbed(
 							':warning: You are not allowed to run this command!',
 							'WARNING',
 						),
 					],
-					ephemeral: true,
 				});
 			}
+
+			await interaction.reply({
+				content: 'Getting event ...',
+				ephemeral: true,
+			});
 
 			const eventInfo: any = await getAllColumnValueById({
 				id: eventId.value,
@@ -87,9 +90,9 @@ const getEvent: Command = {
 						)
 						.setTimestamp();
 
-					return await interaction.reply({
+					return await interaction.editReply({
+						content: ' ',
 						embeds: [embed],
-						ephemeral: true,
 					});
 				} else {
 					const dbPlayers: [{ username: string; userId: string }?] =
@@ -170,7 +173,7 @@ const getEvent: Command = {
 							.setStyle('DANGER'),
 					);
 
-					const reply = await interaction.channel?.send({
+					const editReply = await interaction.channel?.send({
 						embeds: [eventEmbed],
 						components: [
 							buttons,
@@ -184,7 +187,7 @@ const getEvent: Command = {
 							{
 								id: eventId.value,
 								key: 'messageId',
-								value: reply!.id,
+								value: editReply!.id,
 							},
 							{
 								id: eventId.value,
@@ -194,25 +197,23 @@ const getEvent: Command = {
 						],
 					});
 
-					return await interaction.reply({
+					return await interaction.editReply({
+						content: ' ',
 						embeds: [
 							infoMessageEmbed(
 								':white_check_mark: Event reshared Successfully',
 								'SUCCESS',
 							),
 						],
-						ephemeral: true,
 					});
 				}
 			} else {
-				return await interaction.reply({
+				return await interaction.editReply({
+					content: ' ',
 					embeds: [infoMessageEmbed(':x: Event cannot be found', 'ERROR')],
-					ephemeral: true,
 				});
 			}
 		} catch (err) {
-			// console.log(err);
-
 			try {
 				fs.appendFile(
 					'logs/crash_logs.txt',
