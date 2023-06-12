@@ -8,7 +8,7 @@ import originalCommandIDs from '../../ORIGINAL_COMMAND_IDS/commandIDs.json';
 
 const getStarted: Command = {
 	name: 'getstarted',
-	description: 'Helps any user to get started with Etourne',
+	description: 'Get started with using Etourne bot',
 	run: async (client: Client, interaction: BaseCommandInteraction) => {
 		try {
 			const embed = new MessageEmbed()

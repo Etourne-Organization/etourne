@@ -30,7 +30,7 @@ const help: Command = {
 					},
 					{
 						name: ':rocket:  Get started',
-						value: `Get started using Etourne: ${
+						value: `Get started with using Etourne: ${
 							process.env.BOT_IDS === 'TEST_BOT_IDS'
 								? `</getstarted:${testCommandIDs.GET_STARTED}>`
 								: `</getstarted:${originalCommandIDs.GET_STARTED}>`
