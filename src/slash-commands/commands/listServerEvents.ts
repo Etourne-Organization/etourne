@@ -5,6 +5,7 @@ import dayjs from 'dayjs';
 
 import { Command } from '../CommandStructure';
 import { getAllServerEvents } from '../../supabase/supabaseFunctions/events';
+import infoMessageEmbed from '../../globalUtils/infoMessageEmbed';
 
 const listServerEvents: Command = {
 	name: 'listserverevents',
@@ -37,7 +38,10 @@ const listServerEvents: Command = {
 				embeds: [embed],
 			});
 		} catch (err) {
-			console.log(err);
+			await interaction.reply({
+				embeds: [infoMessageEmbed(':x: There has been an error', 'ERROR')],
+			});
+
 			try {
 				fs.appendFile(
 					'logs/crash_logs.txt',

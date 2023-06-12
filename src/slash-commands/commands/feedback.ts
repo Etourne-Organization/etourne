@@ -3,6 +3,7 @@ import fs from 'fs';
 import { BaseCommandInteraction, Client, MessageEmbed } from 'discord.js';
 
 import { Command } from '../CommandStructure';
+import infoMessageEmbed from '../../globalUtils/infoMessageEmbed';
 
 const feedback: Command = {
 	name: 'feedback',
@@ -29,6 +30,10 @@ const feedback: Command = {
 				embeds: [embed],
 			});
 		} catch (err) {
+			await interaction.reply({
+				embeds: [infoMessageEmbed(':x: There has been an error', 'ERROR')],
+			});
+
 			try {
 				fs.appendFile(
 					'logs/crash_logs.txt',

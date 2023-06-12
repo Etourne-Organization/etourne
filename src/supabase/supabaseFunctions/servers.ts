@@ -7,7 +7,6 @@
 */
 
 import { supabase } from '../supabase';
-import psqlErrorCodes from '../../data/psqlErrorCodes.json';
 
 interface checkServerExists {
 	discordServerId: string;

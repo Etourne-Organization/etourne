@@ -214,6 +214,10 @@ const getEvent: Command = {
 				});
 			}
 		} catch (err) {
+			await interaction.reply({
+				embeds: [infoMessageEmbed(':x: There has been an error', 'ERROR')],
+			});
+
 			try {
 				fs.appendFile(
 					'logs/crash_logs.txt',

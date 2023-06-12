@@ -113,6 +113,7 @@ const normalEventModal: ModalFunction = {
 				timezone: timezone,
 				eventHost: interaction.user.tag,
 				channelId: interaction.channel!.id,
+				discordServerName: interaction.guild.name,
 			});
 
 			eventEmbed.setFooter({
@@ -144,7 +145,10 @@ const normalEventModal: ModalFunction = {
 				ephemeral: true,
 			});
 		} catch (err) {
-			console.log(err);
+			await interaction.reply({
+				embeds: [infoMessageEmbed(':x: There has been an error', 'ERROR')],
+			});
+
 			try {
 				fs.appendFile(
 					'logs/crash_logs.txt',

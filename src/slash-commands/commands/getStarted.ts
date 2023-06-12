@@ -5,6 +5,7 @@ import { BaseCommandInteraction, Client, MessageEmbed } from 'discord.js';
 import { Command } from '../CommandStructure';
 import testCommandIDs from '../../TEST_COMMAND_IDS/commandIDs.json';
 import originalCommandIDs from '../../ORIGINAL_COMMAND_IDS/commandIDs.json';
+import infoMessageEmbed from '../../globalUtils/infoMessageEmbed';
 
 const getStarted: Command = {
 	name: 'getstarted',
@@ -45,6 +46,10 @@ const getStarted: Command = {
 				embeds: [embed],
 			});
 		} catch (err) {
+			await interaction.reply({
+				embeds: [infoMessageEmbed(':x: There has been an error', 'ERROR')],
+			});
+
 			try {
 				fs.appendFile(
 					'logs/crash_logs.txt',
