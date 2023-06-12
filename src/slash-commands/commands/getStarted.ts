@@ -16,7 +16,7 @@ const getStarted: Command = {
 				.setThumbnail(`${client.user?.displayAvatarURL()}`)
 				.setTitle(':rocket: Get started')
 				.setDescription(
-					`Thank you for choosing Etourne. \n \n In summary, Etourne aims to make the process of creating and managing events and tournaments much easier with simple commands and buttons. \n \n### Etourne has 3 roles: \n • __Player__: Default role of every user in the sever to register for any event and create teams. \n • __Manager__: Event manager with the permission to create and manage events, teams and players. \n • __Admin__: Admin with all the privileges of \`manager\` and \`player\` with additional permisson which is ${
+					`Thank you for choosing Etourne. \n \n In summary, Etourne aims to make the process of creating and managing events and tournaments much easier with simple commands and buttons (as well as web app which is in works). \n \n### Etourne has 3 roles: \n • __Player__: Default role of every user in the sever to register for any event and create teams. \n • __Manager__: Event manager with the permission to create and manage events, teams and players. \n • __Admin__: Admin with all the privileges of \`manager\` and \`player\` with additional permisson which is ${
 						process.env.BOT_IDS === 'TEST_BOT_IDS'
 							? `</setuserrole:${testCommandIDs.SET_USER_ROLE}>`
 							: `</setuserrole:${originalCommandIDs.SET_USER_ROLE}>`
@@ -36,7 +36,7 @@ const getStarted: Command = {
 						process.env.BOT_IDS === 'TEST_BOT_IDS'
 							? `</feedback:${testCommandIDs.FEEDBACK}>`
 							: `</feedback:${originalCommandIDs.FEEDBACK}>`
-					}`,
+					} \n \n### To get support: \n Join the support server: https://discord.gg/vNe9QVrWNa`,
 				)
 				.setFooter({ text: `Requested by: ${interaction.user.tag}` })
 				.setTimestamp();
