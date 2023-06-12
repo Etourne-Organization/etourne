@@ -1,3 +1,5 @@
+// ** this might be useful in the future **
+
 import { BaseCommandInteraction } from 'discord.js';
 
 const getMessageFromGuild = async (
@@ -5,29 +7,23 @@ const getMessageFromGuild = async (
 	messageId: string,
 ) => {
 	console.log(messageId);
-	// const channels: any = interaction.guild!.channels.cache.filter(
-	// 	(c) => c.type == 'GUILD_TEXT',
-	// );
+	let target: any;
 
-	// for (const channel of channels) {
-	// 	const target = await channel[1]
-	// 		.messages!.fetch(messageId)
-	// 		.catch((err: any) => {});
+	const channels: any = interaction.guild!.channels.cache.filter(
+		(c) => c.type == 'GUILD_TEXT',
+	);
 
-	// 	if (target) return target;
-	// }
+	for (const channel of channels) {
+		console.log(1);
+		target = await channel[1]
+			.messages!.fetch(messageId)
+			.catch((err: any) => {});
 
-	let found: any = null;
+		if (target) return target;
+	}
 
-	interaction.guild!.channels.cache.forEach(async (channel) => {
-		if (channel.type === 'GUILD_TEXT') {
-			if (found) return;
-			found = await channel.messages!.fetch(messageId).catch((err) => {});
-		}
-	});
-
-	console.log(found);
-	return found;
+	console.log('target', target);
+	return target;
 };
 
 export default getMessageFromGuild;

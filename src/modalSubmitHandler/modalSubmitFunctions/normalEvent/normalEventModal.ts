@@ -111,8 +111,8 @@ const normalEventModal: ModalFunction = {
 				isTeamEvent: false,
 				discordServerId: interaction.guild.id,
 				timezone: timezone,
-				serverName: interaction.guild.name,
 				eventHost: interaction.user.tag,
+				channelId: interaction.channel!.id,
 			});
 
 			eventEmbed.setFooter({

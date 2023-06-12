@@ -60,13 +60,17 @@ const getEvent: Command = {
 			});
 
 			if (eventInfo.length > 0) {
-				const fetchedMessage = await interaction.channel?.messages
-					.fetch(eventInfo[0].messageId)
-					.catch((err) => {});
-
-				console.log(
-					await getMessageFromGuild(interaction, eventInfo[0].messageId),
+				const fetchedChannel = await interaction.guild?.channels.fetch(
+					eventInfo[0].channelId,
 				);
+
+				let fetchedMessage;
+
+				if (fetchedChannel?.isText()) {
+					fetchedMessage = await fetchedChannel.messages
+						.fetch(eventInfo[0].messageId)
+						.catch((err) => {});
+				}
 
 				if (fetchedMessage) {
 					const embed = new MessageEmbed()
@@ -203,7 +207,7 @@ const getEvent: Command = {
 				});
 			}
 		} catch (err) {
-			console.log(err);
+			// console.log(err);
 
 			try {
 				fs.appendFile(
