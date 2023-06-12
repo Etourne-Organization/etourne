@@ -7,7 +7,7 @@
 */
 
 import { supabase } from '../supabase';
-import { checkServerExists, getServerId, checkAddServer } from './servers';
+import { getServerId } from './servers';
 
 interface addEvent {
 	eventId?: number;
@@ -68,11 +68,6 @@ export const addEvent = async (props: addEvent) => {
 		channelId,
 		discordServerName,
 	} = props;
-
-	await checkAddServer({
-		discordServerId: discordServerId,
-		name: discordServerName,
-	});
 
 	let dbServerId: number;
 

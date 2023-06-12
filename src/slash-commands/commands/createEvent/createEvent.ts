@@ -12,8 +12,6 @@ import {
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
 import { Command } from '../../CommandStructure';
 import { getUserRole } from '../../../supabase/supabaseFunctions/users';
-// import timezone from '../../resources/timezone';
-// import botConfig from '../../botConfig/botConfig.json';
 
 const createEvent: Command = {
 	name: 'createevent',
@@ -117,7 +115,7 @@ const createEvent: Command = {
 
 			await interaction.showModal(modal);
 		} catch (err) {
-			interaction.reply({
+			await interaction.reply({
 				embeds: [infoMessageEmbed(':x: There has been an error', 'ERROR')],
 			});
 

@@ -10,6 +10,7 @@ import getStarted from './commands/getStarted';
 import feedback from './commands/feedback';
 import listServerEvents from './commands/listServerEvents';
 import getEvent from './commands/getEvent';
+import registerServer from './commands/registerServer';
 
 const allSlashCommands: Command[] = [
 	createEvent,
@@ -22,6 +23,7 @@ const allSlashCommands: Command[] = [
 	feedback,
 	listServerEvents,
 	getEvent,
+	registerServer,
 ];
 
 export default allSlashCommands;
