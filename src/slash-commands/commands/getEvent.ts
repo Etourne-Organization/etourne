@@ -179,13 +179,17 @@ const getEvent: Command = {
 						],
 					});
 
-					console.log(reply!.id);
 					await setColumnValue({
 						data: [
 							{
 								id: eventId.value,
 								key: 'messageId',
 								value: reply!.id,
+							},
+							{
+								id: eventId.value,
+								key: 'channelId',
+								value: interaction.channel!.id,
 							},
 						],
 					});

@@ -24,7 +24,7 @@ interface addEvent {
 }
 
 interface setColumnValue {
-	data: [{ key: string; value: string | number; id: number }];
+	data: { key: string; value: string | number; id: number }[];
 }
 
 interface getColumnValueById {
