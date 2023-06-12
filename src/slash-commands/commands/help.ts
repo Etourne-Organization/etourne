@@ -49,6 +49,13 @@ const help: Command = {
 								: `</createteamevent:${originalCommandIDs.CREATE_TEAM_EVENT}>`,
 					},
 					{
+						name: ':mag_right:  Get event',
+						value:
+							process.env.BOT_IDS === 'TEST_BOT_IDS'
+								? `</getevent:${testCommandIDs.GET_EVENT}>`
+								: `</getevent:${originalCommandIDs.GET_EVENT}>`,
+					},
+					{
 						name: ':notepad_spiral:  List server events',
 						value:
 							process.env.BOT_IDS === 'TEST_BOT_IDS'
@@ -61,6 +68,13 @@ const help: Command = {
 							process.env.BOT_IDS === 'TEST_BOT_IDS'
 								? `</setuserrole:${testCommandIDs.SET_USER_ROLE}>`
 								: `</setuserrole:${originalCommandIDs.SET_USER_ROLE}>`,
+					},
+					{
+						name: ':thought_balloon:  Feedback',
+						value:
+							process.env.BOT_IDS === 'TEST_BOT_IDS'
+								? `</feedback:${testCommandIDs.FEEDBACK}>`
+								: `</feedback:${originalCommandIDs.FEEDBACK}>`,
 					},
 					// { name: '\u200B', value: '\u200B' },
 				)
