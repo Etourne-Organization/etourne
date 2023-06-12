@@ -49,7 +49,7 @@ const registerServer: Command = {
 				return await interaction.reply({
 					embeds: [
 						infoMessageEmbed(
-							':white_check_mark: Discord server registed!',
+							':white_check_mark: Discord server registered!',
 							'SUCCESS',
 						),
 					],

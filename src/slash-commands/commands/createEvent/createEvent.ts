@@ -7,11 +7,15 @@ import {
 	Modal,
 	TextInputComponent,
 	ModalActionRowComponent,
+	MessageEmbed,
 } from 'discord.js';
 
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
 import { Command } from '../../CommandStructure';
 import { getUserRole } from '../../../supabase/supabaseFunctions/users';
+import { checkServerExists } from '../../../supabase/supabaseFunctions/servers';
+import testCommandIDs from '../../../TEST_COMMAND_IDS/commandIDs.json';
+import originalCommandIDs from '../../../ORIGINAL_COMMAND_IDS/commandIDs.json';
 
 const createEvent: Command = {
 	name: 'createevent',
@@ -19,11 +23,36 @@ const createEvent: Command = {
 	type: 'CHAT_INPUT',
 	run: async (client: Client, interaction: BaseCommandInteraction) => {
 		try {
+			if (
+				!(await checkServerExists({
+					discordServerId: interaction.guild!.id,
+				}))
+			) {
+				const embed = new MessageEmbed()
+					.setColor('#D83C3E')
+					.setTitle(':x: Error: Server not registered!')
+					.setDescription(
+						`Use ${
+							process.env.COMMAND_ID === 'TEST_COMMAND_IDS'
+								? `</registerserver:${testCommandIDs.REGISTER_SERVER}>`
+								: `</registerserver:${originalCommandIDs.REGISTER_SERVER}>`
+						} command to register your server in Etourne database.`,
+					)
+					.setFooter({ text: 'Use /support to seek support if required.' })
+					.setTimestamp();
+
+				return await interaction.reply({
+					embeds: [embed],
+				});
+			}
+
 			// check user role in DB
 			const userRoleDB: any = await getUserRole({
 				discordUserId: interaction.user.id,
 				discordServerId: interaction.guild!.id,
 			});
+
+			console.log(userRoleDB.length);
 
 			if (
 				userRoleDB.length === 0 ||

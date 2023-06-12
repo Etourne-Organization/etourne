@@ -24,7 +24,7 @@ const help: Command = {
 					{
 						name: ':information_source:  Bot Info',
 						value: `Get more information about the bot: ${
-							process.env.BOT_IDS === 'TEST_BOT_IDS'
+							process.env.COMMAND_ID === 'TEST_COMMAND_IDS'
 								? `</botinfo:${testCommandIDs.BOT_INFO}>`
 								: `</botinfo:${originalCommandIDs.BOT_INFO}>`
 						}`,
@@ -32,7 +32,7 @@ const help: Command = {
 					{
 						name: ':rocket:  Get started',
 						value: `Get started with using Etourne: ${
-							process.env.BOT_IDS === 'TEST_BOT_IDS'
+							process.env.COMMAND_ID === 'TEST_COMMAND_IDS'
 								? `</getstarted:${testCommandIDs.GET_STARTED}>`
 								: `</getstarted:${originalCommandIDs.GET_STARTED}>`
 						}`,
@@ -40,7 +40,7 @@ const help: Command = {
 					{
 						name: ':calendar_spiral:  Create event',
 						value: `Create event (no-team): ${
-							process.env.BOT_IDS === 'TEST_BOT_IDS'
+							process.env.COMMAND_ID === 'TEST_COMMAND_IDS'
 								? `</createevent:${testCommandIDs.CREATE_EVENT}>`
 								: `</createevent:${originalCommandIDs.CREATE_EVENT}>`
 						}`,
@@ -48,7 +48,7 @@ const help: Command = {
 					{
 						name: ':calendar_spiral:  Create team event',
 						value: `Create team event: ${
-							process.env.BOT_IDS === 'TEST_BOT_IDS'
+							process.env.COMMAND_ID === 'TEST_COMMAND_IDS'
 								? `</createteamevent:${testCommandIDs.CREATE_TEAM_EVENT}>`
 								: `</createteamevent:${originalCommandIDs.CREATE_TEAM_EVENT}>`
 						}`,
@@ -56,7 +56,7 @@ const help: Command = {
 					{
 						name: ':mag_right:  Get event',
 						value: `Get event from database: ${
-							process.env.BOT_IDS === 'TEST_BOT_IDS'
+							process.env.COMMAND_ID === 'TEST_COMMAND_IDS'
 								? `</getevent:${testCommandIDs.GET_EVENT}>`
 								: `</getevent:${originalCommandIDs.GET_EVENT}>`
 						}`,
@@ -64,7 +64,7 @@ const help: Command = {
 					{
 						name: ':notepad_spiral:  List server events',
 						value: `List all the events being hosted in the server: ${
-							process.env.BOT_IDS === 'TEST_BOT_IDS'
+							process.env.COMMAND_ID === 'TEST_COMMAND_IDS'
 								? `</listserverevents:${testCommandIDs.LIST_SERVER_EVENTS}>`
 								: `</listserverevents:${originalCommandIDs.LIST_SERVER_EVENTS}>`
 						}`,
@@ -72,7 +72,7 @@ const help: Command = {
 					{
 						name: ':pencil2:  Set user role',
 						value: `Set role of a user: ${
-							process.env.BOT_IDS === 'TEST_BOT_IDS'
+							process.env.COMMAND_ID === 'TEST_COMMAND_IDS'
 								? `</setuserrole:${testCommandIDs.SET_USER_ROLE}>`
 								: `</setuserrole:${originalCommandIDs.SET_USER_ROLE}>`
 						}`,
@@ -80,7 +80,7 @@ const help: Command = {
 					{
 						name: ':thought_balloon:  Feedback',
 						value: `Share feedback and ideas or raise issues: ${
-							process.env.BOT_IDS === 'TEST_BOT_IDS'
+							process.env.COMMAND_ID === 'TEST_COMMAND_IDS'
 								? `</feedback:${testCommandIDs.FEEDBACK}>`
 								: `</feedback:${originalCommandIDs.FEEDBACK}>`
 						}`,
