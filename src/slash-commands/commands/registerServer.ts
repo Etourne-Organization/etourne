@@ -34,6 +34,17 @@ const registerServer: Command = {
 
 				const log = fetchedLog.entries.first();
 
+				if (log?.executor!.id !== interaction.user.id) {
+					return await interaction.reply({
+						embeds: [
+							infoMessageEmbed(
+								':warning: You are not the user who added the bot into this server!',
+								'ERROR',
+							),
+						],
+					});
+				}
+
 				await addServer({
 					discordServerId: interaction.guild!.id,
 					name: interaction.guild!.name,
@@ -59,7 +70,7 @@ const registerServer: Command = {
 					.setColor('#D83C3E')
 					.setTitle(':x: Error')
 					.setDescription(
-						'Please give the following permission to the bot: \n - `View Audit Log` \n \n## Why is this needed? \n This permission will allow the bot to retrieve the user who added the bot and make the user `Admin` (**NOT** server `Admin`) in Etourne software.',
+						'Please give the following permission to the bot: \n - `View Audit Log` \n \n## Why is this needed? \n This permission will allow the bot to retrieve the user who added the bot and make that user `Admin` (**NOT** server `Admin`) in Etourne software.',
 					)
 					.setTimestamp();
 
