@@ -30,11 +30,11 @@ const help: Command = {
 						}`,
 					},
 					{
-						name: ':tools:  Request Support',
-						value: `Request for support whenever you are facing issues: ${
+						name: ':pencil:  Register Server',
+						value: `Register your Discord server in Etourne database: ${
 							process.env.COMMAND_ID === 'TEST_COMMAND_IDS'
-								? `</requestsupport:${testCommandIDs.REQUEST_SUPPORT}>`
-								: `</requestsupport:${originalCommandIDs.REQUEST_SUPPORT}>`
+								? `</registerserver:${testCommandIDs.REGISTER_SERVER}>`
+								: `</registerserver:${originalCommandIDs.REGISTER_SERVER}>`
 						}`,
 					},
 					{
@@ -91,6 +91,14 @@ const help: Command = {
 							process.env.COMMAND_ID === 'TEST_COMMAND_IDS'
 								? `</feedback:${testCommandIDs.FEEDBACK}>`
 								: `</feedback:${originalCommandIDs.FEEDBACK}>`
+						}`,
+					},
+					{
+						name: ':tools:  Request Support',
+						value: `Request for support whenever you are facing issues: ${
+							process.env.COMMAND_ID === 'TEST_COMMAND_IDS'
+								? `</requestsupport:${testCommandIDs.REQUEST_SUPPORT}>`
+								: `</requestsupport:${originalCommandIDs.REQUEST_SUPPORT}>`
 						}`,
 					},
 				)
