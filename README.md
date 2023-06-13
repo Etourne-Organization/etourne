@@ -1,5 +1,9 @@
 # Etourne
 
+## Architecture Diagram
+
+<img src="./images/Etourne%20Architecture%20Diagram.png" style="border: 1px solid; margin: 10px 0;">
+
 ## Prerequisite
 
 **Note for Windows:** This was tested on powershell which works properly.
@@ -20,7 +24,7 @@
 5. **Windows BUG with scoop:** Scoop needs to be added to the system user variable so that you can use scoop and the installed apps. Read this [GitHub issue](https://github.com/ScoopInstaller/Scoop/issues/3951) to learn more.
 6. Go to `etourne` directory and setup your doppler project locally using `doppler setup`.
 
-## Instruction to setup the test version of the bot
+## Instructions to setup the test version of the bot
 
 1. Clone the repo
 1. Create `logs` folder in the root directory as well as two files inside it:
@@ -34,7 +38,7 @@
 1. Make sure to setup the credentials in your Doppler account. See [prerequisite](#prerequisite).
 1. To start the bot, run: `npm run start-doppler` (make sure to be in the directory).
 
-## Instruction to setup the bot in production (server)
+## Instructions to setup the bot in production (server)
 
 1. Clone the repo.
 2. Create `logs` folder in the root directory as well as two files inside it:
@@ -44,7 +48,7 @@
 4. Install all the packages using: `npm install`.
 5. To start the bot, run: `pm2 start bin/doppler-run.sh`. **Make sure to setup [PM2](https://pm2.io/) beforehand**.
 
-## Instruction to self host Supabase
+## Instructions to self host Supabase
 
 Supabase provides in-depth explanation about self hosting on their [website](https://supabase.com/docs/guides/self-hosting/docker). Below is the summary of what needs to be done with this app:
 
