@@ -30,6 +30,14 @@ const help: Command = {
 						}`,
 					},
 					{
+						name: ':tools:  Request Support',
+						value: `Request for support whenever you are facing issues: ${
+							process.env.COMMAND_ID === 'TEST_COMMAND_IDS'
+								? `</requestsupport:${testCommandIDs.REQUEST_SUPPORT}>`
+								: `</requestsupport:${originalCommandIDs.REQUEST_SUPPORT}>`
+						}`,
+					},
+					{
 						name: ':rocket:  Get started',
 						value: `Get started with using Etourne: ${
 							process.env.COMMAND_ID === 'TEST_COMMAND_IDS'
@@ -85,7 +93,6 @@ const help: Command = {
 								: `</feedback:${originalCommandIDs.FEEDBACK}>`
 						}`,
 					},
-					// { name: '\u200B', value: '\u200B' },
 				)
 				.setTimestamp()
 				.setFooter({ text: `Requested by: ${member}` });

@@ -11,6 +11,7 @@ import feedback from './commands/feedback';
 import listServerEvents from './commands/listServerEvents';
 import getEvent from './commands/getEvent';
 import registerServer from './commands/registerServer';
+import requestSupport from './commands/requestSupport';
 
 const allSlashCommands: Command[] = [
 	createEvent,
@@ -24,6 +25,7 @@ const allSlashCommands: Command[] = [
 	listServerEvents,
 	getEvent,
 	registerServer,
+	requestSupport,
 ];
 
 export default allSlashCommands;

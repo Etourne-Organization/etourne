@@ -37,7 +37,11 @@ const getStarted: Command = {
 						process.env.BOT_IDS === 'TEST_BOT_IDS'
 							? `</feedback:${testCommandIDs.FEEDBACK}>`
 							: `</feedback:${originalCommandIDs.FEEDBACK}>`
-					} \n \n### To get support: \n Join the support server: https://discord.gg/vNe9QVrWNa`,
+					} \n \n### To get support: \n Use ${
+						process.env.COMMAND_ID === 'TEST_COMMAND_IDS'
+							? `</requestsupport:${testCommandIDs.REQUEST_SUPPORT}>`
+							: `</requestsupport:${originalCommandIDs.REQUEST_SUPPORT}>`
+					}`,
 				)
 				.setFooter({ text: `Requested by: ${interaction.user.tag}` })
 				.setTimestamp();

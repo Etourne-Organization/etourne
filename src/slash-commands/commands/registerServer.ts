@@ -79,8 +79,6 @@ const registerServer: Command = {
 				});
 			}
 		} catch (err) {
-			console.log(err);
-
 			await interaction.reply({
 				embeds: [infoMessageEmbed(':x: There has been an error', 'ERROR')],
 			});
