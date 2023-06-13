@@ -6,14 +6,14 @@ pm2 stop doppler-run
 echo "sleeping 1.5sec"
 sleep 1.5
 
-echo "Building prod version"
-npm run build
+echo "git pulling"
+git pull
 
 echo "sleeping 1.5sec"
 sleep 1.5
 
-echo "git pulling"
-git pull
+echo "Building prod version"
+npm run build
 
 echo "sleeping 1.5sec"
 sleep 1.5
