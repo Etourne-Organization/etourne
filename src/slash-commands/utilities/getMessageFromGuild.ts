@@ -14,7 +14,6 @@ const getMessageFromGuild = async (
 	);
 
 	for (const channel of channels) {
-		console.log(1);
 		target = await channel[1]
 			.messages!.fetch(messageId)
 			.catch((err: any) => {});
