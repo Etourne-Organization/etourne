@@ -7,7 +7,7 @@ import commandHandler from './legacy-commands/commands';
 import interactionCreate from './listener/interactionCreate';
 import allSlashCommands from './slash-commands/allSlashCommands';
 import guildCreate from './listener/guildCreate';
-import guildDelete from './listener/guildDelete';
+// import guildDelete from './listener/guildDelete';
 
 const client = new Client({
 	partials: ['MESSAGE', 'REACTION'],

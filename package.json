@@ -6,7 +6,7 @@
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"start": "ts-node ./src/bot.ts",
-		"start-doppler": "doppler run -- nodemon ./src/bot.ts",
+		"dev-doppler": "doppler run -- nodemon ./src/bot.ts",
 		"prod-start-doppler": "doppler run -- node ./prod/bot.js",
 		"dev": "nodemon ./src/bot.ts",
 		"build": "tsc"

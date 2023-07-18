@@ -47,7 +47,7 @@
    2. `crash_logs.txt`
 
 4. Install all the packages using: `npm install`.
-5. To start the bot, run: `npm run start-doppler` (make sure to be in the directory).
+5. To start the bot, run: `npm run dev-doppler` (make sure to be in the directory).
 
 ## Instructions to setup the bot in production (server)
 
