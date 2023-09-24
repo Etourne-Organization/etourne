@@ -58,19 +58,21 @@ const removePlayer: ButtonFunction = {
 					ephemeral: true,
 				});
 
-			const selectMenuOptions: [
-				{ label: string; description: string; value: string },
-			] = [{ label: ' ', description: ' ', value: ' ' }];
+			const selectMenuOptions: Array<{
+				label: string;
+				description: string;
+				value: string;
+			}> = [];
 
 			players!.forEach(
 				(tp: { username: string; userId: string }, i: number) => {
 					if (tp.username === interaction.user.tag) return;
 
-					selectMenuOptions[i] = {
+					selectMenuOptions.push({
 						label: tp.username,
 						description: `Remove ${tp.username}`,
 						value: `${tp.username}||${tp.userId}`,
-					};
+					});
 				},
 			);
 
