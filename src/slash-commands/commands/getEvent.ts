@@ -97,7 +97,7 @@ const getEvent: Command = {
 
 				let fetchedMessage;
 
-				if (fetchedChannel?.isText()) {
+				if (fetchedChannel!.isText()) {
 					fetchedMessage = await fetchedChannel.messages
 						.fetch(eventInfo[0].messageId)
 						.catch((err) => {});
@@ -242,7 +242,8 @@ const getEvent: Command = {
 				});
 			}
 		} catch (err) {
-			await interaction.reply({
+			await interaction.editReply({
+				content: ' ',
 				embeds: [infoMessageEmbed(':x: There has been an error', 'ERROR')],
 			});
 
