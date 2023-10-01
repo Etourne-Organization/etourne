@@ -100,7 +100,7 @@ const getEvent: Command = {
 				if (fetchedChannel!.isText()) {
 					fetchedMessage = await fetchedChannel.messages
 						.fetch(eventInfo[0].messageId)
-						.catch((err) => {});
+						.catch();
 				}
 
 				if (fetchedMessage) {
