@@ -97,7 +97,7 @@ const createEvent: Command = {
 
 			const eventTimezoneInput = new TextInputComponent()
 				.setCustomId('timezone')
-				.setLabel('Your timezone: timezones.etourne.xyz')
+				.setLabel('Your timezone: timezones.etourne.com')
 				.setStyle('SHORT')
 				.setPlaceholder('Your timezone')
 				.setRequired(true);
