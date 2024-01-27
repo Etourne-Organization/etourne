@@ -91,37 +91,39 @@ const getEvent: Command = {
 			});
 
 			if (eventInfo.length > 0) {
-				const fetchedChannel = await interaction.guild?.channels.fetch(
-					eventInfo[0].channelId,
-				);
+				if (eventInfo[0].channelId) {
+					const fetchedChannel = await interaction.guild?.channels.fetch(
+						eventInfo[0].channelId,
+					);
 
-				let fetchedMessage;
+					let fetchedMessage;
 
-				if (fetchedChannel!.isText()) {
-					fetchedMessage = await fetchedChannel.messages
-						.fetch(eventInfo[0].messageId)
-						.catch();
-				}
+					if (fetchedChannel!.isText()) {
+						fetchedMessage = await fetchedChannel.messages
+							.fetch(eventInfo[0].messageId)
+							.catch();
+					}
 
-				if (fetchedMessage) {
-					const embed = new MessageEmbed()
-						.setColor('#D83C3E')
-						.setTitle(':x: Event cannot be shared')
-						.setDescription(
-							`The event embed has already been shared in <#${
-								fetchedMessage.channelId
-							}> (message link: https://discord.com/channels/${
-								interaction.guild!.id
-							}/${fetchedMessage.channelId}/${
-								fetchedMessage.id
-							})\nTo reshare the event embed in a new channel, delete the existing event embed.`,
-						)
-						.setTimestamp();
+					if (fetchedMessage) {
+						const embed = new MessageEmbed()
+							.setColor('#D83C3E')
+							.setTitle(':x: Event cannot be shared')
+							.setDescription(
+								`The event embed has already been shared in <#${
+									fetchedMessage.channelId
+								}> (message link: https://discord.com/channels/${
+									interaction.guild!.id
+								}/${fetchedMessage.channelId}/${
+									fetchedMessage.id
+								})\nTo reshare the event embed in a new channel, delete the existing event embed.`,
+							)
+							.setTimestamp();
 
-					return await interaction.editReply({
-						content: ' ',
-						embeds: [embed],
-					});
+						return await interaction.editReply({
+							content: ' ',
+							embeds: [embed],
+						});
+					}
 				} else {
 					const dbPlayers: [{ username: string; userId: string }?] =
 						await getAllPlayers({ eventId: eventId.value });
