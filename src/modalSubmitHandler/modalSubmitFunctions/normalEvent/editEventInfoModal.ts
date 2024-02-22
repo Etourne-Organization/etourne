@@ -10,6 +10,8 @@ import {
 	isoTimeFormat,
 	getTimzeonValueFromLabel,
 } from '../../../utilities/timezone';
+import errorMessageTemplate from '../../../globalUtils/errorMessageTemplate';
+import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
 
 const editEventInfoModal: ModalFunction = {
 	customId: 'editEventInfoModal',
@@ -120,6 +122,17 @@ const editEventInfoModal: ModalFunction = {
 				embeds: [editedEmbed],
 			});
 		} catch (err) {
+			await interaction.reply({
+				embeds: [
+					infoMessageEmbed(
+						errorMessageTemplate().title,
+						'ERROR',
+						errorMessageTemplate().description,
+					),
+				],
+				ephemeral: true,
+			});
+
 			try {
 				fs.appendFile(
 					'logs/crash_logs.txt',

@@ -75,6 +75,7 @@ const listServerEvents: Command = {
 						errorMessageTemplate().description,
 					),
 				],
+				ephemeral: true,
 			});
 
 			try {

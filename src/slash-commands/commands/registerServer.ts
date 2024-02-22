@@ -79,6 +79,7 @@ const registerServer: Command = {
 		} catch (err) {
 			await interaction.reply({
 				embeds: [infoMessageEmbed(':x: There has been an error', 'ERROR')],
+				ephemeral: true,
 			});
 
 			try {

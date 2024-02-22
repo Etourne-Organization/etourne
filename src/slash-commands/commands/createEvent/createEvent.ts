@@ -153,6 +153,7 @@ const createEvent: Command = {
 						errorMessageTemplate().description,
 					),
 				],
+				ephemeral: true,
 			});
 
 			try {

@@ -13,6 +13,9 @@ import { ButtonFunction } from '../../ButtonStructure';
 import { getNumOfTeams } from '../../../supabase/supabaseFunctions/teams';
 import { getColumnValueById } from '../../../supabase/supabaseFunctions/events';
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
+import errorMessageTemplate, {
+	MessageType,
+} from '../../../globalUtils/errorMessageTemplate';
 
 const createTeam: ButtonFunction = {
 	customId: 'createTeam',
@@ -77,8 +80,20 @@ const createTeam: ButtonFunction = {
 
 			await interaction.showModal(teamFormModal);
 		} catch (err) {
+			await interaction.reply({
+				embeds: [
+					infoMessageEmbed(
+						errorMessageTemplate({ messageType: MessageType.SHORT })
+							.title,
+						'ERROR',
+						errorMessageTemplate({ messageType: MessageType.SHORT })
+							.description,
+					),
+				],
+				ephemeral: true,
+			});
+
 			try {
-				console.log(err);
 				fs.appendFile(
 					'logs/crash_logs.txt',
 					`${new Date()} : Something went wrong in buttonFunctions/teamEvent/createTeam.ts \n Actual error: ${err} \n \n`,

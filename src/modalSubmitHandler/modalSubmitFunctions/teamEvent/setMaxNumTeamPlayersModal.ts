@@ -5,6 +5,8 @@ import { Client, ModalSubmitInteraction, MessageEmbed } from 'discord.js';
 import { ModalFunction } from '../../ModalSubmitStructure';
 import { setColumnValue } from '../../../supabase/supabaseFunctions/events';
 import updateAllTeamInfo from './utils/updateAllTeamInfo';
+import errorMessageTemplate from '../../../globalUtils/errorMessageTemplate';
+import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
 
 const setMaxNumTeamPlayersModal: ModalFunction = {
 	customId: 'setMaxNumTeamPlayersModalSubmit',
@@ -45,6 +47,17 @@ const setMaxNumTeamPlayersModal: ModalFunction = {
 
 			return await interaction.update({ embeds: [editedEmbed] });
 		} catch (err) {
+			await interaction.reply({
+				embeds: [
+					infoMessageEmbed(
+						errorMessageTemplate().title,
+						'ERROR',
+						errorMessageTemplate().description,
+					),
+				],
+				ephemeral: true,
+			});
+
 			try {
 				fs.appendFile(
 					'logs/crash_logs.txt',

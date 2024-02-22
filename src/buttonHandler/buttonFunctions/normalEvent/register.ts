@@ -9,6 +9,9 @@ import {
 	getNumOfPlayers,
 } from '../../../supabase/supabaseFunctions/singlePlayers';
 import { getColumnValueById } from '../../../supabase/supabaseFunctions/events';
+import errorMessageTemplate, {
+	MessageType,
+} from '../../../globalUtils/errorMessageTemplate';
 
 const register: ButtonFunction = {
 	customId: 'normalEventRegister',
@@ -110,8 +113,20 @@ const register: ButtonFunction = {
 
 			await interaction.update({ embeds: [editedEmbed] });
 		} catch (err) {
+			await interaction.reply({
+				embeds: [
+					infoMessageEmbed(
+						errorMessageTemplate({ messageType: MessageType.SHORT })
+							.title,
+						'ERROR',
+						errorMessageTemplate({ messageType: MessageType.SHORT })
+							.description,
+					),
+				],
+				ephemeral: true,
+			});
+
 			try {
-				console.log(err);
 				fs.appendFile(
 					'logs/crash_logs.txt',
 					`${new Date()} : Something went wrong in buttonFunctions/normalEvent/register.ts \n Actual error: ${err} \n \n`,

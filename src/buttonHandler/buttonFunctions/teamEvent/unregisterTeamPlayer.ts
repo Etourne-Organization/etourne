@@ -6,6 +6,7 @@ import { ButtonFunction } from '../../ButtonStructure';
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
 import { removePlayer } from '../../../supabase/supabaseFunctions/teamPlayers';
 import { checkTeamExists } from '../../../supabase/supabaseFunctions/teams';
+import errorMessageTemplate from '../../../globalUtils/errorMessageTemplate';
 
 const unregisterTeamPlayer: ButtonFunction = {
 	customId: 'unregisterTeamPlayer',
@@ -98,6 +99,17 @@ const unregisterTeamPlayer: ButtonFunction = {
 
 			return await interaction.update({ embeds: [editedEmbed] });
 		} catch (err) {
+			await interaction.reply({
+				embeds: [
+					infoMessageEmbed(
+						errorMessageTemplate().title,
+						'ERROR',
+						errorMessageTemplate().description,
+					),
+				],
+				ephemeral: true,
+			});
+
 			try {
 				fs.appendFile(
 					'logs/crash_logs.txt',

@@ -20,6 +20,7 @@ import {
 	isoTimeFormat,
 	getTimzeonValueFromLabel,
 } from '../../../utilities/timezone';
+import errorMessageTemplate from '../../../globalUtils/errorMessageTemplate';
 
 const teamEventModal: ModalFunction = {
 	customId: 'teamEventModalSubmit',
@@ -147,6 +148,17 @@ const teamEventModal: ModalFunction = {
 				ephemeral: true,
 			});
 		} catch (err) {
+			await interaction.reply({
+				embeds: [
+					infoMessageEmbed(
+						errorMessageTemplate().title,
+						'ERROR',
+						errorMessageTemplate().description,
+					),
+				],
+				ephemeral: true,
+			});
+
 			try {
 				fs.appendFile(
 					'logs/crash_logs.txt',

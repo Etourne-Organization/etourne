@@ -12,6 +12,7 @@ import { ButtonFunction } from '../../ButtonStructure';
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
 import { getUserRole } from '../../../supabase/supabaseFunctions/users';
 import { deleteEvent as deleteEventSupabase } from '../../../supabase/supabaseFunctions/events';
+import errorMessageTemplate from '../../../globalUtils/errorMessageTemplate';
 
 const deleteEvent: ButtonFunction = {
 	customId: 'deleteEvent',
@@ -133,7 +134,17 @@ const deleteEvent: ButtonFunction = {
 				});
 			}
 		} catch (err) {
-			console.log(err);
+			await interaction.reply({
+				embeds: [
+					infoMessageEmbed(
+						errorMessageTemplate().title,
+						'ERROR',
+						errorMessageTemplate().description,
+					),
+				],
+				ephemeral: true,
+			});
+
 			try {
 				fs.appendFile(
 					'logs/crash_logs.txt',

@@ -12,6 +12,8 @@ import {
 
 import { ButtonFunction } from '../../ButtonStructure';
 import { getColumnValueById } from '../../../supabase/supabaseFunctions/events';
+import errorMessageTemplate from '../../../globalUtils/errorMessageTemplate';
+import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
 
 const setMaxNumPlayers: ButtonFunction = {
 	customId: 'setMaxNumPlayers',
@@ -49,6 +51,17 @@ const setMaxNumPlayers: ButtonFunction = {
 
 			await interaction.showModal(modal);
 		} catch (err) {
+			await interaction.reply({
+				embeds: [
+					infoMessageEmbed(
+						errorMessageTemplate().title,
+						'ERROR',
+						errorMessageTemplate().description,
+					),
+				],
+				ephemeral: true,
+			});
+
 			try {
 				fs.appendFile(
 					'logs/crash_logs.txt',

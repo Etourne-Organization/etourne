@@ -124,6 +124,7 @@ const setUserRole: Command = {
 						errorMessageTemplate().description,
 					),
 				],
+				ephemeral: true,
 			});
 
 			try {

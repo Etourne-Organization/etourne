@@ -14,6 +14,7 @@ import {
 	checkTeamExists,
 } from '../../../supabase/supabaseFunctions/teams';
 import { getUserRole } from '../../../supabase/supabaseFunctions/users';
+import errorMessageTemplate from '../../../globalUtils/errorMessageTemplate';
 
 const deleteTeam: ButtonFunction = {
 	customId: 'deleteTeam',
@@ -126,6 +127,17 @@ const deleteTeam: ButtonFunction = {
 				});
 			}
 		} catch (err) {
+			await interaction.reply({
+				embeds: [
+					infoMessageEmbed(
+						errorMessageTemplate().title,
+						'ERROR',
+						errorMessageTemplate().description,
+					),
+				],
+				ephemeral: true,
+			});
+
 			try {
 				fs.appendFile(
 					'logs/crash_logs.txt',

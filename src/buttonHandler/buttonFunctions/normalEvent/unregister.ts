@@ -5,6 +5,9 @@ import { Client, ButtonInteraction, MessageEmbed } from 'discord.js';
 import { ButtonFunction } from '../../ButtonStructure';
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
 import { removePlayer } from '../../../supabase/supabaseFunctions/singlePlayers';
+import errorMessageTemplate, {
+	MessageType,
+} from '../../../globalUtils/errorMessageTemplate';
 
 const unregister: ButtonFunction = {
 	customId: 'normalEventUnregister',
@@ -89,6 +92,19 @@ const unregister: ButtonFunction = {
 
 			return await interaction.update({ embeds: [editedEmbed] });
 		} catch (err) {
+			await interaction.reply({
+				embeds: [
+					infoMessageEmbed(
+						errorMessageTemplate({ messageType: MessageType.SHORT })
+							.title,
+						'ERROR',
+						errorMessageTemplate({ messageType: MessageType.SHORT })
+							.description,
+					),
+				],
+				ephemeral: true,
+			});
+
 			try {
 				fs.appendFile(
 					'logs/crash_logs.txt',

@@ -13,6 +13,7 @@ import { ButtonFunction } from '../../ButtonStructure';
 import { getAllColumnValueById } from '../../../supabase/supabaseFunctions/events';
 import { getUserRole } from '../../../supabase/supabaseFunctions/users';
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
+import errorMessageTemplate from '../../../globalUtils/errorMessageTemplate';
 
 const editEventInfo: ButtonFunction = {
 	customId: 'editEventInfo',
@@ -117,6 +118,17 @@ const editEventInfo: ButtonFunction = {
 
 			await interaction.showModal(modal);
 		} catch (err) {
+			await interaction.reply({
+				embeds: [
+					infoMessageEmbed(
+						errorMessageTemplate().title,
+						'ERROR',
+						errorMessageTemplate().description,
+					),
+				],
+				ephemeral: true,
+			});
+
 			try {
 				console.log(err);
 				fs.appendFile(

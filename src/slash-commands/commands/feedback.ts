@@ -4,7 +4,6 @@ import { BaseCommandInteraction, Client, MessageEmbed } from 'discord.js';
 
 import { Command } from '../CommandStructure';
 import infoMessageEmbed from '../../globalUtils/infoMessageEmbed';
-import errorMessageTemplate from '../../globalUtils/errorMessageTemplate';
 
 const feedback: Command = {
 	name: 'feedback',
@@ -32,13 +31,8 @@ const feedback: Command = {
 			});
 		} catch (err) {
 			await interaction.reply({
-				embeds: [
-					infoMessageEmbed(
-						errorMessageTemplate().title,
-						'ERROR',
-						errorMessageTemplate().description,
-					),
-				],
+				embeds: [infoMessageEmbed(':x: There has been an error', 'ERROR')],
+				ephemeral: true,
 			});
 
 			try {

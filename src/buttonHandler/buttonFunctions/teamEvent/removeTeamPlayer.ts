@@ -13,6 +13,7 @@ import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
 import { checkTeamExists } from '../../../supabase/supabaseFunctions/teams';
 import { getAllTeamPlayers } from '../../../supabase/supabaseFunctions/teamPlayers';
 import { getUserRole } from '../../../supabase/supabaseFunctions/users';
+import errorMessageTemplate from '../../../globalUtils/errorMessageTemplate';
 
 const removeTeamPlayer: ButtonFunction = {
 	customId: 'removeTeamPlayer',
@@ -119,6 +120,17 @@ const removeTeamPlayer: ButtonFunction = {
 				components: [selectMenu],
 			});
 		} catch (err) {
+			await interaction.reply({
+				embeds: [
+					infoMessageEmbed(
+						errorMessageTemplate().title,
+						'ERROR',
+						errorMessageTemplate().description,
+					),
+				],
+				ephemeral: true,
+			});
+
 			try {
 				fs.appendFile(
 					'logs/crash_logs.txt',

@@ -20,6 +20,7 @@ import {
 	isoTimeFormat,
 	getTimzeonValueFromLabel,
 } from '../../../utilities/timezone';
+import errorMessageTemplate from '../../../globalUtils/errorMessageTemplate';
 
 const normalEventModal: ModalFunction = {
 	customId: 'normalEventModalSubmit',
@@ -146,7 +147,14 @@ const normalEventModal: ModalFunction = {
 			});
 		} catch (err) {
 			await interaction.reply({
-				embeds: [infoMessageEmbed(':x: There has been an error', 'ERROR')],
+				embeds: [
+					infoMessageEmbed(
+						errorMessageTemplate().title,
+						'ERROR',
+						errorMessageTemplate().description,
+					),
+				],
+				ephemeral: true,
 			});
 
 			try {

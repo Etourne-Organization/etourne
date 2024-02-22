@@ -12,6 +12,7 @@ import { ButtonFunction } from '../../ButtonStructure';
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
 import { getAllPlayers } from '../../../supabase/supabaseFunctions/singlePlayers';
 import { getUserRole } from '../../../supabase/supabaseFunctions/users';
+import errorMessageTemplate from '../../../globalUtils/errorMessageTemplate';
 
 const removePlayer: ButtonFunction = {
 	customId: 'removePlayer',
@@ -95,6 +96,17 @@ const removePlayer: ButtonFunction = {
 				components: [selectMenu],
 			});
 		} catch (err) {
+			await interaction.reply({
+				embeds: [
+					infoMessageEmbed(
+						errorMessageTemplate().title,
+						'ERROR',
+						errorMessageTemplate().description,
+					),
+				],
+				ephemeral: true,
+			});
+
 			try {
 				fs.appendFile(
 					'logs/crash_logs.txt',

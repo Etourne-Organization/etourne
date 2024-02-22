@@ -14,6 +14,8 @@ import {
 	isoParsingDateFormat,
 	isoTimeFormat,
 } from '../../../utilities/timezone';
+import errorMessageTemplate from '../../../globalUtils/errorMessageTemplate';
+import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
 
 const editTeamEventInfoModal: ModalFunction = {
 	customId: 'editTeamEventInfoModal',
@@ -134,8 +136,18 @@ const editTeamEventInfoModal: ModalFunction = {
 				embeds: [editedEmbed],
 			});
 		} catch (err) {
+			await interaction.reply({
+				embeds: [
+					infoMessageEmbed(
+						errorMessageTemplate().title,
+						'ERROR',
+						errorMessageTemplate().description,
+					),
+				],
+				ephemeral: true,
+			});
+
 			try {
-				console.log(err);
 				fs.appendFile(
 					'logs/crash_logs.txt',
 					`${new Date()} : Something went wrong in modalFunctions/teamEvent/editTeamEventInfoModal.ts \n Actual error: ${err} \n \n`,

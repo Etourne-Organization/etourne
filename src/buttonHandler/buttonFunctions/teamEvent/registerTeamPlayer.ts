@@ -10,6 +10,9 @@ import {
 } from '../../../supabase/supabaseFunctions/teamPlayers';
 import { getColumnValueById } from '../../../supabase/supabaseFunctions/events';
 import { checkTeamExists } from '../../../supabase/supabaseFunctions/teams';
+import errorMessageTemplate, {
+	MessageType,
+} from '../../../globalUtils/errorMessageTemplate';
 
 const registerTeamPlayer: ButtonFunction = {
 	customId: 'registerTeamPlayer',
@@ -121,7 +124,19 @@ const registerTeamPlayer: ButtonFunction = {
 
 			return await interaction.update({ embeds: [editedEmbed] });
 		} catch (err) {
-			console.log(err);
+			await interaction.reply({
+				embeds: [
+					infoMessageEmbed(
+						errorMessageTemplate({ messageType: MessageType.SHORT })
+							.title,
+						'ERROR',
+						errorMessageTemplate({ messageType: MessageType.SHORT })
+							.description,
+					),
+				],
+				ephemeral: true,
+			});
+
 			try {
 				fs.appendFile(
 					'logs/crash_logs.txt',

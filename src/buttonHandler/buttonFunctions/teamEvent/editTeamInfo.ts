@@ -3,7 +3,6 @@ import fs from 'fs';
 import {
 	Client,
 	ButtonInteraction,
-	MessageEmbed,
 	Modal,
 	TextInputComponent,
 	MessageActionRow,
@@ -17,6 +16,7 @@ import {
 	getAllColumnValueById,
 } from '../../../supabase/supabaseFunctions/teams';
 import { getUserRole } from '../../../supabase/supabaseFunctions/users';
+import errorMessageTemplate from '../../../globalUtils/errorMessageTemplate';
 
 const editTeamInfo: ButtonFunction = {
 	customId: 'editTeamInfo',
@@ -108,6 +108,17 @@ const editTeamInfo: ButtonFunction = {
 
 			await interaction.showModal(teamFormModal);
 		} catch (err) {
+			await interaction.reply({
+				embeds: [
+					infoMessageEmbed(
+						errorMessageTemplate().title,
+						'ERROR',
+						errorMessageTemplate().description,
+					),
+				],
+				ephemeral: true,
+			});
+
 			try {
 				console.log(err);
 				fs.appendFile(

@@ -152,6 +152,7 @@ const createTeamEvent: Command = {
 						errorMessageTemplate().description,
 					),
 				],
+				ephemeral: true,
 			});
 
 			try {
