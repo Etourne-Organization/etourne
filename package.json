@@ -22,7 +22,6 @@
 		"dotenv": "^16.0.1",
 		"moment": "^2.29.4",
 		"moment-timezone": "^0.5.37",
-		"nodemon": "^2.0.16",
 		"tslib": "^2.4.1",
 		"uuidv4": "^6.2.13"
 	},
