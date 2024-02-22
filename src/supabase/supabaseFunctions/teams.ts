@@ -152,6 +152,8 @@ export const checkTeamExists = async (props: checkTeamExists) => {
 export const setColumnValue = async (props: setColumnValue) => {
 	const { data } = props;
 
+	const errorList = [];
+
 	for (const d of data) {
 		const { data, error } = await supabase
 			.from('Teams')
@@ -159,7 +161,12 @@ export const setColumnValue = async (props: setColumnValue) => {
 				[d.key]: d.value,
 			})
 			.eq('id', d.id);
+
+		if (error) errorList.push(error);
 	}
+
+	if (errorList.length > 0)
+		throw `teams:setColumnValue ${errorList.toString()}`;
 };
 
 export const getColumnValueById = async (props: getColumnValueById) => {

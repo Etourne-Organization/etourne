@@ -155,6 +155,8 @@ export const updateEvent = async (props: updateEvent) => {
 export const setColumnValue = async (props: setColumnValue) => {
 	const { data } = props;
 
+	const errorList = [];
+
 	for (const d of data) {
 		const { data, error } = await supabase
 			.from('Events')
@@ -162,7 +164,12 @@ export const setColumnValue = async (props: setColumnValue) => {
 				[d.key]: d.value,
 			})
 			.eq('id', d.id);
+
+		if (error) errorList.push(error);
 	}
+
+	if (errorList.length > 0)
+		throw `events:setColumnValue ${errorList.toString()}`;
 };
 
 export const getColumnValueById = async (props: getColumnValueById) => {
