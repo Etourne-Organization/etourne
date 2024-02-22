@@ -60,7 +60,7 @@ export const addPlayer = async (props: addPlayer) => {
 		},
 	]);
 
-	if (error) throw error;
+	if (error) throw `singlePlayers:addPlayer ${error}`;
 
 	return { data, error };
 };
@@ -79,7 +79,7 @@ export const removePlayer = async (props: removePlayer) => {
 		.eq('userId', getUserIdData![0]['id'])
 		.eq('eventId', eventId);
 
-	if (error) throw error;
+	if (error) throw `singlePlayers:removePlayer ${error}`;
 
 	return { data, error };
 };
@@ -93,6 +93,8 @@ export const getAllPlayers = async (props: getAllPlayers) => {
 		.from('SinglePlayers')
 		.select('userId')
 		.eq('eventId', eventId);
+
+	if (error) throw `singlePlayers:getAllPlayers ${error}`;
 
 	if (data)
 		for (const d of data!) {
@@ -118,7 +120,7 @@ export const getNumOfPlayers = async (props: getNumOfPlayers) => {
 		.select('id')
 		.eq('eventId', eventId);
 
-	if (error) throw error;
+	if (error) throw `singlePlayers:getNumOfPlayers ${error}`;
 
 	return data.length;
 };

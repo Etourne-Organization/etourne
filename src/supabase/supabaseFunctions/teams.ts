@@ -79,6 +79,8 @@ export const addTeam = async (props: addTeam) => {
 		discordUserId: teamLeaderDiscordUserId,
 	});
 
+	if (getUserIdError) throw `teams:addTeam:getUserIdError ${getUserIdError}`;
+
 	const { data, error } = await supabase
 		.from('Teams')
 		.insert([
@@ -91,7 +93,7 @@ export const addTeam = async (props: addTeam) => {
 		])
 		.select();
 
-	if (error) throw error;
+	if (error) throw `teams:addTeam ${error}`;
 
 	// return { data, error };
 	return data[0]['id'];
@@ -111,7 +113,7 @@ export const updateTeam = async (props: updateTeam) => {
 		.eq('id', id)
 		.select();
 
-	if (error) throw error;
+	if (error) throw `teams:updateTeam ${error}`;
 
 	// return { data, error };
 	return data[0]['id'];
@@ -125,6 +127,8 @@ export const deleteTeam = async (props: deleteTeam) => {
 		.delete()
 		.eq('id', teamId);
 
+	if (error) throw `teams:deleteTeam ${error}`;
+
 	return { data, error };
 };
 
@@ -136,7 +140,7 @@ export const checkTeamExists = async (props: checkTeamExists) => {
 		.select()
 		.eq('id', teamId);
 
-	if (error) throw error;
+	if (error) throw `teams:checkTeamExists ${error}`;
 
 	if (data.length > 0) {
 		return true;
@@ -166,7 +170,7 @@ export const getColumnValueById = async (props: getColumnValueById) => {
 		.select(columnName)
 		.eq('id', id);
 
-	if (error) throw error;
+	if (error) throw `teams:getColumnValueById ${error}`;
 
 	return data;
 };
@@ -181,7 +185,7 @@ export const getColumnValueByEventId = async (
 		.select(columnName)
 		.eq('eventId', eventId);
 
-	if (error) throw error;
+	if (error) throw `teams:getColumnValueByEventId ${error}`;
 
 	return data;
 };
@@ -194,7 +198,7 @@ export const getNumOfTeams = async (props: getNumOfTeam) => {
 		.select('id')
 		.eq('eventId', eventId);
 
-	if (error) throw error;
+	if (error) throw `teams:getNumOfTeams ${error}`;
 
 	return data.length;
 };
@@ -204,7 +208,7 @@ export const getAllColumnValueById = async (props: getAllColumnValueById) => {
 
 	const { data, error } = await supabase.from('Teams').select().eq('id', id);
 
-	if (error) throw error;
+	if (error) throw `teams:getAllColumnValueById ${error}`;
 
 	return data;
 };
@@ -212,10 +216,12 @@ export const getAllColumnValueById = async (props: getAllColumnValueById) => {
 export const getTeamLeaderUsernameDiscordId = async (props: getTeamLeader) => {
 	const { teamId } = props;
 
-	const { data: teamLeaderIdData, error: teamLeaderIdError } = await supabase
+	const { data: teamLeaderIdData, error } = await supabase
 		.from('Teams')
 		.select('teamLeader')
 		.eq('id', teamId);
+
+	if (error) throw `teams:getTeamLeaderUsernameDiscordId ${error}`;
 
 	const discordId = await getUsernameAndDiscordId({
 		userId: teamLeaderIdData![0]['teamLeader'],

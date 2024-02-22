@@ -20,5 +20,7 @@ export const getRoleId = async (props: getRole) => {
 		.select('id')
 		.eq('name', roleName);
 
+	if (error) throw `roles:getRoleId ${error}`;
+
 	return { data, error };
 };

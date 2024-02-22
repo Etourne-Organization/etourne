@@ -39,6 +39,9 @@ export const addPlayer = async (props: addPlayer) => {
 		discordUserId: discordUserId,
 	});
 
+	if (getUserIdError)
+		throw `teamPlayers:addPlayer:getUserIdError ${getUserIdError}`;
+
 	// add user to the Supabase DB if the user does not exist
 	if (getUserIdData!.length < 1) {
 		const { data: addUserData, error: addUserError } = await addUser({
@@ -46,6 +49,9 @@ export const addPlayer = async (props: addPlayer) => {
 			discordUserId: discordUserId,
 			discordServerId: discordServerId!,
 		});
+
+		if (addUserError)
+			throw `teamPlayers:addPlayer:addUserError ${addUserError}`;
 
 		dbUserId = addUserData![0]['id'];
 	} else {
@@ -59,7 +65,7 @@ export const addPlayer = async (props: addPlayer) => {
 		},
 	]);
 
-	if (error) throw error;
+	if (error) throw `teamPlayers:addPlayer ${error}`;
 
 	return { data, error };
 };
@@ -72,13 +78,16 @@ export const removePlayer = async (props: removePlayer) => {
 		discordUserId: discordUserId,
 	});
 
+	if (getUserIdError)
+		throw `teamPlayers:removePlayer:getUserIdError ${getUserIdError}`;
+
 	const { data, error } = await supabase
 		.from('TeamPlayers')
 		.delete()
 		.eq('userId', getUserIdData![0]['id'])
 		.eq('teamId', teamId);
 
-	if (error) throw error;
+	if (error) throw `teamPlayers:removePlayer ${error}`;
 
 	return { data, error };
 };
@@ -92,6 +101,8 @@ export const getAllTeamPlayers = async (props: getAllTeamPlayers) => {
 		.from('TeamPlayers')
 		.select('userId')
 		.eq('teamId', teamId);
+
+	if (error) throw `teamPlayers:getAllTeamPlayers ${error}`;
 
 	for (const d of data!) {
 		const us: [{ username: string }] | any = await getUsernameAndDiscordId({
@@ -114,7 +125,7 @@ export const getNumOfTeamPlayers = async (props: getNumOfTeamPlayers) => {
 		.select('id')
 		.eq('teamId', teamId);
 
-	if (error) throw error;
+	if (error) throw `teamPlayers:getNumOfTeamPlayers ${error}`;
 
 	return data.length;
 };

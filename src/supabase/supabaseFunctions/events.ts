@@ -96,7 +96,7 @@ export const addEvent = async (props: addEvent) => {
 		])
 		.select();
 
-	if (error) throw error;
+	if (error) throw `events:addEvent ${error}`;
 
 	return data[0]['id'];
 };
@@ -144,10 +144,10 @@ export const updateEvent = async (props: updateEvent) => {
 			])
 			.eq('id', eventId);
 
-		if (error) throw error;
+		if (error) throw `events:updateEvent ${error}`;
 	}
 
-	if (error) throw error;
+	if (error) throw `events:updateEvent ${error}`;
 
 	return data[0]['id'];
 };
@@ -173,7 +173,7 @@ export const getColumnValueById = async (props: getColumnValueById) => {
 		.select(columnName)
 		.eq('id', id);
 
-	if (error) throw error;
+	if (error) throw `events:getColumnValueById ${error}`;
 
 	return data;
 };
@@ -186,7 +186,7 @@ export const deleteEvent = async (props: deletEvent) => {
 		.delete()
 		.eq('id', eventId);
 
-	if (error) throw error;
+	if (error) throw `events:deleteEvent ${error}`;
 
 	return { data, error };
 };
@@ -196,7 +196,7 @@ export const getAllColumnValueById = async (props: getAllColumnValueById) => {
 
 	const { data, error } = await supabase.from('Events').select().eq('id', id);
 
-	if (error) throw error;
+	if (error) throw `events:getAllColumnValueById ${error}`;
 
 	return data;
 };
@@ -217,7 +217,7 @@ export const getAllServerEvents = async (props: getAllServerEvents) => {
 		.select('*')
 		.eq('serverId', getServerIdData![0]['id']);
 
-	if (error) throw error;
+	if (error) throw `events:getAllServerEvents ${error}`;
 
 	return data;
 };

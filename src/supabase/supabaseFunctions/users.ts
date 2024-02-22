@@ -65,6 +65,9 @@ export const addUser = async (props: addUser) => {
 		},
 	);
 
+	if (getServerIdError)
+		throw `users:addUser:getServerIdError ${getServerIdError}`;
+
 	const { data, error } = await supabase
 		.from('Users')
 		.insert([
@@ -76,6 +79,8 @@ export const addUser = async (props: addUser) => {
 			},
 		])
 		.select();
+
+	if (error) throw `users:addUser ${error}`;
 
 	return { data, error };
 };
@@ -90,6 +95,9 @@ export const checkAddUser = async (props: checkAddUser) => {
 		},
 	);
 
+	if (getServerIdError)
+		throw `users:checkAddUser:getServerIdError ${getServerIdError}`;
+
 	// check whether user exists in DB
 	const { data: checkUserExistsData, error: checkUserExistsError } =
 		await supabase
@@ -97,6 +105,9 @@ export const checkAddUser = async (props: checkAddUser) => {
 			.select('id')
 			.eq('userId', discordUserId)
 			.eq('serverId', getServerIdData![0]['id']);
+
+	if (checkUserExistsError)
+		throw `users:checkAddUser:checkUserExistsError ${checkUserExistsError}`;
 
 	if (checkUserExistsData!.length === 0) {
 		await addUser({
@@ -116,6 +127,8 @@ export const getUserId = async (props: getUserId) => {
 		.select('id')
 		.eq('userId', discordUserId);
 
+	if (error) throw `users:getUserId ${error}`;
+
 	return { data, error };
 };
 
@@ -127,6 +140,8 @@ export const getUsernameAndDiscordId = async (props: getUsername) => {
 		.select('username, userId')
 		.eq('id', userId);
 
+	if (error) throw `users:getUsernameAndDiscordId ${error}`;
+
 	return data;
 };
 
@@ -137,6 +152,8 @@ export const getMultipleUsernames = async (props: getMultipleUsernames) => {
 		.from('Users')
 		.select('username')
 		.in('id', userIds);
+
+	if (error) throw `users:getMultipleUsernames ${error}`;
 
 	return data;
 };
@@ -150,11 +167,16 @@ export const getUserRole = async (props: getUserRole) => {
 		},
 	);
 
+	if (getServerIdError)
+		throw `users:getUserRole:getServerIdError ${getServerIdError}`;
+
 	const { data, error } = await supabase
 		.from('Users')
 		.select('roleId')
 		.eq('userId', discordUserId)
 		.eq('serverId', getServerIdData![0]['id']);
+
+	if (error) throw `users:getUserRole ${error}`;
 
 	return data;
 };
@@ -168,6 +190,9 @@ export const setUserRole = async (props: setUserRole) => {
 			discordServerId: discordServerId,
 		},
 	);
+
+	if (getServerIdError)
+		throw `users:setUserRole:getServerIdError ${getServerIdError}`;
 
 	await checkAddUser({
 		discordServerId: discordServerId,
@@ -185,6 +210,8 @@ export const setUserRole = async (props: setUserRole) => {
 		.eq('userId', discordUserId)
 		.eq('serverId', getServerIdData![0]['id']);
 
+	if (error) throw `users:setUserRole ${error}`;
+
 	return data;
 };
 
@@ -195,6 +222,8 @@ export const isUserSuperAdmin = async (props: isUserSuperAdmin) => {
 		.from('SuperAdminUsers')
 		.select('id')
 		.eq('id', discordUserId);
+
+	if (error) throw `users:isUserSuperAdmin ${error}`;
 
 	if (data!.length > 0) {
 		return true;
@@ -213,11 +242,16 @@ export const checkUserExists = async (props: checkUserExists) => {
 		},
 	);
 
+	if (getServerIdError)
+		throw `users:checkUserExists:getServerIdError ${getServerIdError}`;
+
 	const { data, error } = await supabase
 		.from('Users')
 		.select('id')
 		.eq('userId', discordUserId)
 		.eq('serverId', getServerIdData![0]['id']);
+
+	if (error) throw `users:checkUserExists ${error}`;
 
 	if (data!.length > 0) {
 		return true;

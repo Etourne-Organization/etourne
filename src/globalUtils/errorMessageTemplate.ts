@@ -33,6 +33,7 @@ const errorMessageTemplate = ({
 				}`,
 			};
 		}
+
 		case MessageType.SHORT: {
 			message = {
 				title: ':x: There has been an error',
