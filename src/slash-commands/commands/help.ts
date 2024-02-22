@@ -38,6 +38,14 @@ const help: Command = {
 						}`,
 					},
 					{
+						name: ':pencil:  Register Admin',
+						value: `Register user who added the bot as Admin in Etourne database: ${
+							process.env.COMMAND_ID === 'TEST_COMMAND_IDS'
+								? `</registerserver:${testCommandIDs.REGISTER_ADMIN}>`
+								: `</registerserver:${originalCommandIDs.REGISTER_ADMIN}>`
+						}`,
+					},
+					{
 						name: ':rocket:  Get started',
 						value: `Get started with using Etourne: ${
 							process.env.COMMAND_ID === 'TEST_COMMAND_IDS'
