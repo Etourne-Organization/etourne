@@ -3,24 +3,47 @@ import fs from 'fs';
 import { BaseCommandInteraction, Client, MessageEmbed } from 'discord.js';
 
 import { Command } from '../CommandStructure';
-import infoMessageEmbed from '../../globalUtils/infoMessageEmbed';
-import {
-	checkServerExists,
-	addServer,
-} from '../../supabase/supabaseFunctions/servers';
-import { checkAddUser } from '../../supabase/supabaseFunctions/users';
 
-const registerServer: Command = {
-	name: 'registerserver',
-	description: 'Register your Discord server in Etourne database',
+import infoMessageEmbed from '../../globalUtils/infoMessageEmbed';
+import { checkServerExists } from '../../supabase/supabaseFunctions/servers';
+import {
+	checkAddUser,
+	checkUserExists,
+} from '../../supabase/supabaseFunctions/users';
+
+const registerAdmin: Command = {
+	name: 'registeradmin',
+	description: 'Register user who added the bot as Admin in Etourne database',
 	type: 'CHAT_INPUT',
 	run: async (client: Client, interaction: BaseCommandInteraction) => {
 		try {
 			if (
-				await checkServerExists({ discordServerId: interaction.guild!.id })
+				!(await checkServerExists({
+					discordServerId: interaction.guild!.id,
+				}))
+			) {
+				console.log('hello 2');
+
+				return await interaction.reply({
+					embeds: [
+						infoMessageEmbed(
+							'Your server is not registered in Etourne Database. Please register your server by running /registerserver command',
+						),
+					],
+				});
+			}
+			if (
+				await checkUserExists({
+					discordServerId: interaction.guild!.id,
+					discordUserId: interaction.user.id,
+				})
 			) {
 				return await interaction.reply({
-					embeds: [infoMessageEmbed('Your server is already registered!')],
+					embeds: [
+						infoMessageEmbed(
+							'You are already registered in Etourne database!',
+						),
+					],
 				});
 			} else if (
 				interaction.guild!.members.me?.permissions.has('VIEW_AUDIT_LOG')
@@ -43,11 +66,6 @@ const registerServer: Command = {
 					});
 				}
 
-				await addServer({
-					discordServerId: interaction.guild!.id,
-					name: interaction.guild!.name,
-				});
-
 				await checkAddUser({
 					username: log!.executor!.tag,
 					discordServerId: interaction.guild!.id,
@@ -58,22 +76,10 @@ const registerServer: Command = {
 				return await interaction.reply({
 					embeds: [
 						infoMessageEmbed(
-							':white_check_mark: Discord server registered!',
+							':white_check_mark: You are registered!',
 							'SUCCESS',
 						),
 					],
-				});
-			} else {
-				const embed = new MessageEmbed()
-					.setColor('#D83C3E')
-					.setTitle(':x: Error')
-					.setDescription(
-						'Please give the following permission to the bot: \n - `View Audit Log` \n \n## Why is this needed? \n This permission will allow the bot to retrieve the user who added the bot and make that user `Admin` (**NOT** server `Admin`) in Etourne software.',
-					)
-					.setTimestamp();
-
-				return await interaction.reply({
-					embeds: [embed],
 				});
 			}
 		} catch (err) {
@@ -84,7 +90,7 @@ const registerServer: Command = {
 			try {
 				fs.appendFile(
 					'logs/crash_logs.txt',
-					`${new Date()} : Something went wrong in slashcommands/registerServer.ts \n Actual error: ${err} \n \n`,
+					`${new Date()} : Something went wrong in slashcommands/registerAdmin.ts \n Actual error: ${err} \n \n`,
 					(err) => {
 						if (err) throw err;
 					},
@@ -96,4 +102,4 @@ const registerServer: Command = {
 	},
 };
 
-export default registerServer;
+export default registerAdmin;

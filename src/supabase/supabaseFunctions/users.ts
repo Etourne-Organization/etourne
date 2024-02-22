@@ -51,6 +51,11 @@ interface isUserSuperAdmin {
 	discordUserId: string;
 }
 
+interface checkUserExists {
+	discordUserId: string;
+	discordServerId: string;
+}
+
 export const addUser = async (props: addUser) => {
 	const { username, discordUserId, discordServerId, roleId = 1 } = props;
 
@@ -190,6 +195,29 @@ export const isUserSuperAdmin = async (props: isUserSuperAdmin) => {
 		.from('SuperAdminUsers')
 		.select('id')
 		.eq('id', discordUserId);
+
+	if (data!.length > 0) {
+		return true;
+	} else {
+		return false;
+	}
+};
+
+export const checkUserExists = async (props: checkUserExists) => {
+	const { discordUserId, discordServerId } = props;
+
+	// get server column id from supabase
+	const { data: getServerIdData, error: getServerIdError } = await getServerId(
+		{
+			discordServerId: discordServerId,
+		},
+	);
+
+	const { data, error } = await supabase
+		.from('Users')
+		.select('id')
+		.eq('userId', discordUserId)
+		.eq('serverId', getServerIdData![0]['id']);
 
 	if (data!.length > 0) {
 		return true;
