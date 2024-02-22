@@ -57,7 +57,7 @@
    1. `restart.txt`
    2. `crash_logs.txt`
 4. Install all the packages using: `npm install`.
-5. To start the bot, run: `pm2 start bin/doppler-run.sh`. **Make sure to setup [PM2](https://pm2.io/) beforehand**.
+5. To start the bot, run: `pm2 start bin/etourne-bot.sh`. **Make sure to setup [PM2](https://pm2.io/) beforehand**.
 
 ## Instructions to self host Supabase
 
