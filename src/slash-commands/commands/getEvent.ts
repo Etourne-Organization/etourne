@@ -20,6 +20,7 @@ import { getAllPlayers } from '../../supabase/supabaseFunctions/singlePlayers';
 import { checkServerExists } from '../../supabase/supabaseFunctions/servers';
 import testCommandIDs from '../../TEST_COMMAND_IDS/commandIDs.json';
 import originalCommandIDs from '../../ORIGINAL_COMMAND_IDS/commandIDs.json';
+import errorMessageTemplate from '../../globalUtils/errorMessageTemplate';
 
 const getEvent: Command = {
 	name: 'getevent',
@@ -245,8 +246,13 @@ const getEvent: Command = {
 			}
 		} catch (err) {
 			await interaction.editReply({
-				content: ' ',
-				embeds: [infoMessageEmbed(':x: There has been an error', 'ERROR')],
+				embeds: [
+					infoMessageEmbed(
+						errorMessageTemplate().title,
+						'ERROR',
+						errorMessageTemplate().description,
+					),
+				],
 			});
 
 			try {

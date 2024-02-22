@@ -17,6 +17,7 @@ import { getUserRole } from '../../../supabase/supabaseFunctions/users';
 import { checkServerExists } from '../../../supabase/supabaseFunctions/servers';
 import testCommandIDs from '../../../TEST_COMMAND_IDS/commandIDs.json';
 import originalCommandIDs from '../../../ORIGINAL_COMMAND_IDS/commandIDs.json';
+import errorMessageTemplate from '../../../globalUtils/errorMessageTemplate';
 
 const createTeamEvent: Command = {
 	name: 'createteamevent',
@@ -143,8 +144,14 @@ const createTeamEvent: Command = {
 
 			await interaction.showModal(modal);
 		} catch (err) {
-			interaction.reply({
-				embeds: [infoMessageEmbed(':x: There has been an error', 'ERROR')],
+			await interaction.reply({
+				embeds: [
+					infoMessageEmbed(
+						errorMessageTemplate().title,
+						'ERROR',
+						errorMessageTemplate().description,
+					),
+				],
 			});
 
 			try {

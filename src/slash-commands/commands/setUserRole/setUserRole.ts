@@ -11,6 +11,7 @@ import {
 import { checkServerExists } from '../../../supabase/supabaseFunctions/servers';
 import testCommandIDs from '../../../TEST_COMMAND_IDS/commandIDs.json';
 import originalCommandIDs from '../../../ORIGINAL_COMMAND_IDS/commandIDs.json';
+import errorMessageTemplate from '../../../globalUtils/errorMessageTemplate';
 
 const setUserRole: Command = {
 	name: 'setuserrole',
@@ -115,6 +116,16 @@ const setUserRole: Command = {
 				ephemeral: true,
 			});
 		} catch (err) {
+			await interaction.reply({
+				embeds: [
+					infoMessageEmbed(
+						errorMessageTemplate().title,
+						'ERROR',
+						errorMessageTemplate().description,
+					),
+				],
+			});
+
 			try {
 				fs.appendFile(
 					'logs/crash_logs.txt',

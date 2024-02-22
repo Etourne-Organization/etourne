@@ -1,7 +1,15 @@
 import { MessageEmbed } from 'discord.js';
 
-const infoMessageEmbed = (message: string, status?: string) => {
-	const infoEmbed = new MessageEmbed().setTitle(message).setTimestamp();
+const infoMessageEmbed = (
+	title: string,
+	status?: string,
+	description?: string,
+) => {
+	const infoEmbed = new MessageEmbed().setTitle(title).setTimestamp();
+
+	if (description) {
+		infoEmbed.setDescription(description);
+	}
 
 	if (status === 'WARNING' || status === 'ERROR') {
 		infoEmbed.setColor('#D83C3E');

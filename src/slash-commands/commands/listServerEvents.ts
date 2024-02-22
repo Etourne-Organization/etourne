@@ -9,6 +9,7 @@ import infoMessageEmbed from '../../globalUtils/infoMessageEmbed';
 import { checkServerExists } from '../../supabase/supabaseFunctions/servers';
 import testCommandIDs from '../../TEST_COMMAND_IDS/commandIDs.json';
 import originalCommandIDs from '../../ORIGINAL_COMMAND_IDS/commandIDs.json';
+import errorMessageTemplate from '../../globalUtils/errorMessageTemplate';
 
 const listServerEvents: Command = {
 	name: 'listserverevents',
@@ -67,7 +68,13 @@ const listServerEvents: Command = {
 			});
 		} catch (err) {
 			await interaction.reply({
-				embeds: [infoMessageEmbed(':x: There has been an error', 'ERROR')],
+				embeds: [
+					infoMessageEmbed(
+						errorMessageTemplate().title,
+						'ERROR',
+						errorMessageTemplate().description,
+					),
+				],
 			});
 
 			try {
