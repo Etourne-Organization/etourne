@@ -9,7 +9,7 @@ import {
 	ModalActionRowComponent,
 } from 'discord.js';
 
-import { ButtonFunction } from '../../ButtonStructure';
+import { ButtonFunction } from '../../Button';
 import { getNumOfTeams } from '../../../supabase/supabaseFunctions/teams';
 import { getColumnValueById } from '../../../supabase/supabaseFunctions/events';
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';

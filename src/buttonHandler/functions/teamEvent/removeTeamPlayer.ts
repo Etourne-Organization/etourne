@@ -8,30 +8,26 @@ import {
 	MessageSelectMenu,
 } from 'discord.js';
 
-import { ButtonFunction } from '../../ButtonStructure';
+import { ButtonFunction } from '../../Button';
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
-import { getAllPlayers } from '../../../supabase/supabaseFunctions/singlePlayers';
+import { checkTeamExists } from '../../../supabase/supabaseFunctions/teams';
+import { getAllTeamPlayers } from '../../../supabase/supabaseFunctions/teamPlayers';
 import { getUserRole } from '../../../supabase/supabaseFunctions/users';
 import errorMessageTemplate from '../../../globalUtils/errorMessageTemplate';
 
-const removePlayer: ButtonFunction = {
-	customId: 'removePlayer',
+const removeTeamPlayer: ButtonFunction = {
+	customId: 'removeTeamPlayer',
 	run: async (client: Client, interaction: ButtonInteraction) => {
 		try {
-			// check user role in DB
-			const userRoleDB: any = await getUserRole({
-				discordUserId: interaction.user.id,
-				discordServerId: interaction.guild!.id,
-			});
+			const footer = interaction.message.embeds[0].footer?.text;
+			const teamId: string | any =
+				interaction.message.embeds[0].footer?.text.split(' ')[2];
 
-			if (
-				userRoleDB.length === 0 ||
-				(userRoleDB[0]['roleId'] !== 3 && userRoleDB[0]['roleId'] !== 2)
-			) {
-				return await interaction.reply({
+			if (!(await checkTeamExists({ teamId: parseInt(teamId) }))) {
+				return interaction.reply({
 					embeds: [
 						infoMessageEmbed(
-							':warning: You are not allowed to run this command!',
+							'The team does not exist anymore, maybe it was deleted?',
 							'WARNING',
 						),
 					],
@@ -39,20 +35,48 @@ const removePlayer: ButtonFunction = {
 				});
 			}
 
-			const footer = interaction.message.embeds[0].footer?.text;
-			const eventId: string | any =
-				interaction.message.embeds[0].footer?.text.split(': ')[1];
+			const teamLeader:
+				| {
+						name: string;
+						value: string;
+						inline: boolean;
+				  }
+				| any = interaction.message?.embeds[0].fields?.find(
+				(r) => r.name === 'Team Leader',
+			);
 
-			const players: [{ username: string; userId: string }] | any =
-				await getAllPlayers({
-					eventId: parseInt(eventId),
-				});
+			// check user role in DB
+			const userRoleDB: any = await getUserRole({
+				discordUserId: interaction.user.id,
+				discordServerId: interaction.guild!.id,
+			});
 
-			if (!(players!.length > 0))
+			if (
+				interaction.user.tag !== teamLeader.value &&
+				(userRoleDB.length === 0 ||
+					(userRoleDB[0]['roleId'] !== 3 && userRoleDB[0]['roleId'] !== 2))
+			) {
 				return interaction.reply({
 					embeds: [
 						infoMessageEmbed(
-							'There are no players to remove!',
+							':warning: You are not allowed to use this button!',
+							'WARNING',
+						),
+					],
+					ephemeral: true,
+				});
+			}
+
+			const teamPlayers: [{ username: string; userId: string }] | any =
+				await getAllTeamPlayers({
+					teamId: parseInt(teamId),
+				});
+
+			if (!(teamPlayers!.length > 0))
+				return interaction.reply({
+					embeds: [
+						infoMessageEmbed(
+							'There are no team players to remove!',
 							'WARNING',
 						),
 					],
@@ -65,7 +89,7 @@ const removePlayer: ButtonFunction = {
 				value: string;
 			}> = [];
 
-			players!.forEach(
+			teamPlayers!.forEach(
 				(tp: { username: string; userId: string }, i: number) => {
 					if (tp.username === interaction.user.tag) return;
 
@@ -79,7 +103,7 @@ const removePlayer: ButtonFunction = {
 
 			const selectMenu = new MessageActionRow().addComponents(
 				new MessageSelectMenu()
-					.setCustomId('removePlayer')
+					.setCustomId('removeTeamPlayer')
 					.setPlaceholder('Select a player to be removed')
 					.addOptions(selectMenuOptions),
 			);
@@ -110,7 +134,7 @@ const removePlayer: ButtonFunction = {
 			try {
 				fs.appendFile(
 					'logs/crash_logs.txt',
-					`${new Date()} : Something went wrong in buttonFunctions/normalEvent/removePlayers.ts \n Actual error: ${err} \n \n`,
+					`${new Date()} : Something went wrong in buttonFunctions/teamEvent/removeTeamPlayers.ts \n Actual error: ${err} \n \n`,
 					(err) => {
 						if (err) throw err;
 					},
@@ -122,4 +146,4 @@ const removePlayer: ButtonFunction = {
 	},
 };
 
-export default removePlayer;
+export default removeTeamPlayer;

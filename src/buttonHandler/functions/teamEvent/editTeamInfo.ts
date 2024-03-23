@@ -10,7 +10,7 @@ import {
 } from 'discord.js';
 
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
-import { ButtonFunction } from '../../ButtonStructure';
+import { ButtonFunction } from '../../Button';
 import {
 	checkTeamExists,
 	getAllColumnValueById,

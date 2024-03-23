@@ -9,14 +9,14 @@ import {
 	ModalActionRowComponent,
 } from 'discord.js';
 
-import { ButtonFunction } from '../../ButtonStructure';
+import { ButtonFunction } from '../../Button';
 import { getAllColumnValueById } from '../../../supabase/supabaseFunctions/events';
 import { getUserRole } from '../../../supabase/supabaseFunctions/users';
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
 import errorMessageTemplate from '../../../globalUtils/errorMessageTemplate';
 
-const editEventInfo: ButtonFunction = {
-	customId: 'editEventInfo',
+const editTeamEventInfo: ButtonFunction = {
+	customId: 'editTeamEventInfo',
 	run: async (client: Client, interaction: ButtonInteraction) => {
 		try {
 			// check user role in DB
@@ -46,7 +46,7 @@ const editEventInfo: ButtonFunction = {
 			const allColumnValue = await getAllColumnValueById({ id: eventId });
 
 			const modal = new Modal()
-				.setCustomId(`editEventInfoModal-${interaction.id}`)
+				.setCustomId(`editTeamEventInfoModal-${interaction.id}`)
 				.setTitle('Edit event');
 
 			const eventNameInput = new TextInputComponent()
@@ -130,10 +130,9 @@ const editEventInfo: ButtonFunction = {
 			});
 
 			try {
-				console.log(err);
 				fs.appendFile(
 					'logs/crash_logs.txt',
-					`${new Date()} : Something went wrong in buttonFunctions/normalEvent/editEventInfo.ts \n Actual error: ${err} \n \n`,
+					`${new Date()} : Something went wrong in buttonFunctions/teamEvent/editTeamEventInfo.ts \n Actual error: ${err} \n \n`,
 					(err) => {
 						if (err) throw err;
 					},
@@ -145,4 +144,4 @@ const editEventInfo: ButtonFunction = {
 	},
 };
 
-export default editEventInfo;
+export default editTeamEventInfo;

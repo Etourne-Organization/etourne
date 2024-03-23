@@ -8,43 +8,16 @@ import {
 	MessageSelectMenu,
 } from 'discord.js';
 
-import { ButtonFunction } from '../../ButtonStructure';
+import { ButtonFunction } from '../../Button';
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
-import { checkTeamExists } from '../../../supabase/supabaseFunctions/teams';
-import { getAllTeamPlayers } from '../../../supabase/supabaseFunctions/teamPlayers';
+import { getAllPlayers } from '../../../supabase/supabaseFunctions/singlePlayers';
 import { getUserRole } from '../../../supabase/supabaseFunctions/users';
 import errorMessageTemplate from '../../../globalUtils/errorMessageTemplate';
 
-const removeTeamPlayer: ButtonFunction = {
-	customId: 'removeTeamPlayer',
+const removePlayer: ButtonFunction = {
+	customId: 'removePlayer',
 	run: async (client: Client, interaction: ButtonInteraction) => {
 		try {
-			const footer = interaction.message.embeds[0].footer?.text;
-			const teamId: string | any =
-				interaction.message.embeds[0].footer?.text.split(' ')[2];
-
-			if (!(await checkTeamExists({ teamId: parseInt(teamId) }))) {
-				return interaction.reply({
-					embeds: [
-						infoMessageEmbed(
-							'The team does not exist anymore, maybe it was deleted?',
-							'WARNING',
-						),
-					],
-					ephemeral: true,
-				});
-			}
-
-			const teamLeader:
-				| {
-						name: string;
-						value: string;
-						inline: boolean;
-				  }
-				| any = interaction.message?.embeds[0].fields?.find(
-				(r) => r.name === 'Team Leader',
-			);
-
 			// check user role in DB
 			const userRoleDB: any = await getUserRole({
 				discordUserId: interaction.user.id,
@@ -52,14 +25,13 @@ const removeTeamPlayer: ButtonFunction = {
 			});
 
 			if (
-				interaction.user.tag !== teamLeader.value &&
-				(userRoleDB.length === 0 ||
-					(userRoleDB[0]['roleId'] !== 3 && userRoleDB[0]['roleId'] !== 2))
+				userRoleDB.length === 0 ||
+				(userRoleDB[0]['roleId'] !== 3 && userRoleDB[0]['roleId'] !== 2)
 			) {
-				return interaction.reply({
+				return await interaction.reply({
 					embeds: [
 						infoMessageEmbed(
-							':warning: You are not allowed to use this button!',
+							':warning: You are not allowed to run this command!',
 							'WARNING',
 						),
 					],
@@ -67,16 +39,20 @@ const removeTeamPlayer: ButtonFunction = {
 				});
 			}
 
-			const teamPlayers: [{ username: string; userId: string }] | any =
-				await getAllTeamPlayers({
-					teamId: parseInt(teamId),
+			const footer = interaction.message.embeds[0].footer?.text;
+			const eventId: string | any =
+				interaction.message.embeds[0].footer?.text.split(': ')[1];
+
+			const players: [{ username: string; userId: string }] | any =
+				await getAllPlayers({
+					eventId: parseInt(eventId),
 				});
 
-			if (!(teamPlayers!.length > 0))
+			if (!(players!.length > 0))
 				return interaction.reply({
 					embeds: [
 						infoMessageEmbed(
-							'There are no team players to remove!',
+							'There are no players to remove!',
 							'WARNING',
 						),
 					],
@@ -89,7 +65,7 @@ const removeTeamPlayer: ButtonFunction = {
 				value: string;
 			}> = [];
 
-			teamPlayers!.forEach(
+			players!.forEach(
 				(tp: { username: string; userId: string }, i: number) => {
 					if (tp.username === interaction.user.tag) return;
 
@@ -103,7 +79,7 @@ const removeTeamPlayer: ButtonFunction = {
 
 			const selectMenu = new MessageActionRow().addComponents(
 				new MessageSelectMenu()
-					.setCustomId('removeTeamPlayer')
+					.setCustomId('removePlayer')
 					.setPlaceholder('Select a player to be removed')
 					.addOptions(selectMenuOptions),
 			);
@@ -134,7 +110,7 @@ const removeTeamPlayer: ButtonFunction = {
 			try {
 				fs.appendFile(
 					'logs/crash_logs.txt',
-					`${new Date()} : Something went wrong in buttonFunctions/teamEvent/removeTeamPlayers.ts \n Actual error: ${err} \n \n`,
+					`${new Date()} : Something went wrong in buttonFunctions/normalEvent/removePlayers.ts \n Actual error: ${err} \n \n`,
 					(err) => {
 						if (err) throw err;
 					},
@@ -146,4 +122,4 @@ const removeTeamPlayer: ButtonFunction = {
 	},
 };
 
-export default removeTeamPlayer;
+export default removePlayer;

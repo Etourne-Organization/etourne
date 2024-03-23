@@ -3,21 +3,33 @@ import fs from 'fs';
 import {
 	Client,
 	ButtonInteraction,
-	MessageEmbed,
 	MessageButton,
 	MessageActionRow,
 } from 'discord.js';
 
-import { ButtonFunction } from '../../ButtonStructure';
+import { ButtonFunction } from '../../Button';
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
+import {
+	deleteTeam as deleteTeamSupabase,
+	checkTeamExists,
+} from '../../../supabase/supabaseFunctions/teams';
 import { getUserRole } from '../../../supabase/supabaseFunctions/users';
-import { deleteEvent as deleteEventSupabase } from '../../../supabase/supabaseFunctions/events';
 import errorMessageTemplate from '../../../globalUtils/errorMessageTemplate';
 
-const deleteEvent: ButtonFunction = {
-	customId: 'deleteEvent',
+const deleteTeam: ButtonFunction = {
+	customId: 'deleteTeam',
 	run: async (client: Client, interaction: ButtonInteraction) => {
 		try {
+			const teamLeader:
+				| {
+						name: string;
+						value: string;
+						inline: boolean;
+				  }
+				| any = interaction.message?.embeds[0].fields?.find(
+				(r) => r.name === 'Team Leader',
+			);
+
 			// check user role in DB
 			const userRoleDB: any = await getUserRole({
 				discordUserId: interaction.user.id,
@@ -25,10 +37,11 @@ const deleteEvent: ButtonFunction = {
 			});
 
 			if (
-				userRoleDB.length === 0 ||
-				(userRoleDB[0]['roleId'] !== 3 && userRoleDB[0]['roleId'] !== 2)
+				interaction.user.tag !== teamLeader.value &&
+				(userRoleDB.length === 0 ||
+					(userRoleDB[0]['roleId'] !== 3 && userRoleDB[0]['roleId'] !== 2))
 			) {
-				return await interaction.reply({
+				return interaction.reply({
 					embeds: [
 						infoMessageEmbed(
 							':warning: You are not allowed to use this button!',
@@ -39,28 +52,8 @@ const deleteEvent: ButtonFunction = {
 				});
 			}
 
-			// const eventHostUsername: any =
-			// 	interaction.message.embeds[0].fields?.find(
-			// 		(r) => r.name === 'Hosted by',
-			// 	)?.value;
-
-			// if (
-			// 	userRoleDB[0]['roleId'] !== 3 &&
-			// 	eventHostUsername !== interaction.user.tag
-			// ) {
-			// 	return interaction.reply({
-			// 		embeds: [
-			// 			infoMessageEmbed(
-			// 				':warning: You are not allowed to use this button!',
-			// 				'WARNING',
-			// 			),
-			// 		],
-			// 		ephemeral: true,
-			// 	});
-			// }
-
-			const eventId: string | any =
-				interaction.message.embeds[0].footer?.text.split(': ')[1];
+			const teamId: string | any =
+				interaction.message.embeds[0].footer?.text.split(' ')[2];
 
 			const fetchedMessage = await interaction.channel?.messages.fetch(
 				interaction.message.id,
@@ -69,11 +62,11 @@ const deleteEvent: ButtonFunction = {
 			if (fetchedMessage) {
 				const confirmationButtons = new MessageActionRow().addComponents(
 					new MessageButton()
-						.setCustomId(`deleteYes-${interaction.id}`)
+						.setCustomId('deleteYes')
 						.setLabel('✔')
 						.setStyle('PRIMARY'),
 					new MessageButton()
-						.setCustomId(`deleteNo-${interaction.id}`)
+						.setCustomId('deleteNo')
 						.setLabel('✖')
 						.setStyle('SECONDARY'),
 				);
@@ -81,7 +74,7 @@ const deleteEvent: ButtonFunction = {
 				await interaction.reply({
 					embeds: [
 						infoMessageEmbed(
-							'Are you sure you want to delete the event?',
+							'Are you sure you want to delete your team?',
 						),
 					],
 					components: [confirmationButtons],
@@ -89,40 +82,40 @@ const deleteEvent: ButtonFunction = {
 				});
 
 				const filter: any = (i: ButtonInteraction) =>
-					(i.customId === `deleteYes-${interaction.id}` ||
-						i.customId === `deleteNo-${interaction.id}`) &&
+					(i.customId === 'deleteYes' || i.customId === 'deleteNo') &&
 					i.user.id === interaction.user.id;
 
 				const collector =
 					interaction.channel?.createMessageComponentCollector({
 						filter,
 						time: 15000,
-						// max: 1,
-						// maxComponents: 1,
+						max: 1,
+						maxComponents: 1,
 					});
 
 				collector?.on('collect', async (i: ButtonInteraction) => {
-					if (i.customId.includes('deleteYes')) {
+					if (i.customId === 'deleteYes') {
 						await fetchedMessage.delete();
 
-						await deleteEventSupabase({ eventId: parseInt(eventId) });
-
 						await interaction.deleteReply();
+
+						if (await checkTeamExists({ teamId: teamId }))
+							await deleteTeamSupabase({ teamId: parseInt(teamId) });
 
 						await i.reply({
 							embeds: [
 								infoMessageEmbed(
-									':white_check_mark: Event deleted successfully!',
+									':white_check_mark: Team deleted successfully!',
 									'SUCCESS',
 								),
 							],
 							ephemeral: true,
 						});
-					} else if (i.customId.includes('deleteNo')) {
+					} else if (i.customId === 'deleteNo') {
 						await interaction.deleteReply();
 
 						await i.reply({
-							embeds: [infoMessageEmbed(':x: Event not deleted')],
+							embeds: [infoMessageEmbed(':x: Team was not deleted')],
 							ephemeral: true,
 						});
 					}
@@ -148,7 +141,7 @@ const deleteEvent: ButtonFunction = {
 			try {
 				fs.appendFile(
 					'logs/crash_logs.txt',
-					`${new Date()} : Something went wrong in buttonFunctions/allEventButtonFunctions/deleteEvent.ts \n Actual error: ${err} \n \n`,
+					`${new Date()} : Something went wrong in buttonFunctions/teamEvent/deleteTeam.ts \n Actual error: ${err} \n \n`,
 					(err) => {
 						if (err) throw err;
 					},
@@ -160,4 +153,4 @@ const deleteEvent: ButtonFunction = {
 	},
 };
 
-export default deleteEvent;
+export default deleteTeam;

@@ -3,50 +3,52 @@ import fs from 'fs';
 import {
 	Client,
 	ButtonInteraction,
+	MessageEmbed,
 	Modal,
 	TextInputComponent,
 	MessageActionRow,
 	ModalActionRowComponent,
 } from 'discord.js';
 
-import { ButtonFunction } from '../../ButtonStructure';
+import { ButtonFunction } from '../../Button';
 import { getColumnValueById } from '../../../supabase/supabaseFunctions/events';
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
 import errorMessageTemplate from '../../../globalUtils/errorMessageTemplate';
 
-const setMaxNumTeamPlayers: ButtonFunction = {
-	customId: 'setMaxNumTeamPlayers',
+const setMaxNumTeams: ButtonFunction = {
+	customId: 'setMaxNumTeams',
 	run: async (client: Client, interaction: ButtonInteraction) => {
 		try {
 			const eventId: string | any =
 				interaction.message?.embeds[0].footer?.text.split(': ')[1];
 
-			const maxNumTeamPlayers: any = await getColumnValueById({
+			const maxNumTeams: any = await getColumnValueById({
 				id: eventId,
-				columnName: 'maxNumTeamPlayers',
+				columnName: 'maxNumTeams',
 			});
 
 			const modal = new Modal()
-				.setCustomId(`setMaxNumTeamPlayersModalSubmit-${interaction.id}`)
+				.setCustomId(`setMaxNumTeamsModalSubmit-${interaction.id}`)
 				.setTitle('Create Team');
 
-			const maxNumTeamPlayersInput = new TextInputComponent()
-				.setCustomId('maxNumTeamPlayers')
-				.setLabel('Max num of team players')
+			const maxNumTeamsInput = new TextInputComponent()
+				.setCustomId('maxNumTeams')
+				.setLabel('Max num of teams')
 				.setStyle('SHORT')
-				.setPlaceholder('Enter max num of team players in each team')
+				// .setValue('123')
+				.setPlaceholder('Enter max num of teams')
 				.setValue(
-					maxNumTeamPlayers[0]['maxNumTeamPlayers']
-						? maxNumTeamPlayers[0]['maxNumTeamPlayers'].toString()
+					maxNumTeams[0]['maxNumTeams']
+						? maxNumTeams[0]['maxNumTeams'].toString()
 						: '',
 				);
 
-			const maxNumTeamPlayersActionRow =
+			const maxNumTeamsLimitActionRow =
 				new MessageActionRow<ModalActionRowComponent>().addComponents(
-					maxNumTeamPlayersInput,
+					maxNumTeamsInput,
 				);
 
-			modal.addComponents(maxNumTeamPlayersActionRow);
+			modal.addComponents(maxNumTeamsLimitActionRow);
 
 			await interaction.showModal(modal);
 		} catch (err) {
@@ -64,7 +66,7 @@ const setMaxNumTeamPlayers: ButtonFunction = {
 			try {
 				fs.appendFile(
 					'logs/crash_logs.txt',
-					`${new Date()} : Something went wrong in buttonFunctions/teamEvent/setTeamMemberNumLimit.ts \n Actual error: ${err} \n \n`,
+					`${new Date()} : Something went wrong in buttonFunctions/teamEvent/setTeamNumLimit.ts \n Actual error: ${err} \n \n`,
 					(err) => {
 						if (err) throw err;
 					},
@@ -76,4 +78,4 @@ const setMaxNumTeamPlayers: ButtonFunction = {
 	},
 };
 
-export default setMaxNumTeamPlayers;
+export default setMaxNumTeams;

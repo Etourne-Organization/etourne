@@ -2,44 +2,19 @@ import fs from 'fs';
 
 import { Client, ButtonInteraction, MessageEmbed } from 'discord.js';
 
-import { ButtonFunction } from '../../ButtonStructure';
+import { ButtonFunction } from '../../Button';
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
-import {
-	addPlayer,
-	getNumOfPlayers,
-} from '../../../supabase/supabaseFunctions/singlePlayers';
-import { getColumnValueById } from '../../../supabase/supabaseFunctions/events';
+import { removePlayer } from '../../../supabase/supabaseFunctions/singlePlayers';
 import errorMessageTemplate, {
 	MessageType,
 } from '../../../globalUtils/errorMessageTemplate';
 
-const register: ButtonFunction = {
-	customId: 'normalEventRegister',
+const unregister: ButtonFunction = {
+	customId: 'normalEventUnregister',
 	run: async (client: Client, interaction: ButtonInteraction) => {
 		try {
 			const eventId: string | any =
 				interaction.message.embeds[0].footer?.text.split(': ')[1];
-
-			const maxNumPlayers: any = await getColumnValueById({
-				id: eventId,
-				columnName: 'maxNumPlayers',
-			});
-
-			if (
-				maxNumPlayers.length > 0 &&
-				(await getNumOfPlayers({ eventId: eventId })) ===
-					maxNumPlayers[0]['maxNumPlayers']
-			) {
-				return await interaction.reply({
-					embeds: [
-						infoMessageEmbed(
-							'Number of players has reached the limit!',
-							'WARNING',
-						),
-					],
-					ephemeral: true,
-				});
-			}
 
 			const registeredPlayers:
 				| {
@@ -53,29 +28,33 @@ const register: ButtonFunction = {
 
 			let newPlayersList: string = ' ';
 			if (registeredPlayers.value.length === 0) {
-				newPlayersList = `${interaction.user.tag}\n`;
+				return await interaction.reply({
+					embeds: [
+						infoMessageEmbed(
+							'The registration list is empty!',
+							'WARNING',
+						),
+					],
+					ephemeral: true,
+				});
 			} else {
-				if (
-					registeredPlayers.value
-						.split('>>> ')[1]
-						.split('\n')
-						.indexOf(interaction.user.tag) !== -1
-				) {
+				const oldPlayersList: [string] = registeredPlayers.value
+					.split('>>> ')[1]
+					.split('\n');
+
+				if (oldPlayersList.indexOf(interaction.user.tag) === -1) {
 					return await interaction.reply({
 						embeds: [
-							infoMessageEmbed('You are already registered!', 'WARNING'),
+							infoMessageEmbed('You are not registered!', 'WARNING'),
 						],
 						ephemeral: true,
 					});
-				} else {
-					const oldPlayersList: [string] = registeredPlayers.value
-						.split('>>> ')[1]
-						.split('\n');
-
-					oldPlayersList.push(interaction.user.tag);
-
-					newPlayersList = oldPlayersList.join('\n');
 				}
+
+				const index = oldPlayersList.indexOf(interaction.user.tag);
+				oldPlayersList.splice(index, 1);
+
+				newPlayersList = oldPlayersList.join('\n');
 			}
 
 			/* assigning updated player list back to the orignal embed field AND update player count */
@@ -88,18 +67,13 @@ const register: ButtonFunction = {
 						.split(' ')[2]
 						.split('/')[1];
 
-					numRegisteredPlayers += 1;
+					numRegisteredPlayers -= 1;
 
 					r.name = `Registered players ${numRegisteredPlayers}/${maxNumPlayersEmbedValue}`;
-					r.value = `>>> ${newPlayersList}`;
+					r.value = `${
+						newPlayersList.length > 0 ? '>>>' : ' '
+					} ${newPlayersList}`;
 				}
-			});
-
-			await addPlayer({
-				username: interaction.user.tag,
-				discordUserId: interaction.user.id,
-				eventId: parseInt(eventId),
-				discordServerId: interaction.guild?.id!,
 			});
 
 			const editedEmbed = new MessageEmbed()
@@ -111,7 +85,12 @@ const register: ButtonFunction = {
 				.addFields(interaction.message.embeds[0].fields || [])
 				.setFooter({ text: `Event ID: ${eventId}` });
 
-			await interaction.update({ embeds: [editedEmbed] });
+			await removePlayer({
+				discordUserId: interaction.user.id,
+				eventId: parseInt(eventId),
+			});
+
+			return await interaction.update({ embeds: [editedEmbed] });
 		} catch (err) {
 			await interaction.reply({
 				embeds: [
@@ -129,7 +108,7 @@ const register: ButtonFunction = {
 			try {
 				fs.appendFile(
 					'logs/crash_logs.txt',
-					`${new Date()} : Something went wrong in buttonFunctions/normalEvent/register.ts \n Actual error: ${err} \n \n`,
+					`${new Date()} : Something went wrong in buttonFunctions/normalEvent/unregister.ts \n Actual error: ${err} \n \n`,
 					(err) => {
 						if (err) throw err;
 					},
@@ -141,4 +120,4 @@ const register: ButtonFunction = {
 	},
 };
 
-export default register;
+export default unregister;

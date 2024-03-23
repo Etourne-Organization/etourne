@@ -10,7 +10,7 @@ import {
 	ModalActionRowComponent,
 } from 'discord.js';
 
-import { ButtonFunction } from '../../ButtonStructure';
+import { ButtonFunction } from '../../Button';
 import { getColumnValueById } from '../../../supabase/supabaseFunctions/events';
 import errorMessageTemplate from '../../../globalUtils/errorMessageTemplate';
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
