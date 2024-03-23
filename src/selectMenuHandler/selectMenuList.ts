@@ -1,7 +1,7 @@
 import { SelectMenu } from './SelectMenu';
 
-import removeTeamPlayer from './selectMenuFunctions/removeTeamPlayer/removeTeamPlayer';
-import removePlayer from './selectMenuFunctions/removePlayer/removePlayer';
+import removeTeamPlayer from './functions/removeTeamPlayer/removeTeamPlayer';
+import removePlayer from './functions/removePlayer/removePlayer';
 
 const selectMenuList: SelectMenu[] = [removeTeamPlayer, removePlayer];
 

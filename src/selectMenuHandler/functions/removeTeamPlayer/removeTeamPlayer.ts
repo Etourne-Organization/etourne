@@ -9,7 +9,7 @@ import {
 	MessageEmbed,
 } from 'discord.js';
 
-import { SelectMenu } from '../../../selectMenuHandler/SelectMenu';
+import { SelectMenu } from '../../SelectMenu';
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
 import { removePlayer } from '../../../supabase/supabaseFunctions/teamPlayers';
 import { checkTeamExists } from '../../../supabase/supabaseFunctions/teams';
