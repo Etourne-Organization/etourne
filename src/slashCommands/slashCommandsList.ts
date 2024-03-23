@@ -1,11 +1,10 @@
-import { Command } from './CommandStructure';
+import { Command } from './Command';
 
-import createEvent from './commands/createEvent/createEvent';
-// import selectTimezone from './commands/selectTimezone';
+import createEvent from './commands/createEvent';
 import help from './commands/help';
 import botInfo from './commands/botInfo';
-import createTeamEvent from './commands/createTeamEvent/createTeamEvent';
-import setUserRole from './commands/setUserRole/setUserRole';
+import createTeamEvent from './commands/createTeamEvent';
+import setUserRole from './commands/setUserRole';
 import getStarted from './commands/getStarted';
 import feedback from './commands/feedback';
 import listServerEvents from './commands/listServerEvents';
@@ -14,9 +13,8 @@ import registerServer from './commands/registerServer';
 import requestSupport from './commands/requestSupport';
 import registerAdmin from './commands/registerAdmin';
 
-const allSlashCommands: Command[] = [
+const slashCommandsList: Command[] = [
 	createEvent,
-	// selectTimezone,
 	help,
 	botInfo,
 	createTeamEvent,
@@ -30,4 +28,4 @@ const allSlashCommands: Command[] = [
 	registerAdmin,
 ];
 
-export default allSlashCommands;
+export default slashCommandsList;

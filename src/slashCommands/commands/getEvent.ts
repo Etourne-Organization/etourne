@@ -13,7 +13,7 @@ import {
 	getAllColumnValueById,
 	setColumnValue,
 } from '../../supabase/supabaseFunctions/events';
-import { Command } from '../CommandStructure';
+import { Command } from '../Command';
 import infoMessageEmbed from '../../globalUtils/infoMessageEmbed';
 import { getUserRole } from '../../supabase/supabaseFunctions/users';
 import { getAllPlayers } from '../../supabase/supabaseFunctions/singlePlayers';

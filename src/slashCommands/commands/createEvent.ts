@@ -10,13 +10,13 @@ import {
 	MessageEmbed,
 } from 'discord.js';
 
-import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
-import { Command } from '../../CommandStructure';
-import { getUserRole } from '../../../supabase/supabaseFunctions/users';
-import { checkServerExists } from '../../../supabase/supabaseFunctions/servers';
-import testCommandIDs from '../../../TEST_COMMAND_IDS/commandIDs.json';
-import originalCommandIDs from '../../../ORIGINAL_COMMAND_IDS/commandIDs.json';
-import errorMessageTemplate from '../../../globalUtils/errorMessageTemplate';
+import infoMessageEmbed from '../../globalUtils/infoMessageEmbed';
+import { Command } from '../Command';
+import { getUserRole } from '../../supabase/supabaseFunctions/users';
+import { checkServerExists } from '../../supabase/supabaseFunctions/servers';
+import testCommandIDs from '../../TEST_COMMAND_IDS/commandIDs.json';
+import originalCommandIDs from '../../ORIGINAL_COMMAND_IDS/commandIDs.json';
+import errorMessageTemplate from '../../globalUtils/errorMessageTemplate';
 
 const createEvent: Command = {
 	name: 'createevent',

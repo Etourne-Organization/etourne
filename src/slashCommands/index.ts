@@ -2,14 +2,14 @@ import fs from 'fs';
 
 import { BaseCommandInteraction, Client } from 'discord.js';
 
-import allSlashCommands from './allSlashCommands';
+import slashCommandsList from './slashCommandsList';
 
 export default async (
 	client: Client,
 	interaction: BaseCommandInteraction,
 ): Promise<void> => {
 	try {
-		const slashCommand = allSlashCommands.find(
+		const slashCommand = slashCommandsList.find(
 			(c) => c.name === interaction.commandName,
 		);
 

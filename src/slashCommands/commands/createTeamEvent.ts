@@ -11,13 +11,13 @@ import {
 } from 'discord.js';
 import momentTimzone from 'moment-timezone';
 
-import { Command } from '../../CommandStructure';
-import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
-import { getUserRole } from '../../../supabase/supabaseFunctions/users';
-import { checkServerExists } from '../../../supabase/supabaseFunctions/servers';
-import testCommandIDs from '../../../TEST_COMMAND_IDS/commandIDs.json';
-import originalCommandIDs from '../../../ORIGINAL_COMMAND_IDS/commandIDs.json';
-import errorMessageTemplate from '../../../globalUtils/errorMessageTemplate';
+import { Command } from '../Command';
+import infoMessageEmbed from '../../globalUtils/infoMessageEmbed';
+import { getUserRole } from '../../supabase/supabaseFunctions/users';
+import { checkServerExists } from '../../supabase/supabaseFunctions/servers';
+import testCommandIDs from '../../TEST_COMMAND_IDS/commandIDs.json';
+import originalCommandIDs from '../../ORIGINAL_COMMAND_IDS/commandIDs.json';
+import errorMessageTemplate from '../../globalUtils/errorMessageTemplate';
 
 const createTeamEvent: Command = {
 	name: 'createteamevent',

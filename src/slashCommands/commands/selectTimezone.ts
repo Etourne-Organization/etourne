@@ -7,7 +7,7 @@ import {
 } from 'discord.js';
 import momentTimzone from 'moment-timezone';
 
-import { Command } from '../CommandStructure';
+import { Command } from '../Command';
 
 const selectTimezone: Command = {
 	name: 'selecttimezone',

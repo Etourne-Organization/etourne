@@ -3,7 +3,7 @@ import fs from 'fs';
 import { BaseCommandInteraction, Client, MessageEmbed } from 'discord.js';
 import dayjs from 'dayjs';
 
-import { Command } from '../CommandStructure';
+import { Command } from '../Command';
 import { getAllServerEvents } from '../../supabase/supabaseFunctions/events';
 import infoMessageEmbed from '../../globalUtils/infoMessageEmbed';
 import { checkServerExists } from '../../supabase/supabaseFunctions/servers';

@@ -2,7 +2,7 @@ import fs from 'fs';
 
 import { BaseCommandInteraction, Client, MessageEmbed } from 'discord.js';
 
-import { Command } from '../CommandStructure';
+import { Command } from '../Command';
 import testCommandIDs from '../../TEST_COMMAND_IDS/commandIDs.json';
 import originalCommandIDs from '../../ORIGINAL_COMMAND_IDS/commandIDs.json';
 import infoMessageEmbed from '../../globalUtils/infoMessageEmbed';

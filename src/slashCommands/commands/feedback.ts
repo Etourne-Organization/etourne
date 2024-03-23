@@ -1,27 +1,29 @@
 import fs from 'fs';
 
-import {
-	BaseCommandInteraction,
-	Client,
-	Message,
-	MessageEmbed,
-} from 'discord.js';
+import { BaseCommandInteraction, Client, MessageEmbed } from 'discord.js';
 
-import { Command } from '../CommandStructure';
+import { Command } from '../Command';
 import infoMessageEmbed from '../../globalUtils/infoMessageEmbed';
 
-const requestSupport: Command = {
-	name: 'requestsupport',
-	description: 'Request for support whenever you are facing issues',
-	type: 'CHAT_INPUT',
+const feedback: Command = {
+	name: 'feedback',
+	description: 'Send feedback',
 	run: async (client: Client, interaction: BaseCommandInteraction) => {
 		try {
 			const embed = new MessageEmbed()
 				.setColor('#3A9CE2')
-				.setTitle(':tools: Support')
-				.setDescription(
-					'Join the support server: https://discord.gg/vNe9QVrWNa',
-				)
+				.setTitle(':thought_balloon: Feedback')
+				.setFields([
+					{
+						name: ':plunger: Report bug',
+						value: 'https://etourne.canny.io/bugs',
+					},
+					{
+						name: ':pencil: Share feedback or new ideas',
+						value: 'https://etourne.canny.io/feature-requests',
+					},
+				])
+				.setFooter({ text: 'Etourne' })
 				.setTimestamp();
 
 			return await interaction.reply({
@@ -36,7 +38,7 @@ const requestSupport: Command = {
 			try {
 				fs.appendFile(
 					'logs/crash_logs.txt',
-					`${new Date()} : Something went wrong in slashcommands/registerServer.ts \n Actual error: ${err} \n \n`,
+					`${new Date()} : Something went wrong in slashcommands/feedback.ts \n Actual error: ${err} \n \n`,
 					(err) => {
 						if (err) throw err;
 					},
@@ -48,4 +50,4 @@ const requestSupport: Command = {
 	},
 };
 
-export default requestSupport;
+export default feedback;

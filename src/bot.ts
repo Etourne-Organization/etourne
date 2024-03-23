@@ -5,7 +5,7 @@ import { Client, Intents, Constants, Message } from 'discord.js';
 
 import commandHandler from './legacy-commands/commands';
 import interactionCreate from './listener/interactionCreate';
-import allSlashCommands from './slash-commands/allSlashCommands';
+import slashCommandsList from './slashCommands/slashCommandsList';
 import guildCreate from './listener/guildCreate';
 // import guildDelete from './listener/guildDelete';
 
@@ -35,7 +35,7 @@ client.on('ready', async () => {
 		commands = client.application.commands;
 	}
 
-	await commands.set(allSlashCommands);
+	await commands.set(slashCommandsList);
 
 	console.log(`${client.user!.tag} has logged in BEEP BEEP 🤖`);
 

@@ -2,7 +2,7 @@ import fs from 'fs';
 
 import { BaseCommandInteraction, Client, MessageEmbed } from 'discord.js';
 
-import { Command } from '../CommandStructure';
+import { Command } from '../Command';
 
 import infoMessageEmbed from '../../globalUtils/infoMessageEmbed';
 import { checkServerExists } from '../../supabase/supabaseFunctions/servers';
