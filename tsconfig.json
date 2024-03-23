@@ -19,6 +19,6 @@
 		"baseUrl": "./"
 	},
 	"files": ["src/bot.ts"],
-	"include": ["./**/*.ts"],
+	"include": ["./**/*.ts", "./*.ts"],
 	"exclude": ["node_modules", "prod"]
 }
