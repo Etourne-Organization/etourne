@@ -2,7 +2,7 @@ import fs from 'fs';
 
 import { ModalSubmitInteraction, Client } from 'discord.js';
 
-import modalSubmitFunctionList from './modalSubmitFunctionList';
+import modalSubmitFunctionList from './modalSubmitList';
 
 export default async (
 	client: Client,

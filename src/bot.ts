@@ -3,7 +3,7 @@ import fs from 'fs';
 require('dotenv').config();
 import { Client, Intents, Constants, Message } from 'discord.js';
 
-import commandHandler from './legacy-commands/commands';
+import commandHandler from './legacyCommands/commands';
 import interactionCreate from './listener/interactionCreate';
 import slashCommandsList from './slashCommands/slashCommandsList';
 import guildCreate from './listener/guildCreate';

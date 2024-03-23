@@ -1,60 +1,40 @@
 import fs from 'fs';
 
-import {
-	Client,
-	ModalSubmitInteraction,
-	MessageEmbed,
-	Message,
-} from 'discord.js';
+import { Client, ModalSubmitInteraction, MessageEmbed } from 'discord.js';
 
-import { ModalFunction } from '../../ModalSubmitStructure';
+import { ModalSubmit } from '../../ModalSubmit';
 import { setColumnValue } from '../../../supabase/supabaseFunctions/events';
-import { getNumOfTeams } from '../../../supabase/supabaseFunctions/teams';
 import errorMessageTemplate from '../../../globalUtils/errorMessageTemplate';
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
 
-const setMaxNumTeamsModal: ModalFunction = {
-	customId: 'setMaxNumTeamsModalSubmit',
+const setMaxNumPlayersModal: ModalSubmit = {
+	customId: 'maxNumPlayersModalSubmit',
 	run: async (client: Client, interaction: ModalSubmitInteraction) => {
 		try {
 			const eventId: string | any =
 				interaction.message?.embeds[0].footer?.text.split(': ')[1];
 
-			const maxNumTeams: string =
-				interaction.fields.getTextInputValue('maxNumTeams');
-
-			const numOfTeams: number = await getNumOfTeams({ eventId: eventId });
-
-			if (numOfTeams > parseInt(maxNumTeams)) {
-				const replyEmbed: MessageEmbed = new MessageEmbed()
-					.setColor('#D83C3E')
-					.setTitle(
-						':x: Number of registered teams is more than the new limit',
-					)
-					.setDescription(
-						'Decrease the number of registered teams to set a lower limit than the present value',
-					)
-					.setTimestamp();
-
-				return await interaction.reply({
-					embeds: [replyEmbed],
-					ephemeral: true,
-				});
-			}
+			const maxNumPlayers: string =
+				interaction.fields.getTextInputValue('maxNumPlayersInput');
 
 			setColumnValue({
 				data: [
 					{
-						key: 'maxNumTeams',
-						value: parseInt(maxNumTeams),
+						key: 'maxNumPlayers',
+						value: parseInt(maxNumPlayers),
 						id: parseInt(eventId),
 					},
 				],
 			});
 
 			interaction.message?.embeds[0].fields?.find((r) => {
-				if (r.name === 'Max num of teams') {
-					r.value = maxNumTeams;
+				if (r.name.includes('Registered players')) {
+					const numRegisteredPlayers = r.name.split(' ')[2].split('/')[0];
+					r.name = `Registered players ${numRegisteredPlayers}/${maxNumPlayers}`;
+
+					if (!r.value) {
+						r.value = ' ';
+					}
 				}
 			});
 
@@ -83,7 +63,7 @@ const setMaxNumTeamsModal: ModalFunction = {
 			try {
 				fs.appendFile(
 					'logs/crash_logs.txt',
-					`${new Date()} : Something went wrong in modalFunctions/teamEvent/teamNumLimitModalSubmit.ts \n Actual error: ${err} \n \n`,
+					`${new Date()} : Something went wrong in modalFunctions/teamEvent/teamMemberNumLimitModalSubmit.ts \n Actual error: ${err} \n \n`,
 					(err) => {
 						if (err) throw err;
 					},
@@ -95,4 +75,4 @@ const setMaxNumTeamsModal: ModalFunction = {
 	},
 };
 
-export default setMaxNumTeamsModal;
+export default setMaxNumPlayersModal;

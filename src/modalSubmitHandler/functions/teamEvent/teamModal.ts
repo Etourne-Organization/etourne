@@ -8,7 +8,7 @@ import {
 	MessageActionRow,
 } from 'discord.js';
 
-import { ModalFunction } from '../../ModalSubmitStructure';
+import { ModalSubmit } from '../../ModalSubmit';
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
 import {
 	addTeam,
@@ -17,7 +17,7 @@ import {
 import { getColumnValueById } from '../../../supabase/supabaseFunctions/events';
 import errorMessageTemplate from '../../../globalUtils/errorMessageTemplate';
 
-const teamModal: ModalFunction = {
+const teamModal: ModalSubmit = {
 	customId: 'teamModalSubmit',
 	run: async (client: Client, interaction: ModalSubmitInteraction) => {
 		try {

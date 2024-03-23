@@ -2,13 +2,13 @@ import fs from 'fs';
 
 import { Client, ModalSubmitInteraction, MessageEmbed } from 'discord.js';
 
-import { ModalFunction } from '../../ModalSubmitStructure';
+import { ModalSubmit } from '../../ModalSubmit';
 import { setColumnValue } from '../../../supabase/supabaseFunctions/events';
-import updateAllTeamInfo from './utils/updateAllTeamInfo';
+import updateAllTeamInfo from './utilities/updateAllTeamInfo';
 import errorMessageTemplate from '../../../globalUtils/errorMessageTemplate';
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
 
-const setMaxNumTeamPlayersModal: ModalFunction = {
+const setMaxNumTeamPlayersModal: ModalSubmit = {
 	customId: 'setMaxNumTeamPlayersModalSubmit',
 	run: async (client: Client, interaction: ModalSubmitInteraction) => {
 		try {

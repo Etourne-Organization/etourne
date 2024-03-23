@@ -9,7 +9,7 @@ import {
 } from 'discord.js';
 import moment from 'moment-timezone';
 
-import { ModalFunction } from '../../ModalSubmitStructure';
+import { ModalSubmit } from '../../ModalSubmit';
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
 import {
 	addEvent,
@@ -22,7 +22,7 @@ import {
 } from '../../../utilities/timezone';
 import errorMessageTemplate from '../../../globalUtils/errorMessageTemplate';
 
-const teamEventModal: ModalFunction = {
+const teamEventModal: ModalSubmit = {
 	customId: 'teamEventModalSubmit',
 	run: async (client: Client, interaction: ModalSubmitInteraction) => {
 		try {

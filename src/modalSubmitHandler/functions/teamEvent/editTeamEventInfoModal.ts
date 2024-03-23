@@ -3,12 +3,12 @@ import fs from 'fs';
 import { Client, ModalSubmitInteraction, MessageEmbed } from 'discord.js';
 import moment from 'moment-timezone';
 
-import { ModalFunction } from '../../ModalSubmitStructure';
+import { ModalSubmit } from '../../ModalSubmit';
 import {
 	updateEvent,
 	getColumnValueById,
 } from '../../../supabase/supabaseFunctions/events';
-import updateAllTeamInfo from './utils/updateAllTeamInfo';
+import updateAllTeamInfo from './utilities/updateAllTeamInfo';
 import {
 	getTimzeonValueFromLabel,
 	isoParsingDateFormat,
@@ -17,7 +17,7 @@ import {
 import errorMessageTemplate from '../../../globalUtils/errorMessageTemplate';
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
 
-const editTeamEventInfoModal: ModalFunction = {
+const editTeamEventInfoModal: ModalSubmit = {
 	customId: 'editTeamEventInfoModal',
 	run: async (client: Client, interaction: ModalSubmitInteraction) => {
 		try {

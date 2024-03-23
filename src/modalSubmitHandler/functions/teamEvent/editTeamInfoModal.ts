@@ -2,12 +2,12 @@ import fs from 'fs';
 
 import { Client, ModalSubmitInteraction, MessageEmbed } from 'discord.js';
 
-import { ModalFunction } from '../../ModalSubmitStructure';
+import { ModalSubmit } from '../../ModalSubmit';
 import { updateTeam } from '../../../supabase/supabaseFunctions/teams';
 import errorMessageTemplate from '../../../globalUtils/errorMessageTemplate';
 import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
 
-const editTeamInfoModal: ModalFunction = {
+const editTeamInfoModal: ModalSubmit = {
 	customId: 'editTeamInfoModal',
 	run: async (client: Client, interaction: ModalSubmitInteraction) => {
 		try {

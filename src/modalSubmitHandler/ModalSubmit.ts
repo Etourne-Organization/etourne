@@ -1,6 +1,6 @@
 import { Client, ModalSubmitInteraction } from 'discord.js';
 
-export interface ModalFunction {
+export interface ModalSubmit {
 	customId: string;
 	run: (client: Client, interaction: ModalSubmitInteraction) => void;
 }
