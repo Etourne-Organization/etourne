@@ -15,33 +15,33 @@ const getStarted: Command = {
 			const embed = new MessageEmbed()
 				.setColor('#3a9ce2')
 				.setThumbnail(`${client.user?.displayAvatarURL()}`)
-				.setTitle(':rocket: Get started')
+				.setTitle('')
 				.setDescription(
-					`Thank you for choosing Etourne. \n \n In summary, Etourne aims to make the process of creating and managing events and tournaments much easier with simple commands and buttons (as well as web app which is in works). \n \n### Etourne has 3 roles: \n • __Player__: Default role of every user in the sever to register for any event and create teams. \n • __Manager__: Event manager with the permission to create and manage events, teams and players. \n • __Admin__: Admin with all the privileges of \`manager\` and \`player\` with additional permisson which is ${
+					`# :rocket: Get started\nThank you for choosing Etourne.\n\nIn summary, Etourne aims to make the process of creating and managing events and tournaments much easier with simple commands and buttons (as well as [web app](https://etourne.com) - currently in beta).\n\n## Etourne has 3 roles:\n• __Player__: Default role of every user in the sever to register for any event and create teams.\n• __Manager__: Event manager with the permission to create and manage events, teams and players.\n• __Admin__: Admin with all the privileges of \`manager\` and \`player\` with additional permisson which is ${
 						process.env.COMMAND_ID === 'TEST_COMMAND_IDS'
 							? `</setuserrole:${testCommandIDs.SET_USER_ROLE}>`
 							: `</setuserrole:${originalCommandIDs.SET_USER_ROLE}>`
-					}. User who adds the bot gets this role by default. \n \n### To get started: \n • Use ${
+					}. User who adds the bot gets this role by default.\n\n## To get started:\n• Use ${
 						process.env.COMMAND_ID === 'TEST_COMMAND_IDS'
 							? `</createevent:${testCommandIDs.CREATE_EVENT}>`
 							: `</createevent:${originalCommandIDs.CREATE_EVENT}>`
-					} to start creating events. \n • Use ${
+					} to start creating events.\n• Use ${
 						process.env.COMMAND_ID === 'TEST_COMMAND_IDS'
 							? `</createteamevent:${testCommandIDs.CREATE_TEAM_EVENT}>`
 							: `</createteamevent:${originalCommandIDs.CREATE_TEAM_EVENT}>`
-					} to start creating team events. \n • Use ${
+					} to start creating team events.\n• Use ${
 						process.env.COMMAND_ID === 'TEST_COMMAND_IDS'
 							? `</help:${testCommandIDs.HELP}>`
 							: `</help:${originalCommandIDs.HELP}>`
-					} to find out other commands you can use. \n \n **Note:** Double check whether your Discord server is registered in Etourne database by using ${
+					} to find out other commands you can use.\n\n**Note:** Double check whether your Discord server is registered in Etourne database by using ${
 						process.env.COMMAND_ID === 'TEST_COMMAND_IDS'
 							? `</registerserver:${testCommandIDs.REGISTER_SERVER}>`
 							: `</registerserver:${originalCommandIDs.REGISTER_SERVER}>`
-					} \n \n### To share any feedback or report bugs: \n Use ${
+					} \n \n## To share any feedback or report bugs:\nUse ${
 						process.env.COMMAND_ID === 'TEST_COMMAND_IDS'
 							? `</feedback:${testCommandIDs.FEEDBACK}>`
 							: `</feedback:${originalCommandIDs.FEEDBACK}>`
-					} \n \n### To get support: \n Use ${
+					} \n \n## To get support:\nUse ${
 						process.env.COMMAND_ID === 'TEST_COMMAND_IDS'
 							? `</requestsupport:${testCommandIDs.REQUEST_SUPPORT}>`
 							: `</requestsupport:${originalCommandIDs.REQUEST_SUPPORT}>`
