@@ -3,9 +3,8 @@ import fs from 'fs';
 import { BaseCommandInteraction, Client, MessageEmbed } from 'discord.js';
 
 import { Command } from '../Command';
-import testCommandIDs from '../../TEST_COMMAND_IDS/commandIDs.json';
-import originalCommandIDs from '../../ORIGINAL_COMMAND_IDS/commandIDs.json';
 import infoMessageEmbed from '../../globalUtils/infoMessageEmbed';
+import commandIds from '../../commandIds';
 
 const help: Command = {
 	name: 'help',
@@ -23,91 +22,47 @@ const help: Command = {
 				.addFields(
 					{
 						name: ':information_source:  Bot Info',
-						value: `Get more information about the bot: ${
-							process.env.COMMAND_ID === 'TEST_COMMAND_IDS'
-								? `</botinfo:${testCommandIDs.BOT_INFO}>`
-								: `</botinfo:${originalCommandIDs.BOT_INFO}>`
-						}`,
+						value: `Get more information about the bot: </botinfo:${commandIds.BOT_INFO}>`,
 					},
 					{
 						name: ':pencil:  Register Server',
-						value: `Register your Discord server in Etourne database: ${
-							process.env.COMMAND_ID === 'TEST_COMMAND_IDS'
-								? `</registerserver:${testCommandIDs.REGISTER_SERVER}>`
-								: `</registerserver:${originalCommandIDs.REGISTER_SERVER}>`
-						}`,
+						value: `Register your Discord server in Etourne database: </registerserver:${commandIds.REGISTER_SERVER}>`,
 					},
 					{
 						name: ':pencil:  Register Admin',
-						value: `Register user who added the bot as Admin in Etourne database: ${
-							process.env.COMMAND_ID === 'TEST_COMMAND_IDS'
-								? `</registeradmin:${testCommandIDs.REGISTER_ADMIN}>`
-								: `</registeradmin:${originalCommandIDs.REGISTER_ADMIN}>`
-						}`,
+						value: `Register user who added the bot as Admin in Etourne database: </registeradmin:${commandIds.REGISTER_ADMIN}>`,
 					},
 					{
 						name: ':rocket:  Get started',
-						value: `Get started with using Etourne: ${
-							process.env.COMMAND_ID === 'TEST_COMMAND_IDS'
-								? `</getstarted:${testCommandIDs.GET_STARTED}>`
-								: `</getstarted:${originalCommandIDs.GET_STARTED}>`
-						}`,
+						value: `Get started with using Etourne: </getstarted:${commandIds.GET_STARTED}>`,
 					},
 					{
 						name: ':calendar_spiral:  Create event',
-						value: `Create event (no-team): ${
-							process.env.COMMAND_ID === 'TEST_COMMAND_IDS'
-								? `</createevent:${testCommandIDs.CREATE_EVENT}>`
-								: `</createevent:${originalCommandIDs.CREATE_EVENT}>`
-						}`,
+						value: `Create event (no-team): </createevent:${commandIds.CREATE_EVENT}>`,
 					},
 					{
 						name: ':calendar_spiral:  Create team event',
-						value: `Create team event: ${
-							process.env.COMMAND_ID === 'TEST_COMMAND_IDS'
-								? `</createteamevent:${testCommandIDs.CREATE_TEAM_EVENT}>`
-								: `</createteamevent:${originalCommandIDs.CREATE_TEAM_EVENT}>`
-						}`,
+						value: `Create team event: </createteamevent:${commandIds.CREATE_TEAM_EVENT}>`,
 					},
 					{
 						name: ':mag_right:  Get event',
-						value: `Get event from database: ${
-							process.env.COMMAND_ID === 'TEST_COMMAND_IDS'
-								? `</getevent:${testCommandIDs.GET_EVENT}>`
-								: `</getevent:${originalCommandIDs.GET_EVENT}>`
-						}`,
+						value: `Get event from database: </getevent:${commandIds.GET_EVENT}>`,
 					},
 					{
 						name: ':notepad_spiral:  List server events',
-						value: `List all the events being hosted in the server: ${
-							process.env.COMMAND_ID === 'TEST_COMMAND_IDS'
-								? `</listserverevents:${testCommandIDs.LIST_SERVER_EVENTS}>`
-								: `</listserverevents:${originalCommandIDs.LIST_SERVER_EVENTS}>`
-						}`,
+						value: `List all the events being hosted in the server: </listserverevents:${commandIds.LIST_SERVER_EVENTS}>`,
 					},
 					{
 						name: ':pencil2:  Set user role',
-						value: `Set role of a user: ${
-							process.env.COMMAND_ID === 'TEST_COMMAND_IDS'
-								? `</setuserrole:${testCommandIDs.SET_USER_ROLE}>`
-								: `</setuserrole:${originalCommandIDs.SET_USER_ROLE}>`
-						}`,
+						value: `Set role of a user: </setuserrole:${commandIds.SET_USER_ROLE}>`,
 					},
 					{
 						name: ':thought_balloon:  Feedback',
-						value: `Share feedback and ideas or raise issues: ${
-							process.env.COMMAND_ID === 'TEST_COMMAND_IDS'
-								? `</feedback:${testCommandIDs.FEEDBACK}>`
-								: `</feedback:${originalCommandIDs.FEEDBACK}>`
-						}`,
+						value: `Share feedback and ideas or raise issues: </feedback:${commandIds.FEEDBACK}>`,
 					},
 					{
 						name: ':tools:  Request Support',
-						value: `Request for support whenever you are facing issues: ${
-							process.env.COMMAND_ID === 'TEST_COMMAND_IDS'
-								? `</requestsupport:${testCommandIDs.REQUEST_SUPPORT}>`
-								: `</requestsupport:${originalCommandIDs.REQUEST_SUPPORT}>`
-						}`,
+						value: `Request for support whenever you are facing issues: </requestsupport:${commandIds.REQUEST_SUPPORT}>`,
 					},
 				)
 				.setTimestamp()
