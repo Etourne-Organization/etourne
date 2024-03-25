@@ -1,11 +1,6 @@
 import fs from 'fs';
 
-import {
-	BaseCommandInteraction,
-	Client,
-	Message,
-	MessageEmbed,
-} from 'discord.js';
+import { BaseCommandInteraction, Client, MessageEmbed } from 'discord.js';
 
 import { Command } from '../Command';
 import infoMessageEmbed from '../../globalUtils/infoMessageEmbed';

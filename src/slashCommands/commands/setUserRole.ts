@@ -9,8 +9,7 @@ import {
 	setUserRole as setUserRoleSupabase,
 } from '../../supabase/supabaseFunctions/users';
 import { checkServerExists } from '../../supabase/supabaseFunctions/servers';
-import testCommandIDs from '../../TEST_COMMAND_IDS/commandIDs.json';
-import originalCommandIDs from '../../ORIGINAL_COMMAND_IDS/commandIDs.json';
+import commandIds from '../../commandIds';
 import errorMessageTemplate from '../../globalUtils/errorMessageTemplate';
 
 const setUserRole: Command = {
@@ -56,11 +55,7 @@ const setUserRole: Command = {
 					.setColor('#D83C3E')
 					.setTitle(':x: Error: Server not registered!')
 					.setDescription(
-						`Use ${
-							process.env.COMMAND_ID === 'TEST_COMMAND_IDS'
-								? `</registerserver:${testCommandIDs.REGISTER_SERVER}>`
-								: `</registerserver:${originalCommandIDs.REGISTER_SERVER}>`
-						} command to register your server in Etourne database.`,
+						`Use </registerserver:${commandIds.REGISTER_SERVER}> command to register your server in Etourne database.`,
 					)
 					.setFooter({
 						text: 'Use /support to seek support if required.',
