@@ -9,7 +9,7 @@ import {
 } from 'discord.js';
 
 import { ButtonFunction } from '../../Button';
-import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
+import infoMessageEmbed, { types } from '../../../globalUtils/infoMessageEmbed';
 import { getAllPlayers } from '../../../supabase/supabaseFunctions/singlePlayers';
 import { getUserRole } from '../../../supabase/supabaseFunctions/users';
 import errorMessageTemplate from '../../../globalUtils/errorMessageTemplate';
@@ -30,10 +30,10 @@ const removePlayer: ButtonFunction = {
 			) {
 				return await interaction.reply({
 					embeds: [
-						infoMessageEmbed(
-							':warning: You are not allowed to run this command!',
-							'WARNING',
-						),
+						infoMessageEmbed({
+							title: ':warning: You are not allowed to use this button!',
+							type: types.ERROR,
+						}),
 					],
 					ephemeral: true,
 				});
@@ -51,10 +51,10 @@ const removePlayer: ButtonFunction = {
 			if (!(players!.length > 0))
 				return interaction.reply({
 					embeds: [
-						infoMessageEmbed(
-							'There are no players to remove!',
-							'WARNING',
-						),
+						infoMessageEmbed({
+							title: ':warning: There are no players to remove!',
+							type: types.ERROR,
+						}),
 					],
 					ephemeral: true,
 				});
@@ -98,11 +98,11 @@ const removePlayer: ButtonFunction = {
 		} catch (err) {
 			await interaction.reply({
 				embeds: [
-					infoMessageEmbed(
-						errorMessageTemplate().title,
-						'ERROR',
-						errorMessageTemplate().description,
-					),
+					infoMessageEmbed({
+						title: errorMessageTemplate().title,
+						description: errorMessageTemplate().description,
+						type: types.ERROR,
+					}),
 				],
 				ephemeral: true,
 			});

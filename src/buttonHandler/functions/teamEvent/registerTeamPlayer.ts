@@ -3,7 +3,7 @@ import fs from 'fs';
 import { Client, ButtonInteraction, MessageEmbed } from 'discord.js';
 
 import { ButtonFunction } from '../../Button';
-import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
+import infoMessageEmbed, { types } from '../../../globalUtils/infoMessageEmbed';
 import {
 	addPlayer,
 	getNumOfTeamPlayers,
@@ -32,10 +32,10 @@ const registerTeamPlayer: ButtonFunction = {
 			if (!(await checkTeamExists({ teamId: parseInt(teamId) }))) {
 				return interaction.reply({
 					embeds: [
-						infoMessageEmbed(
-							'The team does not exist anymore, maybe it was deleted?',
-							'WARNING',
-						),
+						infoMessageEmbed({
+							title: 'The team does not exist anymore, maybe it was deleted?',
+							type: types.ERROR,
+						}),
 					],
 					ephemeral: true,
 				});
@@ -48,10 +48,10 @@ const registerTeamPlayer: ButtonFunction = {
 			) {
 				return await interaction.reply({
 					embeds: [
-						infoMessageEmbed(
-							'Number of players has reached the limit!',
-							'WARNING',
-						),
+						infoMessageEmbed({
+							title: 'Number of players has reached the limit!',
+							type: types.ERROR,
+						}),
 					],
 					ephemeral: true,
 				});
@@ -74,7 +74,10 @@ const registerTeamPlayer: ButtonFunction = {
 				) {
 					return await interaction.reply({
 						embeds: [
-							infoMessageEmbed('You are already registered!', 'WARNING'),
+							infoMessageEmbed({
+								title: 'You are already registered!',
+								type: types.ERROR,
+							}),
 						],
 						ephemeral: true,
 					});
@@ -126,13 +129,15 @@ const registerTeamPlayer: ButtonFunction = {
 		} catch (err) {
 			await interaction.reply({
 				embeds: [
-					infoMessageEmbed(
-						errorMessageTemplate({ messageType: MessageType.SHORT })
-							.title,
-						'ERROR',
-						errorMessageTemplate({ messageType: MessageType.SHORT })
-							.description,
-					),
+					infoMessageEmbed({
+						title: errorMessageTemplate({
+							messageType: MessageType.SHORT,
+						}).title,
+						description: errorMessageTemplate({
+							messageType: MessageType.SHORT,
+						}).description,
+						type: types.ERROR,
+					}),
 				],
 				ephemeral: true,
 			});

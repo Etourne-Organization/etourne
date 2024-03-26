@@ -3,7 +3,7 @@ import fs from 'fs';
 import { Client, ButtonInteraction, MessageEmbed } from 'discord.js';
 
 import { ButtonFunction } from '../../Button';
-import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
+import infoMessageEmbed, { types } from '../../../globalUtils/infoMessageEmbed';
 import { removePlayer } from '../../../supabase/supabaseFunctions/singlePlayers';
 import errorMessageTemplate, {
 	MessageType,
@@ -30,10 +30,10 @@ const unregister: ButtonFunction = {
 			if (registeredPlayers.value.length === 0) {
 				return await interaction.reply({
 					embeds: [
-						infoMessageEmbed(
-							'The registration list is empty!',
-							'WARNING',
-						),
+						infoMessageEmbed({
+							title: ':warning: The registration list is empty!',
+							type: types.ERROR,
+						}),
 					],
 					ephemeral: true,
 				});
@@ -45,7 +45,10 @@ const unregister: ButtonFunction = {
 				if (oldPlayersList.indexOf(interaction.user.tag) === -1) {
 					return await interaction.reply({
 						embeds: [
-							infoMessageEmbed('You are not registered!', 'WARNING'),
+							infoMessageEmbed({
+								title: 'You are not registered!',
+								type: types.ERROR,
+							}),
 						],
 						ephemeral: true,
 					});
@@ -94,13 +97,15 @@ const unregister: ButtonFunction = {
 		} catch (err) {
 			await interaction.reply({
 				embeds: [
-					infoMessageEmbed(
-						errorMessageTemplate({ messageType: MessageType.SHORT })
-							.title,
-						'ERROR',
-						errorMessageTemplate({ messageType: MessageType.SHORT })
-							.description,
-					),
+					infoMessageEmbed({
+						title: errorMessageTemplate({
+							messageType: MessageType.SHORT,
+						}).title,
+						description: errorMessageTemplate({
+							messageType: MessageType.SHORT,
+						}).description,
+						type: types.ERROR,
+					}),
 				],
 				ephemeral: true,
 			});

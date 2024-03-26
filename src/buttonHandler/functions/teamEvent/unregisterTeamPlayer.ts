@@ -3,7 +3,7 @@ import fs from 'fs';
 import { Client, ButtonInteraction, MessageEmbed } from 'discord.js';
 
 import { ButtonFunction } from '../../Button';
-import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
+import infoMessageEmbed, { types } from '../../../globalUtils/infoMessageEmbed';
 import { removePlayer } from '../../../supabase/supabaseFunctions/teamPlayers';
 import { checkTeamExists } from '../../../supabase/supabaseFunctions/teams';
 import errorMessageTemplate from '../../../globalUtils/errorMessageTemplate';
@@ -19,10 +19,10 @@ const unregisterTeamPlayer: ButtonFunction = {
 			if (!(await checkTeamExists({ teamId: parseInt(teamId) }))) {
 				return interaction.reply({
 					embeds: [
-						infoMessageEmbed(
-							'The team does not exist anymore, maybe it was deleted?',
-							'WARNING',
-						),
+						infoMessageEmbed({
+							title: ':warning: The team does not exist anymore, maybe it was deleted?',
+							type: types.ERROR,
+						}),
 					],
 					ephemeral: true,
 				});
@@ -37,10 +37,10 @@ const unregisterTeamPlayer: ButtonFunction = {
 			if (registeredPlayers.value.length === 0) {
 				return await interaction.reply({
 					embeds: [
-						infoMessageEmbed(
-							'The registration list is empty!',
-							'WARNING',
-						),
+						infoMessageEmbed({
+							title: ':warning: The registration list is empty!',
+							type: types.ERROR,
+						}),
 					],
 					ephemeral: true,
 				});
@@ -52,7 +52,10 @@ const unregisterTeamPlayer: ButtonFunction = {
 				if (oldPlayersList.indexOf(interaction.user.tag) === -1) {
 					return await interaction.reply({
 						embeds: [
-							infoMessageEmbed('You are not registered!', 'WARNING'),
+							infoMessageEmbed({
+								title: ':warning: ou are not registered!',
+								type: types.ERROR,
+							}),
 						],
 						ephemeral: true,
 					});
@@ -101,11 +104,11 @@ const unregisterTeamPlayer: ButtonFunction = {
 		} catch (err) {
 			await interaction.reply({
 				embeds: [
-					infoMessageEmbed(
-						errorMessageTemplate().title,
-						'ERROR',
-						errorMessageTemplate().description,
-					),
+					infoMessageEmbed({
+						title: errorMessageTemplate().title,
+						description: errorMessageTemplate().description,
+						type: types.ERROR,
+					}),
 				],
 				ephemeral: true,
 			});

@@ -3,7 +3,6 @@ import fs from 'fs';
 import {
 	Client,
 	ButtonInteraction,
-	MessageEmbed,
 	Modal,
 	TextInputComponent,
 	MessageActionRow,
@@ -13,7 +12,7 @@ import {
 import { ButtonFunction } from '../../Button';
 import { getColumnValueById } from '../../../supabase/supabaseFunctions/events';
 import errorMessageTemplate from '../../../globalUtils/errorMessageTemplate';
-import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
+import infoMessageEmbed, { types } from '../../../globalUtils/infoMessageEmbed';
 
 const setMaxNumPlayers: ButtonFunction = {
 	customId: 'setMaxNumPlayers',
@@ -53,11 +52,11 @@ const setMaxNumPlayers: ButtonFunction = {
 		} catch (err) {
 			await interaction.reply({
 				embeds: [
-					infoMessageEmbed(
-						errorMessageTemplate().title,
-						'ERROR',
-						errorMessageTemplate().description,
-					),
+					infoMessageEmbed({
+						title: errorMessageTemplate().title,
+						description: errorMessageTemplate().description,
+						type: types.ERROR,
+					}),
 				],
 				ephemeral: true,
 			});

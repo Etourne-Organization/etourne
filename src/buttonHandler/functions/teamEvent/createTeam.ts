@@ -12,7 +12,7 @@ import {
 import { ButtonFunction } from '../../Button';
 import { getNumOfTeams } from '../../../supabase/supabaseFunctions/teams';
 import { getColumnValueById } from '../../../supabase/supabaseFunctions/events';
-import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
+import infoMessageEmbed, { types } from '../../../globalUtils/infoMessageEmbed';
 import errorMessageTemplate, {
 	MessageType,
 } from '../../../globalUtils/errorMessageTemplate';
@@ -36,10 +36,10 @@ const createTeam: ButtonFunction = {
 			) {
 				return await interaction.reply({
 					embeds: [
-						infoMessageEmbed(
-							'Number of team has reached the limit!',
-							'WARNING',
-						),
+						infoMessageEmbed({
+							title: ':warning: Number of team has reached the limit!',
+							type: types.ERROR,
+						}),
 					],
 					ephemeral: true,
 				});
@@ -82,13 +82,15 @@ const createTeam: ButtonFunction = {
 		} catch (err) {
 			await interaction.reply({
 				embeds: [
-					infoMessageEmbed(
-						errorMessageTemplate({ messageType: MessageType.SHORT })
-							.title,
-						'ERROR',
-						errorMessageTemplate({ messageType: MessageType.SHORT })
-							.description,
-					),
+					infoMessageEmbed({
+						title: errorMessageTemplate({
+							messageType: MessageType.SHORT,
+						}).title,
+						description: errorMessageTemplate({
+							messageType: MessageType.SHORT,
+						}).description,
+						type: types.ERROR,
+					}),
 				],
 				ephemeral: true,
 			});

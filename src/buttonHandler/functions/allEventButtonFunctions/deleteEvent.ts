@@ -3,13 +3,12 @@ import fs from 'fs';
 import {
 	Client,
 	ButtonInteraction,
-	MessageEmbed,
 	MessageButton,
 	MessageActionRow,
 } from 'discord.js';
 
 import { ButtonFunction } from '../../Button';
-import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
+import infoMessageEmbed, { types } from '../../../globalUtils/infoMessageEmbed';
 import { getUserRole } from '../../../supabase/supabaseFunctions/users';
 import { deleteEvent as deleteEventSupabase } from '../../../supabase/supabaseFunctions/events';
 import errorMessageTemplate from '../../../globalUtils/errorMessageTemplate';
@@ -30,10 +29,10 @@ const deleteEvent: ButtonFunction = {
 			) {
 				return await interaction.reply({
 					embeds: [
-						infoMessageEmbed(
-							':warning: You are not allowed to use this button!',
-							'WARNING',
-						),
+						infoMessageEmbed({
+							title: ':warning: You are not allowed to use this button!',
+							type: types.ERROR,
+						}),
 					],
 					ephemeral: true,
 				});
@@ -80,9 +79,9 @@ const deleteEvent: ButtonFunction = {
 
 				await interaction.reply({
 					embeds: [
-						infoMessageEmbed(
-							'Are you sure you want to delete the event?',
-						),
+						infoMessageEmbed({
+							title: ':question: Are you sure you want to delete the event?',
+						}),
 					],
 					components: [confirmationButtons],
 					ephemeral: true,
@@ -111,10 +110,10 @@ const deleteEvent: ButtonFunction = {
 
 						await i.reply({
 							embeds: [
-								infoMessageEmbed(
-									':white_check_mark: Event deleted successfully!',
-									'SUCCESS',
-								),
+								infoMessageEmbed({
+									title: ':white_check_mark: Event deleted successfully!',
+									type: types.SUCCESS,
+								}),
 							],
 							ephemeral: true,
 						});
@@ -122,25 +121,34 @@ const deleteEvent: ButtonFunction = {
 						await interaction.deleteReply();
 
 						await i.reply({
-							embeds: [infoMessageEmbed(':x: Event not deleted')],
+							embeds: [
+								infoMessageEmbed({
+									title: ':x: Event not deleted',
+								}),
+							],
 							ephemeral: true,
 						});
 					}
 				});
 			} else {
 				await interaction.reply({
-					embeds: [infoMessageEmbed('Something went wrong', 'WARNING')],
+					embeds: [
+						infoMessageEmbed({
+							title: ':x: Something went wrong',
+							type: types.ERROR,
+						}),
+					],
 					ephemeral: true,
 				});
 			}
 		} catch (err) {
 			await interaction.reply({
 				embeds: [
-					infoMessageEmbed(
-						errorMessageTemplate().title,
-						'ERROR',
-						errorMessageTemplate().description,
-					),
+					infoMessageEmbed({
+						title: errorMessageTemplate().title,
+						description: errorMessageTemplate().description,
+						type: types.ERROR,
+					}),
 				],
 				ephemeral: true,
 			});

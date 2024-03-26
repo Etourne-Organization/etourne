@@ -9,7 +9,7 @@ import {
 } from 'discord.js';
 
 import { ButtonFunction } from '../../Button';
-import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
+import infoMessageEmbed, { types } from '../../../globalUtils/infoMessageEmbed';
 import { checkTeamExists } from '../../../supabase/supabaseFunctions/teams';
 import { getAllTeamPlayers } from '../../../supabase/supabaseFunctions/teamPlayers';
 import { getUserRole } from '../../../supabase/supabaseFunctions/users';
@@ -26,10 +26,10 @@ const removeTeamPlayer: ButtonFunction = {
 			if (!(await checkTeamExists({ teamId: parseInt(teamId) }))) {
 				return interaction.reply({
 					embeds: [
-						infoMessageEmbed(
-							'The team does not exist anymore, maybe it was deleted?',
-							'WARNING',
-						),
+						infoMessageEmbed({
+							title: 'The team does not exist anymore, maybe it was deleted?',
+							type: types.ERROR,
+						}),
 					],
 					ephemeral: true,
 				});
@@ -58,10 +58,10 @@ const removeTeamPlayer: ButtonFunction = {
 			) {
 				return interaction.reply({
 					embeds: [
-						infoMessageEmbed(
-							':warning: You are not allowed to use this button!',
-							'WARNING',
-						),
+						infoMessageEmbed({
+							title: ':warning: You are not allowed use this button!',
+							type: types.ERROR,
+						}),
 					],
 					ephemeral: true,
 				});
@@ -75,10 +75,10 @@ const removeTeamPlayer: ButtonFunction = {
 			if (!(teamPlayers!.length > 0))
 				return interaction.reply({
 					embeds: [
-						infoMessageEmbed(
-							'There are no team players to remove!',
-							'WARNING',
-						),
+						infoMessageEmbed({
+							title: ':warning: There are no team players to remove!',
+							type: types.ERROR,
+						}),
 					],
 					ephemeral: true,
 				});
@@ -122,11 +122,11 @@ const removeTeamPlayer: ButtonFunction = {
 		} catch (err) {
 			await interaction.reply({
 				embeds: [
-					infoMessageEmbed(
-						errorMessageTemplate().title,
-						'ERROR',
-						errorMessageTemplate().description,
-					),
+					infoMessageEmbed({
+						title: errorMessageTemplate().title,
+						description: errorMessageTemplate().description,
+						type: types.ERROR,
+					}),
 				],
 				ephemeral: true,
 			});

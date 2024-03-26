@@ -12,7 +12,7 @@ import {
 
 import { ButtonFunction } from '../../Button';
 import { getColumnValueById } from '../../../supabase/supabaseFunctions/events';
-import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
+import infoMessageEmbed, { types } from '../../../globalUtils/infoMessageEmbed';
 import errorMessageTemplate from '../../../globalUtils/errorMessageTemplate';
 
 const setMaxNumTeams: ButtonFunction = {
@@ -54,11 +54,11 @@ const setMaxNumTeams: ButtonFunction = {
 		} catch (err) {
 			await interaction.reply({
 				embeds: [
-					infoMessageEmbed(
-						errorMessageTemplate().title,
-						'ERROR',
-						errorMessageTemplate().description,
-					),
+					infoMessageEmbed({
+						title: errorMessageTemplate().title,
+						description: errorMessageTemplate().description,
+						type: types.ERROR,
+					}),
 				],
 				ephemeral: true,
 			});

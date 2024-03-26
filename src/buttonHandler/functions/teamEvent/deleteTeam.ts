@@ -8,7 +8,7 @@ import {
 } from 'discord.js';
 
 import { ButtonFunction } from '../../Button';
-import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
+import infoMessageEmbed, { types } from '../../../globalUtils/infoMessageEmbed';
 import {
 	deleteTeam as deleteTeamSupabase,
 	checkTeamExists,
@@ -43,10 +43,10 @@ const deleteTeam: ButtonFunction = {
 			) {
 				return interaction.reply({
 					embeds: [
-						infoMessageEmbed(
-							':warning: You are not allowed to use this button!',
-							'WARNING',
-						),
+						infoMessageEmbed({
+							title: ':warning: You are not allowed to use this button!',
+							type: types.ERROR,
+						}),
 					],
 					ephemeral: true,
 				});
@@ -73,9 +73,9 @@ const deleteTeam: ButtonFunction = {
 
 				await interaction.reply({
 					embeds: [
-						infoMessageEmbed(
-							'Are you sure you want to delete your team?',
-						),
+						infoMessageEmbed({
+							title: ':question: Are you sure you want to delete your team?',
+						}),
 					],
 					components: [confirmationButtons],
 					ephemeral: true,
@@ -104,10 +104,10 @@ const deleteTeam: ButtonFunction = {
 
 						await i.reply({
 							embeds: [
-								infoMessageEmbed(
-									':white_check_mark: Team deleted successfully!',
-									'SUCCESS',
-								),
+								infoMessageEmbed({
+									title: ':white_check_mark: Team deleted successfully!',
+									type: types.SUCCESS,
+								}),
 							],
 							ephemeral: true,
 						});
@@ -115,25 +115,34 @@ const deleteTeam: ButtonFunction = {
 						await interaction.deleteReply();
 
 						await i.reply({
-							embeds: [infoMessageEmbed(':x: Team was not deleted')],
+							embeds: [
+								infoMessageEmbed({
+									title: ':x: Team not deleted',
+								}),
+							],
 							ephemeral: true,
 						});
 					}
 				});
 			} else {
 				await interaction.reply({
-					embeds: [infoMessageEmbed('Something went wrong', 'WARNING')],
+					embeds: [
+						infoMessageEmbed({
+							title: ':x: Something went wrong',
+							type: types.ERROR,
+						}),
+					],
 					ephemeral: true,
 				});
 			}
 		} catch (err) {
 			await interaction.reply({
 				embeds: [
-					infoMessageEmbed(
-						errorMessageTemplate().title,
-						'ERROR',
-						errorMessageTemplate().description,
-					),
+					infoMessageEmbed({
+						title: errorMessageTemplate().title,
+						description: errorMessageTemplate().description,
+						type: types.ERROR,
+					}),
 				],
 				ephemeral: true,
 			});

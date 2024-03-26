@@ -12,7 +12,7 @@ import {
 import { ButtonFunction } from '../../Button';
 import { getAllColumnValueById } from '../../../supabase/supabaseFunctions/events';
 import { getUserRole } from '../../../supabase/supabaseFunctions/users';
-import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
+import infoMessageEmbed, { types } from '../../../globalUtils/infoMessageEmbed';
 import errorMessageTemplate from '../../../globalUtils/errorMessageTemplate';
 
 const editEventInfo: ButtonFunction = {
@@ -31,10 +31,10 @@ const editEventInfo: ButtonFunction = {
 			) {
 				return await interaction.reply({
 					embeds: [
-						infoMessageEmbed(
-							':warning: You are not allowed to run this command!',
-							'WARNING',
-						),
+						infoMessageEmbed({
+							title: ':warning: You are not allowed use this button!',
+							type: types.ERROR,
+						}),
 					],
 					ephemeral: true,
 				});
@@ -120,11 +120,11 @@ const editEventInfo: ButtonFunction = {
 		} catch (err) {
 			await interaction.reply({
 				embeds: [
-					infoMessageEmbed(
-						errorMessageTemplate().title,
-						'ERROR',
-						errorMessageTemplate().description,
-					),
+					infoMessageEmbed({
+						title: errorMessageTemplate().title,
+						description: errorMessageTemplate().description,
+						type: types.ERROR,
+					}),
 				],
 				ephemeral: true,
 			});

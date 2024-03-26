@@ -9,7 +9,7 @@ import {
 	ModalActionRowComponent,
 } from 'discord.js';
 
-import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
+import infoMessageEmbed, { types } from '../../../globalUtils/infoMessageEmbed';
 import { ButtonFunction } from '../../Button';
 import {
 	checkTeamExists,
@@ -30,10 +30,10 @@ const editTeamInfo: ButtonFunction = {
 			if (!(await checkTeamExists({ teamId: parseInt(teamId) }))) {
 				return interaction.reply({
 					embeds: [
-						infoMessageEmbed(
-							':warning: The team does not exist anymore, maybe it was deleted?',
-							'WARNING',
-						),
+						infoMessageEmbed({
+							title: ':warning: The team does not exist anymore, maybe it was deleted?',
+							type: types.ERROR,
+						}),
 					],
 					ephemeral: true,
 				});
@@ -62,10 +62,10 @@ const editTeamInfo: ButtonFunction = {
 			) {
 				return interaction.reply({
 					embeds: [
-						infoMessageEmbed(
-							':warning: You are not allowed to use this button!',
-							'WARNING',
-						),
+						infoMessageEmbed({
+							title: ':warning: You are not allowed to use this button!',
+							type: types.ERROR,
+						}),
 					],
 					ephemeral: true,
 				});
@@ -110,11 +110,11 @@ const editTeamInfo: ButtonFunction = {
 		} catch (err) {
 			await interaction.reply({
 				embeds: [
-					infoMessageEmbed(
-						errorMessageTemplate().title,
-						'ERROR',
-						errorMessageTemplate().description,
-					),
+					infoMessageEmbed({
+						title: errorMessageTemplate().title,
+						description: errorMessageTemplate().description,
+						type: types.ERROR,
+					}),
 				],
 				ephemeral: true,
 			});
