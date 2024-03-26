@@ -10,7 +10,7 @@ import {
 import moment from 'moment-timezone';
 
 import { ModalSubmit } from '../../ModalSubmit';
-import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
+import infoMessageEmbed, { types } from '../../../globalUtils/infoMessageEmbed';
 import {
 	addEvent,
 	setColumnValue,
@@ -138,21 +138,21 @@ const normalEventModal: ModalSubmit = {
 
 			await interaction.reply({
 				embeds: [
-					infoMessageEmbed(
-						':white_check_mark: Event Created Successfully',
-						'SUCCESS',
-					),
+					infoMessageEmbed({
+						title: ':white_check_mark: Event Created Successfully',
+						type: types.SUCCESS,
+					}),
 				],
 				ephemeral: true,
 			});
 		} catch (err) {
 			await interaction.reply({
 				embeds: [
-					infoMessageEmbed(
-						errorMessageTemplate().title,
-						'ERROR',
-						errorMessageTemplate().description,
-					),
+					infoMessageEmbed({
+						title: errorMessageTemplate().title,
+						description: errorMessageTemplate().description,
+						type: types.ERROR,
+					}),
 				],
 				ephemeral: true,
 			});

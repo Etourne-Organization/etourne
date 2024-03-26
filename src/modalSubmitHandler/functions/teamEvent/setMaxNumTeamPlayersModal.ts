@@ -6,7 +6,7 @@ import { ModalSubmit } from '../../ModalSubmit';
 import { setColumnValue } from '../../../supabase/supabaseFunctions/events';
 import updateAllTeamInfo from './utilities/updateAllTeamInfo';
 import errorMessageTemplate from '../../../globalUtils/errorMessageTemplate';
-import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
+import infoMessageEmbed, { types } from '../../../globalUtils/infoMessageEmbed';
 
 const setMaxNumTeamPlayersModal: ModalSubmit = {
 	customId: 'setMaxNumTeamPlayersModalSubmit',
@@ -49,11 +49,11 @@ const setMaxNumTeamPlayersModal: ModalSubmit = {
 		} catch (err) {
 			await interaction.reply({
 				embeds: [
-					infoMessageEmbed(
-						errorMessageTemplate().title,
-						'ERROR',
-						errorMessageTemplate().description,
-					),
+					infoMessageEmbed({
+						title: errorMessageTemplate().title,
+						description: errorMessageTemplate().description,
+						type: types.ERROR,
+					}),
 				],
 				ephemeral: true,
 			});

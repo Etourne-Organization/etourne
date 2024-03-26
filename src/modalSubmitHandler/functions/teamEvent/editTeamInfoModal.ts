@@ -5,7 +5,7 @@ import { Client, ModalSubmitInteraction, MessageEmbed } from 'discord.js';
 import { ModalSubmit } from '../../ModalSubmit';
 import { updateTeam } from '../../../supabase/supabaseFunctions/teams';
 import errorMessageTemplate from '../../../globalUtils/errorMessageTemplate';
-import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
+import infoMessageEmbed, { types } from '../../../globalUtils/infoMessageEmbed';
 
 const editTeamInfoModal: ModalSubmit = {
 	customId: 'editTeamInfoModal',
@@ -104,11 +104,11 @@ const editTeamInfoModal: ModalSubmit = {
 		} catch (err) {
 			await interaction.reply({
 				embeds: [
-					infoMessageEmbed(
-						errorMessageTemplate().title,
-						'ERROR',
-						errorMessageTemplate().description,
-					),
+					infoMessageEmbed({
+						title: errorMessageTemplate().title,
+						description: errorMessageTemplate().description,
+						type: types.ERROR,
+					}),
 				],
 				ephemeral: true,
 			});

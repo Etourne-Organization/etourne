@@ -9,7 +9,7 @@ import {
 } from 'discord.js';
 
 import { ModalSubmit } from '../../ModalSubmit';
-import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
+import infoMessageEmbed, { types } from '../../../globalUtils/infoMessageEmbed';
 import {
 	addTeam,
 	setColumnValue,
@@ -125,21 +125,21 @@ const teamModal: ModalSubmit = {
 
 			await interaction.reply({
 				embeds: [
-					infoMessageEmbed(
-						':white_check_mark: Team created successfully',
-						'SUCCESS',
-					),
+					infoMessageEmbed({
+						title: ':white_check_mark: Team created successfully',
+						type: types.SUCCESS,
+					}),
 				],
 				ephemeral: true,
 			});
 		} catch (err) {
 			await interaction.reply({
 				embeds: [
-					infoMessageEmbed(
-						errorMessageTemplate().title,
-						'ERROR',
-						errorMessageTemplate().description,
-					),
+					infoMessageEmbed({
+						title: errorMessageTemplate().title,
+						description: errorMessageTemplate().description,
+						type: types.ERROR,
+					}),
 				],
 				ephemeral: true,
 			});
