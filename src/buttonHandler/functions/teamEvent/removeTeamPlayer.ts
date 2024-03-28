@@ -1,5 +1,3 @@
-import fs from 'fs';
-
 import {
 	Client,
 	ButtonInteraction,
@@ -8,6 +6,7 @@ import {
 	MessageSelectMenu,
 } from 'discord.js';
 
+import logFile from '../../../globalUtils/logFile';
 import { ButtonFunction } from '../../Button';
 import infoMessageEmbed, { types } from '../../../globalUtils/infoMessageEmbed';
 import { checkTeamExists } from '../../../supabase/supabaseFunctions/teams';
@@ -131,17 +130,11 @@ const removeTeamPlayer: ButtonFunction = {
 				ephemeral: true,
 			});
 
-			try {
-				fs.appendFile(
-					'logs/crash_logs.txt',
-					`${new Date()} : Something went wrong in buttonFunctions/teamEvent/removeTeamPlayers.ts \n Actual error: ${err} \n \n`,
-					(err) => {
-						if (err) throw err;
-					},
-				);
-			} catch (err) {
-				console.log('Error logging failed');
-			}
+			logFile({
+				error: err,
+				folder: 'buttonHandler/buttonFunctions',
+				file: 'teamEvent/removeTeamPlayer',
+			});
 		}
 	},
 };

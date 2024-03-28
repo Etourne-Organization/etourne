@@ -1,7 +1,6 @@
-import fs from 'fs';
-
 import { Client, ButtonInteraction, MessageEmbed } from 'discord.js';
 
+import logFile from '../../../globalUtils/logFile';
 import { ButtonFunction } from '../../Button';
 import infoMessageEmbed, { types } from '../../../globalUtils/infoMessageEmbed';
 import { removePlayer } from '../../../supabase/supabaseFunctions/singlePlayers';
@@ -110,17 +109,11 @@ const unregister: ButtonFunction = {
 				ephemeral: true,
 			});
 
-			try {
-				fs.appendFile(
-					'logs/crash_logs.txt',
-					`${new Date()} : Something went wrong in buttonFunctions/normalEvent/unregister.ts \n Actual error: ${err} \n \n`,
-					(err) => {
-						if (err) throw err;
-					},
-				);
-			} catch (err) {
-				console.log('Error logging failed');
-			}
+			logFile({
+				error: err,
+				folder: 'buttonHandler/buttonFunctions',
+				file: 'normalEvent/unregister',
+			});
 		}
 	},
 };

@@ -1,5 +1,3 @@
-import fs from 'fs';
-
 import {
 	Client,
 	ButtonInteraction,
@@ -9,6 +7,7 @@ import {
 	ModalActionRowComponent,
 } from 'discord.js';
 
+import logFile from '../../../globalUtils/logFile';
 import { ButtonFunction } from '../../Button';
 import { getAllColumnValueById } from '../../../supabase/supabaseFunctions/events';
 import { getUserRole } from '../../../supabase/supabaseFunctions/users';
@@ -129,17 +128,11 @@ const editTeamEventInfo: ButtonFunction = {
 				ephemeral: true,
 			});
 
-			try {
-				fs.appendFile(
-					'logs/crash_logs.txt',
-					`${new Date()} : Something went wrong in buttonFunctions/teamEvent/editTeamEventInfo.ts \n Actual error: ${err} \n \n`,
-					(err) => {
-						if (err) throw err;
-					},
-				);
-			} catch (err) {
-				console.log('Error logging failed');
-			}
+			logFile({
+				error: err,
+				folder: 'buttonHandler/buttonFunctions',
+				file: 'teamEvent/editTeamEventInfo',
+			});
 		}
 	},
 };
