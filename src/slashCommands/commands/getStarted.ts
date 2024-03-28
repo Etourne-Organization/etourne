@@ -4,7 +4,7 @@ import { BaseCommandInteraction, Client, MessageEmbed } from 'discord.js';
 
 import { Command } from '../Command';
 import commandIds from '../../commandIds';
-import infoMessageEmbed from '../../globalUtils/infoMessageEmbed';
+import infoMessageEmbed, { types } from '../../globalUtils/infoMessageEmbed';
 
 const getStarted: Command = {
 	name: 'getstarted',
@@ -26,7 +26,12 @@ const getStarted: Command = {
 			});
 		} catch (err) {
 			await interaction.reply({
-				embeds: [infoMessageEmbed(':x: There has been an error', 'ERROR')],
+				embeds: [
+					infoMessageEmbed({
+						title: ':x: There has been an error',
+						type: types.ERROR,
+					}),
+				],
 				ephemeral: true,
 			});
 

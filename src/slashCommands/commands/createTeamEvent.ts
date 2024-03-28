@@ -9,10 +9,9 @@ import {
 	ModalActionRowComponent,
 	MessageEmbed,
 } from 'discord.js';
-import momentTimzone from 'moment-timezone';
 
 import { Command } from '../Command';
-import infoMessageEmbed from '../../globalUtils/infoMessageEmbed';
+import infoMessageEmbed, { types } from '../../globalUtils/infoMessageEmbed';
 import { getUserRole } from '../../supabase/supabaseFunctions/users';
 import { checkServerExists } from '../../supabase/supabaseFunctions/servers';
 import commandIds from '../../commandIds';
@@ -55,10 +54,10 @@ const createTeamEvent: Command = {
 			) {
 				return await interaction.reply({
 					embeds: [
-						infoMessageEmbed(
-							':warning: You are not allowed to run this command!',
-							'WARNING',
-						),
+						infoMessageEmbed({
+							title: ':warning: You are not allowed run this command!',
+							type: types.ERROR,
+						}),
 					],
 					ephemeral: true,
 				});
@@ -141,11 +140,11 @@ const createTeamEvent: Command = {
 		} catch (err) {
 			await interaction.reply({
 				embeds: [
-					infoMessageEmbed(
-						errorMessageTemplate().title,
-						'ERROR',
-						errorMessageTemplate().description,
-					),
+					infoMessageEmbed({
+						title: errorMessageTemplate().title,
+						description: errorMessageTemplate().description,
+						type: types.ERROR,
+					}),
 				],
 				ephemeral: true,
 			});

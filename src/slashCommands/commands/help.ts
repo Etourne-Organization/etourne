@@ -3,7 +3,7 @@ import fs from 'fs';
 import { BaseCommandInteraction, Client, MessageEmbed } from 'discord.js';
 
 import { Command } from '../Command';
-import infoMessageEmbed from '../../globalUtils/infoMessageEmbed';
+import infoMessageEmbed, { types } from '../../globalUtils/infoMessageEmbed';
 import commandIds from '../../commandIds';
 
 const help: Command = {
@@ -73,7 +73,12 @@ const help: Command = {
 			});
 		} catch (err) {
 			await interaction.reply({
-				embeds: [infoMessageEmbed(':x: There has been an error', 'ERROR')],
+				embeds: [
+					infoMessageEmbed({
+						title: ':x: There has been an error',
+						type: types.ERROR,
+					}),
+				],
 				ephemeral: true,
 			});
 

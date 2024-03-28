@@ -4,7 +4,7 @@ import { BaseCommandInteraction, Client, MessageEmbed } from 'discord.js';
 
 import { Command } from '../Command';
 import formatProcessUptime from '../utilities/formatProcessUptime';
-import infoMessageEmbed from '../../globalUtils/infoMessageEmbed';
+import infoMessageEmbed, { types } from '../../globalUtils/infoMessageEmbed';
 
 const botInfo: Command = {
 	name: 'botinfo',
@@ -51,7 +51,12 @@ const botInfo: Command = {
 			});
 		} catch (err) {
 			await interaction.reply({
-				embeds: [infoMessageEmbed(':x: There has been an error', 'ERROR')],
+				embeds: [
+					infoMessageEmbed({
+						title: ':x: There has been an error',
+						type: types.ERROR,
+					}),
+				],
 				ephemeral: true,
 			});
 

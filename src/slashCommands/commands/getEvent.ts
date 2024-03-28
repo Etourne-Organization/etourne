@@ -14,7 +14,7 @@ import {
 	setColumnValue,
 } from '../../supabase/supabaseFunctions/events';
 import { Command } from '../Command';
-import infoMessageEmbed from '../../globalUtils/infoMessageEmbed';
+import infoMessageEmbed, { types } from '../../globalUtils/infoMessageEmbed';
 import { getUserRole } from '../../supabase/supabaseFunctions/users';
 import { getAllPlayers } from '../../supabase/supabaseFunctions/singlePlayers';
 import { checkServerExists } from '../../supabase/supabaseFunctions/servers';
@@ -69,10 +69,10 @@ const getEvent: Command = {
 			) {
 				return await interaction.editReply({
 					embeds: [
-						infoMessageEmbed(
-							':warning: You are not allowed to run this command!',
-							'WARNING',
-						),
+						infoMessageEmbed({
+							title: ':warning: You are not allowed run this command!',
+							type: types.ERROR,
+						}),
 					],
 				});
 			}
@@ -226,27 +226,32 @@ const getEvent: Command = {
 					return await interaction.editReply({
 						content: ' ',
 						embeds: [
-							infoMessageEmbed(
-								':white_check_mark: Event reshared Successfully',
-								'SUCCESS',
-							),
+							infoMessageEmbed({
+								title: ':white_check_mark: Event reshared Successfully',
+								type: types.SUCCESS,
+							}),
 						],
 					});
 				}
 			} else {
 				return await interaction.editReply({
 					content: ' ',
-					embeds: [infoMessageEmbed(':x: Event cannot be found', 'ERROR')],
+					embeds: [
+						infoMessageEmbed({
+							title: ':x: Event cannot be found',
+							type: types.ERROR,
+						}),
+					],
 				});
 			}
 		} catch (err) {
 			await interaction.editReply({
 				embeds: [
-					infoMessageEmbed(
-						errorMessageTemplate().title,
-						'ERROR',
-						errorMessageTemplate().description,
-					),
+					infoMessageEmbed({
+						title: errorMessageTemplate().title,
+						description: errorMessageTemplate().description,
+						type: types.ERROR,
+					}),
 				],
 			});
 

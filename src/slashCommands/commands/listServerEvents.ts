@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 
 import { Command } from '../Command';
 import { getAllServerEvents } from '../../supabase/supabaseFunctions/events';
-import infoMessageEmbed from '../../globalUtils/infoMessageEmbed';
+import infoMessageEmbed, { types } from '../../globalUtils/infoMessageEmbed';
 import { checkServerExists } from '../../supabase/supabaseFunctions/servers';
 import commandIds from '../../commandIds';
 import errorMessageTemplate from '../../globalUtils/errorMessageTemplate';
@@ -64,11 +64,11 @@ const listServerEvents: Command = {
 		} catch (err) {
 			await interaction.reply({
 				embeds: [
-					infoMessageEmbed(
-						errorMessageTemplate().title,
-						'ERROR',
-						errorMessageTemplate().description,
-					),
+					infoMessageEmbed({
+						title: errorMessageTemplate().title,
+						description: errorMessageTemplate().description,
+						type: types.ERROR,
+					}),
 				],
 				ephemeral: true,
 			});

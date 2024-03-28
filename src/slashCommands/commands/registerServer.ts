@@ -3,7 +3,7 @@ import fs from 'fs';
 import { BaseCommandInteraction, Client, MessageEmbed } from 'discord.js';
 
 import { Command } from '../Command';
-import infoMessageEmbed from '../../globalUtils/infoMessageEmbed';
+import infoMessageEmbed, { types } from '../../globalUtils/infoMessageEmbed';
 import {
 	checkServerExists,
 	addServer,
@@ -20,7 +20,12 @@ const registerServer: Command = {
 				await checkServerExists({ discordServerId: interaction.guild!.id })
 			) {
 				return await interaction.reply({
-					embeds: [infoMessageEmbed('Your server is already registered!')],
+					embeds: [
+						infoMessageEmbed({
+							title: ':warning: Your server is already registered!',
+							type: types.ERROR,
+						}),
+					],
 				});
 			} else if (
 				interaction.guild!.members.me?.permissions.has('VIEW_AUDIT_LOG')
@@ -35,10 +40,10 @@ const registerServer: Command = {
 				if (log?.executor!.id !== interaction.user.id) {
 					return await interaction.reply({
 						embeds: [
-							infoMessageEmbed(
-								':warning: You are not the user who added the bot into this server!',
-								'ERROR',
-							),
+							infoMessageEmbed({
+								title: ':warning: You are not the user who added the bot into this server!',
+								type: types.ERROR,
+							}),
 						],
 					});
 				}
@@ -57,10 +62,10 @@ const registerServer: Command = {
 
 				return await interaction.reply({
 					embeds: [
-						infoMessageEmbed(
-							':white_check_mark: Discord server registered!',
-							'SUCCESS',
-						),
+						infoMessageEmbed({
+							title: ':white_check_mark:  Discord server registered!',
+							type: types.SUCCESS,
+						}),
 					],
 				});
 			} else {
@@ -78,7 +83,12 @@ const registerServer: Command = {
 			}
 		} catch (err) {
 			await interaction.reply({
-				embeds: [infoMessageEmbed(':x: There has been an error', 'ERROR')],
+				embeds: [
+					infoMessageEmbed({
+						title: ':x: There has been an error',
+						type: types.ERROR,
+					}),
+				],
 				ephemeral: true,
 			});
 

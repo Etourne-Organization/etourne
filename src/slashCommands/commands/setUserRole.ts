@@ -2,7 +2,7 @@ import fs from 'fs';
 
 import { BaseCommandInteraction, Client, User, MessageEmbed } from 'discord.js';
 
-import infoMessageEmbed from '../../globalUtils/infoMessageEmbed';
+import infoMessageEmbed, { types } from '../../globalUtils/infoMessageEmbed';
 import { Command } from '../Command';
 import {
 	getUserRole,
@@ -85,10 +85,10 @@ const setUserRole: Command = {
 				if (userRoleDB.length === 0 || userRoleDB[0]['roleId'] !== 3) {
 					return await interaction.reply({
 						embeds: [
-							infoMessageEmbed(
-								':warning: You are not allowed to run this command!',
-								'WARNING',
-							),
+							infoMessageEmbed({
+								title: ':warning: You are not allowed run this command!',
+								type: types.ERROR,
+							}),
 						],
 						ephemeral: true,
 					});
@@ -104,20 +104,21 @@ const setUserRole: Command = {
 
 			await interaction.reply({
 				embeds: [
-					infoMessageEmbed(
-						`:white_check_mark: ${user!.tag}'s role has been set!`,
-					),
+					infoMessageEmbed({
+						title: `:white_check_mark: ${user!.tag}'s role has been set!`,
+						type: types.SUCCESS,
+					}),
 				],
 				ephemeral: true,
 			});
 		} catch (err) {
 			await interaction.reply({
 				embeds: [
-					infoMessageEmbed(
-						errorMessageTemplate().title,
-						'ERROR',
-						errorMessageTemplate().description,
-					),
+					infoMessageEmbed({
+						title: errorMessageTemplate().title,
+						description: errorMessageTemplate().description,
+						type: types.ERROR,
+					}),
 				],
 				ephemeral: true,
 			});
