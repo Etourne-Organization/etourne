@@ -7,7 +7,7 @@ import unregisterTeamPlayer from './functions/teamEvent/unregisterTeamPlayer';
 import deleteTeam from './functions/teamEvent/deleteTeam';
 import setMaxNumTeamPlayers from './functions/teamEvent/setMaxNumTeamPlayers';
 import setMaxNumTeams from './functions/teamEvent/setMaxNumTeams';
-import deleteEvent from './functions/allEventButtonFunctions/deleteEvent';
+import deleteEvent from './functions/allEventfunctions/deleteEvent';
 import removeTeamPlayer from './functions/teamEvent/removeTeamPlayer';
 import removePlayer from './functions/normalEvent/removePlayer';
 import editEventInfo from './functions/normalEvent/editEventInfo';

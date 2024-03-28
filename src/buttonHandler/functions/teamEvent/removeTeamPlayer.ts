@@ -132,7 +132,7 @@ const removeTeamPlayer: ButtonFunction = {
 
 			logFile({
 				error: err,
-				folder: 'buttonHandler/buttonFunctions',
+				folder: 'buttonHandler/functions',
 				file: 'teamEvent/removeTeamPlayer',
 			});
 		}

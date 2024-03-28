@@ -154,8 +154,8 @@ const deleteEvent: ButtonFunction = {
 
 			logFile({
 				error: err,
-				folder: 'buttonHandler/buttonFunctions',
-				file: 'allEventButtonFunctions/deleteEvent',
+				folder: 'buttonHandler/functions',
+				file: 'allEventfunctions/deleteEvent',
 			});
 		}
 	},

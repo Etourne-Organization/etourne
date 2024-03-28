@@ -114,7 +114,7 @@ const unregisterTeamPlayer: ButtonFunction = {
 
 			logFile({
 				error: err,
-				folder: 'buttonHandler/buttonFunctions',
+				folder: 'buttonHandler/functions',
 				file: 'teamEvent/unregisterTeamPlayer',
 			});
 		}

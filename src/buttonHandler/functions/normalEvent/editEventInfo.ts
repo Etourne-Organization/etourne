@@ -130,7 +130,7 @@ const editEventInfo: ButtonFunction = {
 
 			logFile({
 				error: err,
-				folder: 'buttonHandler/buttonFunctions',
+				folder: 'buttonHandler/functions',
 				file: 'normalEvent/editEvent',
 			});
 		}

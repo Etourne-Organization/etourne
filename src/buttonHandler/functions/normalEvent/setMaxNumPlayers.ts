@@ -62,7 +62,7 @@ const setMaxNumPlayers: ButtonFunction = {
 
 			logFile({
 				error: err,
-				folder: 'buttonHandler/buttonFunctions',
+				folder: 'buttonHandler/functions',
 				file: 'normalEvent/setMaxNumPlayers',
 			});
 		}
