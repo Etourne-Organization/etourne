@@ -1,12 +1,6 @@
-import fs from 'fs';
+import { Client, ModalSubmitInteraction, MessageEmbed } from 'discord.js';
 
-import {
-	Client,
-	ModalSubmitInteraction,
-	MessageEmbed,
-	Message,
-} from 'discord.js';
-
+import logFile from '../../../globalUtils/logFile';
 import { ModalSubmit } from '../../ModalSubmit';
 import { setColumnValue } from '../../../supabase/supabaseFunctions/events';
 import { getNumOfTeams } from '../../../supabase/supabaseFunctions/teams';
@@ -80,17 +74,11 @@ const setMaxNumTeamsModal: ModalSubmit = {
 				ephemeral: true,
 			});
 
-			try {
-				fs.appendFile(
-					'logs/crash_logs.txt',
-					`${new Date()} : Something went wrong in modalFunctions/teamEvent/teamNumLimitModalSubmit.ts \n Actual error: ${err} \n \n`,
-					(err) => {
-						if (err) throw err;
-					},
-				);
-			} catch (err) {
-				console.log('Error logging failed');
-			}
+			logFile({
+				error: err,
+				folder: 'modalSubmitHandler/functions',
+				file: 'teamEvent/setMaxNumTeamsModal',
+			});
 		}
 	},
 };

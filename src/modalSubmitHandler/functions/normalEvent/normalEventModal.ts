@@ -1,5 +1,3 @@
-import fs from 'fs';
-
 import {
 	Client,
 	ModalSubmitInteraction,
@@ -9,6 +7,7 @@ import {
 } from 'discord.js';
 import moment from 'moment-timezone';
 
+import logFile from '../../../globalUtils/logFile';
 import { ModalSubmit } from '../../ModalSubmit';
 import infoMessageEmbed, { types } from '../../../globalUtils/infoMessageEmbed';
 import {
@@ -157,17 +156,11 @@ const normalEventModal: ModalSubmit = {
 				ephemeral: true,
 			});
 
-			try {
-				fs.appendFile(
-					'logs/crash_logs.txt',
-					`${new Date()} : Something went wrong in modalFunctions/normalEvent/normalEventModal.ts \n Actual error: ${err} \n \n`,
-					(err) => {
-						if (err) throw err;
-					},
-				);
-			} catch (err) {
-				console.log('Error logging failed');
-			}
+			logFile({
+				error: err,
+				folder: 'modalSubmitHandler/functions',
+				file: 'normalEvent/normalEventModal',
+			});
 		}
 	},
 };
