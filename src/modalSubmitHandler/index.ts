@@ -1,8 +1,7 @@
-import fs from 'fs';
-
 import { ModalSubmitInteraction, Client } from 'discord.js';
 
 import modalSubmitFunctionList from './modalSubmitList';
+import logFile from '../globalUtils/logFile';
 
 export default async (
 	client: Client,
@@ -28,13 +27,11 @@ export default async (
 		modalSubmitFunction.run(client, interaction);
 	} catch (err) {
 		try {
-			fs.appendFile(
-				'logs/crash_logs.txt',
-				`${new Date()} : Something went wrong in modalFormHandler.ts \n Actual error: ${err} \n \n`,
-				(err) => {
-					if (err) throw err;
-				},
-			);
+			logFile({
+				error: err,
+				folder: 'modalSubmitHandler',
+				file: 'index',
+			});
 		} catch (err) {
 			console.log('Error logging failed');
 		}

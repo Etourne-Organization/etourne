@@ -1,5 +1,3 @@
-import fs from 'fs';
-
 import {
 	BaseCommandInteraction,
 	Client,
@@ -9,6 +7,7 @@ import {
 } from 'discord.js';
 import dayjs from 'dayjs';
 
+import logFile from '../../globalUtils/logFile';
 import {
 	getAllColumnValueById,
 	setColumnValue,
@@ -255,17 +254,11 @@ const getEvent: Command = {
 				],
 			});
 
-			try {
-				fs.appendFile(
-					'logs/crash_logs.txt',
-					`${new Date()} : Something went wrong in slashcommands/getEvent.ts \n Actual error: ${err} \n \n`,
-					(err) => {
-						if (err) throw err;
-					},
-				);
-			} catch (err) {
-				console.log('Error logging failed');
-			}
+			logFile({
+				error: err,
+				folder: 'slashCommands/commands',
+				file: 'getEvent',
+			});
 		}
 	},
 };

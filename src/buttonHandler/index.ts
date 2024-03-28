@@ -1,8 +1,7 @@
-import fs from 'fs';
-
 import { ButtonInteraction, Client } from 'discord.js';
 
 import buttonList from './buttonList';
+import logFile from '../globalUtils/logFile';
 
 export default async (
 	client: Client,
@@ -20,13 +19,11 @@ export default async (
 		buttonFunction.run(client, interaction);
 	} catch (err) {
 		try {
-			fs.appendFile(
-				'logs/crash_logs.txt',
-				`${new Date()} : Something went wrong in buttonHandler.ts \n Actual error: ${err} \n \n`,
-				(err) => {
-					if (err) throw err;
-				},
-			);
+			logFile({
+				error: err,
+				folder: 'buttonHandler',
+				file: 'index',
+			});
 		} catch (err) {
 			console.log('Error logging failed');
 		}

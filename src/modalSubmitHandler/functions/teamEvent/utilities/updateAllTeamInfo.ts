@@ -1,10 +1,9 @@
-import fs from 'fs';
-
 import { ModalSubmitInteraction, MessageEmbed } from 'discord.js';
 import dayjs from 'dayjs';
 
 import { getColumnValueByEventId } from '../../../../supabase/supabaseFunctions/teams';
 import { getColumnValueById } from '../../../../supabase/supabaseFunctions/events';
+import logFile from '../../../../globalUtils/logFile';
 
 interface updateAllTeamInfo {
 	eventId: number;
@@ -87,13 +86,11 @@ const updateAllTeamInfo = async (props: updateAllTeamInfo) => {
 		}
 	} catch (err) {
 		try {
-			fs.appendFile(
-				'logs/crash_logs.txt',
-				`${new Date()} : Something went wrong in modalFunctions/teamEvent/utils/updateAllTeamInfo.ts \n Actual error: ${err} \n \n`,
-				(err) => {
-					if (err) throw err;
-				},
-			);
+			logFile({
+				error: err,
+				folder: 'modalSubmitHandler/functions',
+				file: 'teamEvent/utils/updateAllTeamInfo',
+			});
 		} catch (err) {
 			console.log('Error logging failed');
 		}

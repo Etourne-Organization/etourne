@@ -1,5 +1,3 @@
-import fs from 'fs';
-
 import {
 	BaseCommandInteraction,
 	Client,
@@ -10,6 +8,7 @@ import {
 	MessageEmbed,
 } from 'discord.js';
 
+import logFile from '../../globalUtils/logFile';
 import { Command } from '../Command';
 import infoMessageEmbed, { types } from '../../globalUtils/infoMessageEmbed';
 import { getUserRole } from '../../supabase/supabaseFunctions/users';
@@ -149,17 +148,11 @@ const createTeamEvent: Command = {
 				ephemeral: true,
 			});
 
-			try {
-				fs.appendFile(
-					'logs/crash_logs.txt',
-					`${new Date()} : Something went wrong in slashcommands/createTeamEvent/createTeamEvent.ts \n Actual error: ${err} \n \n`,
-					(err) => {
-						if (err) throw err;
-					},
-				);
-			} catch (err) {
-				console.log('Error logging failed');
-			}
+			logFile({
+				error: err,
+				folder: 'slashCommands/commands',
+				file: 'createTeamEvent',
+			});
 		}
 	},
 };

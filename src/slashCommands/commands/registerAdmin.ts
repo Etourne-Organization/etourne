@@ -1,9 +1,8 @@
-import fs from 'fs';
-
 import { BaseCommandInteraction, Client, MessageEmbed } from 'discord.js';
 
 import { Command } from '../Command';
 
+import logFile from '../../globalUtils/logFile';
 import infoMessageEmbed, { types } from '../../globalUtils/infoMessageEmbed';
 import { checkServerExists } from '../../supabase/supabaseFunctions/servers';
 import {
@@ -95,17 +94,11 @@ const registerAdmin: Command = {
 				ephemeral: true,
 			});
 
-			try {
-				fs.appendFile(
-					'logs/crash_logs.txt',
-					`${new Date()} : Something went wrong in slashcommands/registerAdmin.ts \n Actual error: ${err} \n \n`,
-					(err) => {
-						if (err) throw err;
-					},
-				);
-			} catch (err) {
-				console.log('Error logging failed');
-			}
+			logFile({
+				error: err,
+				folder: 'slashCommands/commands',
+				file: 'registerAdmin',
+			});
 		}
 	},
 };

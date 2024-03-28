@@ -1,7 +1,6 @@
-import fs from 'fs';
-
 import { BaseCommandInteraction, Client, User, MessageEmbed } from 'discord.js';
 
+import logFile from '../../globalUtils/logFile';
 import infoMessageEmbed, { types } from '../../globalUtils/infoMessageEmbed';
 import { Command } from '../Command';
 import {
@@ -123,17 +122,11 @@ const setUserRole: Command = {
 				ephemeral: true,
 			});
 
-			try {
-				fs.appendFile(
-					'logs/crash_logs.txt',
-					`${new Date()} : Something went wrong in slashcommands/setUserRole/setUserRole.ts \n Actual error: ${err} \n \n`,
-					(err) => {
-						if (err) throw err;
-					},
-				);
-			} catch (err) {
-				console.log('Error logging failed');
-			}
+			logFile({
+				error: err,
+				folder: 'slashCommands/commands',
+				file: 'setUserRole',
+			});
 		}
 	},
 };
