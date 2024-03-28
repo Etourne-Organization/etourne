@@ -1,17 +1,13 @@
-import Discord, { Message, Client, MessageEmbed } from 'discord.js';
+import { Message, Client, MessageEmbed } from 'discord.js';
+import botConfig from '../../botConfig';
 
 const PREFIX: any = process.env.PREFIX;
 
-const botInfo = (
-	message: Message,
-	CMD_NAME: string,
-	args: [],
-	client: Client,
-) => {
+const botInfo = (message: Message, CMD_NAME: string, client: Client) => {
 	const { user, guilds } = client;
 
 	const botInfoEmbed = new MessageEmbed()
-		.setColor('#3A9CE2')
+		.setColor(botConfig.color.default)
 		.setThumbnail(user!.displayAvatarURL())
 		.setAuthor({
 			name: `${user!.username}`,

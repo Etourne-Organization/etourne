@@ -4,6 +4,7 @@ import logFile from '../../globalUtils/logFile';
 import { Command } from '../Command';
 import infoMessageEmbed, { types } from '../../globalUtils/infoMessageEmbed';
 import commandIds from '../../commandIds';
+import botConfig from '../../botConfig';
 
 const help: Command = {
 	name: 'help',
@@ -14,7 +15,7 @@ const help: Command = {
 			const member: string = interaction.user.tag;
 
 			const helpEmbed = new MessageEmbed()
-				.setColor('#3a9ce2')
+				.setColor(botConfig.color.default)
 				.setTitle(`:question: Help`)
 				.setDescription('Here is the list of commands you can use')
 				.setThumbnail(`${client.user?.displayAvatarURL()}`)

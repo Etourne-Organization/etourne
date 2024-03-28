@@ -12,6 +12,7 @@ import { SelectMenu } from '../../SelectMenu';
 import infoMessageEmbed, { types } from '../../../globalUtils/infoMessageEmbed';
 import { removePlayer as removeSupabasePlayer } from '../../../supabase/supabaseFunctions/singlePlayers';
 import { getColumnValueById } from '../../../supabase/supabaseFunctions/events';
+import botConfig from '../../../botConfig';
 
 const removePlayer: SelectMenu = {
 	customId: 'removePlayer',
@@ -110,7 +111,7 @@ const removePlayer: SelectMenu = {
 						});
 
 						const editedEmbed = new MessageEmbed()
-							.setColor('#3a9ce2')
+							.setColor(botConfig.color.default)
 							.setTitle(fetchedMessage.embeds[0].title || 'Undefined')
 							.setDescription(
 								fetchedMessage.embeds[0].description || 'Undefined',

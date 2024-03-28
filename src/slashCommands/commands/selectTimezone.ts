@@ -6,6 +6,7 @@ import {
 	MessageActionRow,
 } from 'discord.js';
 import momentTimzone from 'moment-timezone';
+import botConfig from '../../botConfig';
 
 import { Command } from '../Command';
 
@@ -50,7 +51,7 @@ const selectTimezone: Command = {
 
 			// embed
 			const embed = new MessageEmbed()
-				.setColor('#3a9ce2')
+				.setColor(botConfig.color.default)
 				.setTitle('Select your timezone');
 
 			await interaction.reply({

@@ -13,6 +13,7 @@ import infoMessageEmbed, { types } from '../../../globalUtils/infoMessageEmbed';
 import { removePlayer } from '../../../supabase/supabaseFunctions/teamPlayers';
 import { checkTeamExists } from '../../../supabase/supabaseFunctions/teams';
 import { getColumnValueById } from '../../../supabase/supabaseFunctions/teams';
+import botConfig from '../../../botConfig';
 
 const removeTeamPlayer: SelectMenu = {
 	customId: 'removeTeamPlayer',
@@ -114,7 +115,7 @@ const removeTeamPlayer: SelectMenu = {
 						});
 
 						const editedEmbed = new MessageEmbed()
-							.setColor('#3a9ce2')
+							.setColor(botConfig.color.default)
 							.setTitle(fetchedMessage.embeds[0].title || 'Undefined')
 							.setDescription(
 								fetchedMessage.embeds[0].description || 'Undefined',

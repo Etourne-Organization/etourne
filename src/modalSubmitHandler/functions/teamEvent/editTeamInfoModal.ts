@@ -5,6 +5,7 @@ import { ModalSubmit } from '../../ModalSubmit';
 import { updateTeam } from '../../../supabase/supabaseFunctions/teams';
 import errorMessageTemplate from '../../../globalUtils/errorMessageTemplate';
 import infoMessageEmbed, { types } from '../../../globalUtils/infoMessageEmbed';
+import botConfig from '../../../botConfig';
 
 const editTeamInfoModal: ModalSubmit = {
 	customId: 'editTeamInfoModal',
@@ -61,7 +62,7 @@ const editTeamInfoModal: ModalSubmit = {
 				interaction.fields.getTextInputValue('teamShortDescription');
 
 			const editedEmbed = new MessageEmbed()
-				.setColor('#3a9ce2')
+				.setColor(botConfig.color.default)
 				.setTitle(teamName)
 				.setDescription(`>>> ${teamShortDescription}`)
 				.addFields([

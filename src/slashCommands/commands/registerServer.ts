@@ -8,6 +8,7 @@ import {
 	addServer,
 } from '../../supabase/supabaseFunctions/servers';
 import { checkAddUser } from '../../supabase/supabaseFunctions/users';
+import botConfig from '../../botConfig';
 
 const registerServer: Command = {
 	name: 'registerserver',
@@ -69,7 +70,7 @@ const registerServer: Command = {
 				});
 			} else {
 				const embed = new MessageEmbed()
-					.setColor('#D83C3E')
+					.setColor(botConfig.color.red)
 					.setTitle(':x: Error')
 					.setDescription(
 						'Please give the following permission to the bot: \n - `View Audit Log` \n \n## Why is this needed? \n This permission will allow the bot to retrieve the user who added the bot and make that user `Admin` (**NOT** server `Admin`) in Etourne software.',

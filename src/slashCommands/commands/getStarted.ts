@@ -4,6 +4,7 @@ import logFile from '../../globalUtils/logFile';
 import { Command } from '../Command';
 import commandIds from '../../commandIds';
 import infoMessageEmbed, { types } from '../../globalUtils/infoMessageEmbed';
+import botConfig from '../../botConfig';
 
 const getStarted: Command = {
 	name: 'getstarted',
@@ -11,7 +12,7 @@ const getStarted: Command = {
 	run: async (client: Client, interaction: BaseCommandInteraction) => {
 		try {
 			const embed = new MessageEmbed()
-				.setColor('#3a9ce2')
+				.setColor(botConfig.color.default)
 				.setThumbnail(`${client.user?.displayAvatarURL()}`)
 				.setTitle('')
 				.setDescription(

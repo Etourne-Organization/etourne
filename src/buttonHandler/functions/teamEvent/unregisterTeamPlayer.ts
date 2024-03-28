@@ -6,6 +6,7 @@ import infoMessageEmbed, { types } from '../../../globalUtils/infoMessageEmbed';
 import { removePlayer } from '../../../supabase/supabaseFunctions/teamPlayers';
 import { checkTeamExists } from '../../../supabase/supabaseFunctions/teams';
 import errorMessageTemplate from '../../../globalUtils/errorMessageTemplate';
+import botConfig from '../../../botConfig';
 
 const unregisterTeamPlayer: ButtonFunction = {
 	customId: 'unregisterTeamPlayer',
@@ -91,7 +92,7 @@ const unregisterTeamPlayer: ButtonFunction = {
 			});
 
 			const editedEmbed = new MessageEmbed()
-				.setColor('#3a9ce2')
+				.setColor(botConfig.color.default)
 				.setTitle(interaction.message.embeds[0].title || 'Undefined')
 				.setDescription(
 					interaction.message.embeds[0].description || 'Undefined',

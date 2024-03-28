@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import { getColumnValueByEventId } from '../../../../supabase/supabaseFunctions/teams';
 import { getColumnValueById } from '../../../../supabase/supabaseFunctions/events';
 import logFile from '../../../../globalUtils/logFile';
+import botConfig from '../../../../botConfig';
 
 interface updateAllTeamInfo {
 	eventId: number;
@@ -48,7 +49,7 @@ const updateAllTeamInfo = async (props: updateAllTeamInfo) => {
 					});
 
 					const editedEmbed = new MessageEmbed()
-						.setColor('#3a9ce2')
+						.setColor(botConfig.color.default)
 						.setTitle(value['name'])
 						.setDescription(`>>> ${value['description']}`)
 						.addFields([

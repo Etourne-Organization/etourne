@@ -12,6 +12,7 @@ import infoMessageEmbed, { types } from '../../../globalUtils/infoMessageEmbed';
 import { getAllPlayers } from '../../../supabase/supabaseFunctions/singlePlayers';
 import { getUserRole } from '../../../supabase/supabaseFunctions/users';
 import errorMessageTemplate from '../../../globalUtils/errorMessageTemplate';
+import botConfig from '../../../botConfig';
 
 const removePlayer: ButtonFunction = {
 	customId: 'removePlayer',
@@ -85,7 +86,7 @@ const removePlayer: ButtonFunction = {
 
 			const selectMessageEmbed = new MessageEmbed()
 				.setTitle('Select team player to be removed')
-				.setColor('#3A9CE2')
+				.setColor(botConfig.color.default)
 				.setFooter({ text: `${footer}` })
 				.setTimestamp();
 

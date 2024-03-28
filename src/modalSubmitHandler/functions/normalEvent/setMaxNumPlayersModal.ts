@@ -5,6 +5,7 @@ import { ModalSubmit } from '../../ModalSubmit';
 import { setColumnValue } from '../../../supabase/supabaseFunctions/events';
 import errorMessageTemplate from '../../../globalUtils/errorMessageTemplate';
 import infoMessageEmbed, { types } from '../../../globalUtils/infoMessageEmbed';
+import botConfig from '../../../botConfig';
 
 const setMaxNumPlayersModal: ModalSubmit = {
 	customId: 'maxNumPlayersModalSubmit',
@@ -38,7 +39,7 @@ const setMaxNumPlayersModal: ModalSubmit = {
 			});
 
 			const editedEmbed = new MessageEmbed()
-				.setColor('#3a9ce2')
+				.setColor(botConfig.color.default)
 				.setTitle(interaction.message?.embeds[0].title || 'Undefined')
 				.setDescription(
 					interaction.message?.embeds[0].description || 'Undefined',

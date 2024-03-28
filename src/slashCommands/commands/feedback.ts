@@ -3,6 +3,7 @@ import { BaseCommandInteraction, Client, MessageEmbed } from 'discord.js';
 import logFile from '../../globalUtils/logFile';
 import { Command } from '../Command';
 import infoMessageEmbed, { types } from '../../globalUtils/infoMessageEmbed';
+import botConfig from '../../botConfig';
 
 const feedback: Command = {
 	name: 'feedback',
@@ -10,7 +11,7 @@ const feedback: Command = {
 	run: async (client: Client, interaction: BaseCommandInteraction) => {
 		try {
 			const embed = new MessageEmbed()
-				.setColor('#3A9CE2')
+				.setColor(botConfig.color.default)
 				.setTitle(':thought_balloon: Feedback')
 				.setFields([
 					{

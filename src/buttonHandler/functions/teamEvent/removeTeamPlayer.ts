@@ -13,6 +13,7 @@ import { checkTeamExists } from '../../../supabase/supabaseFunctions/teams';
 import { getAllTeamPlayers } from '../../../supabase/supabaseFunctions/teamPlayers';
 import { getUserRole } from '../../../supabase/supabaseFunctions/users';
 import errorMessageTemplate from '../../../globalUtils/errorMessageTemplate';
+import botConfig from '../../../botConfig';
 
 const removeTeamPlayer: ButtonFunction = {
 	customId: 'removeTeamPlayer',
@@ -109,7 +110,7 @@ const removeTeamPlayer: ButtonFunction = {
 
 			const selectMessageEmbed = new MessageEmbed()
 				.setTitle('Select team player to be removed')
-				.setColor('#3A9CE2')
+				.setColor(botConfig.color.default)
 				.setFooter({ text: `${footer}` })
 				.setTimestamp();
 

@@ -4,6 +4,7 @@ import logFile from '../../globalUtils/logFile';
 import { Command } from '../Command';
 import formatProcessUptime from '../utilities/formatProcessUptime';
 import infoMessageEmbed, { types } from '../../globalUtils/infoMessageEmbed';
+import botConfig from '../../botConfig';
 
 const botInfo: Command = {
 	name: 'botinfo',
@@ -12,7 +13,7 @@ const botInfo: Command = {
 	run: async (client: Client, interaction: BaseCommandInteraction) => {
 		try {
 			const botInfoEmbed = new MessageEmbed()
-				.setColor('#3A9CE2')
+				.setColor(botConfig.color.default)
 				.setThumbnail(client.user!.displayAvatarURL())
 				.setAuthor({
 					name: `${client.user!.username}`,

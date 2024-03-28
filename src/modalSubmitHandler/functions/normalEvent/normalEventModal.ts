@@ -20,6 +20,7 @@ import {
 	getTimzeonValueFromLabel,
 } from '../../../utilities/timezone';
 import errorMessageTemplate from '../../../globalUtils/errorMessageTemplate';
+import botConfig from '../../../botConfig';
 
 const normalEventModal: ModalSubmit = {
 	customId: 'normalEventModalSubmit',
@@ -33,7 +34,7 @@ const normalEventModal: ModalSubmit = {
 				interaction.fields.getTextInputValue('eventDescription');
 
 			const eventEmbed = new MessageEmbed()
-				.setColor('#3a9ce2')
+				.setColor(botConfig.color.default)
 				.setTitle(eventName)
 				.setDescription(
 					`**----------------------------------------** \n **Event description:** \n \n >>> ${description}  \n \n`,

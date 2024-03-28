@@ -6,6 +6,7 @@ import { setColumnValue } from '../../../supabase/supabaseFunctions/events';
 import { getNumOfTeams } from '../../../supabase/supabaseFunctions/teams';
 import errorMessageTemplate from '../../../globalUtils/errorMessageTemplate';
 import infoMessageEmbed, { types } from '../../../globalUtils/infoMessageEmbed';
+import botConfig from '../../../botConfig';
 
 const setMaxNumTeamsModal: ModalSubmit = {
 	customId: 'setMaxNumTeamsModalSubmit',
@@ -21,7 +22,7 @@ const setMaxNumTeamsModal: ModalSubmit = {
 
 			if (numOfTeams > parseInt(maxNumTeams)) {
 				const replyEmbed: MessageEmbed = new MessageEmbed()
-					.setColor('#D83C3E')
+					.setColor(botConfig.color.red)
 					.setTitle(
 						':x: Number of registered teams is more than the new limit',
 					)
@@ -53,7 +54,7 @@ const setMaxNumTeamsModal: ModalSubmit = {
 			});
 
 			const editedEmbed = new MessageEmbed()
-				.setColor('#3a9ce2')
+				.setColor(botConfig.color.default)
 				.setTitle(interaction.message?.embeds[0].title || 'Undefined')
 				.setDescription(
 					interaction.message?.embeds[0].description || 'Undefined',

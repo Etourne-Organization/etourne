@@ -3,6 +3,7 @@ import { BaseCommandInteraction, Client, MessageEmbed } from 'discord.js';
 import logFile from '../../globalUtils/logFile';
 import { Command } from '../Command';
 import infoMessageEmbed, { types } from '../../globalUtils/infoMessageEmbed';
+import botConfig from '../../botConfig';
 
 const requestSupport: Command = {
 	name: 'requestsupport',
@@ -11,7 +12,7 @@ const requestSupport: Command = {
 	run: async (client: Client, interaction: BaseCommandInteraction) => {
 		try {
 			const embed = new MessageEmbed()
-				.setColor('#3A9CE2')
+				.setColor(botConfig.color.default)
 				.setTitle(':tools: Support')
 				.setDescription(
 					'Join the support server: https://discord.gg/vNe9QVrWNa',

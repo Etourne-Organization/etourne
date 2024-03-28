@@ -15,6 +15,7 @@ import {
 } from '../../../supabase/supabaseFunctions/teams';
 import { getColumnValueById } from '../../../supabase/supabaseFunctions/events';
 import errorMessageTemplate from '../../../globalUtils/errorMessageTemplate';
+import botConfig from '../../../botConfig';
 
 const teamModal: ModalSubmit = {
 	customId: 'teamModalSubmit',
@@ -68,7 +69,7 @@ const teamModal: ModalSubmit = {
 			);
 
 			const teamEmbed = new MessageEmbed()
-				.setColor('#3a9ce2')
+				.setColor(botConfig.color.default)
 				.setTitle(teamName)
 				.setDescription(`>>> ${teamShortDescription}`)
 				.addFields([

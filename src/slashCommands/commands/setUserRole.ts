@@ -10,6 +10,7 @@ import {
 import { checkServerExists } from '../../supabase/supabaseFunctions/servers';
 import commandIds from '../../commandIds';
 import errorMessageTemplate from '../../globalUtils/errorMessageTemplate';
+import botConfig from '../../botConfig';
 
 const setUserRole: Command = {
 	name: 'setuserrole',
@@ -51,7 +52,7 @@ const setUserRole: Command = {
 				}))
 			) {
 				const embed = new MessageEmbed()
-					.setColor('#D83C3E')
+					.setColor(botConfig.color.red)
 					.setTitle(':x: Error: Server not registered!')
 					.setDescription(
 						`Use </registerserver:${commandIds.REGISTER_SERVER}> command to register your server in Etourne database.`,

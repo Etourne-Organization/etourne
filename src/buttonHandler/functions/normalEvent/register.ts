@@ -11,6 +11,7 @@ import { getColumnValueById } from '../../../supabase/supabaseFunctions/events';
 import errorMessageTemplate, {
 	MessageType,
 } from '../../../globalUtils/errorMessageTemplate';
+import botConfig from '../../../botConfig';
 
 const register: ButtonFunction = {
 	customId: 'normalEventRegister',
@@ -105,7 +106,7 @@ const register: ButtonFunction = {
 			});
 
 			const editedEmbed = new MessageEmbed()
-				.setColor('#3a9ce2')
+				.setColor(botConfig.color.default)
 				.setTitle(interaction.message.embeds[0].title || 'Undefined')
 				.setDescription(
 					interaction.message.embeds[0].description || 'Undefined',

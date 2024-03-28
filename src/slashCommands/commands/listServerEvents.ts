@@ -8,6 +8,7 @@ import infoMessageEmbed, { types } from '../../globalUtils/infoMessageEmbed';
 import { checkServerExists } from '../../supabase/supabaseFunctions/servers';
 import commandIds from '../../commandIds';
 import errorMessageTemplate from '../../globalUtils/errorMessageTemplate';
+import botConfig from '../../botConfig';
 
 const listServerEvents: Command = {
 	name: 'listserverevents',
@@ -20,7 +21,7 @@ const listServerEvents: Command = {
 				}))
 			) {
 				const embed = new MessageEmbed()
-					.setColor('#D83C3E')
+					.setColor(botConfig.color.red)
 					.setTitle(':x: Error: Server not registered!')
 					.setDescription(
 						`Use </registerserver:${commandIds.REGISTER_SERVER}> command to register your server in Etourne database.`,
@@ -52,7 +53,7 @@ const listServerEvents: Command = {
 			});
 
 			const embed = new MessageEmbed()
-				.setColor('#3a9ce2')
+				.setColor(botConfig.color.default)
 				.setTitle(`All events in ${interaction.guild?.name}`)
 				.setThumbnail(`${interaction.guild!.iconURL()}`)
 				.setDescription(eventString);

@@ -6,6 +6,7 @@ import { setColumnValue } from '../../../supabase/supabaseFunctions/events';
 import updateAllTeamInfo from './utilities/updateAllTeamInfo';
 import errorMessageTemplate from '../../../globalUtils/errorMessageTemplate';
 import infoMessageEmbed, { types } from '../../../globalUtils/infoMessageEmbed';
+import botConfig from '../../../botConfig';
 
 const setMaxNumTeamPlayersModal: ModalSubmit = {
 	customId: 'setMaxNumTeamPlayersModalSubmit',
@@ -34,7 +35,7 @@ const setMaxNumTeamPlayersModal: ModalSubmit = {
 			});
 
 			const editedEmbed = new MessageEmbed()
-				.setColor('#3a9ce2')
+				.setColor(botConfig.color.default)
 				.setTitle(interaction.message?.embeds[0].title || 'Undefined')
 				.setDescription(
 					interaction.message?.embeds[0].description || 'Undefined',

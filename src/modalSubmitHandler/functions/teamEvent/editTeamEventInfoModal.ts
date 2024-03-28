@@ -15,6 +15,7 @@ import {
 } from '../../../utilities/timezone';
 import errorMessageTemplate from '../../../globalUtils/errorMessageTemplate';
 import infoMessageEmbed, { types } from '../../../globalUtils/infoMessageEmbed';
+import botConfig from '../../../botConfig';
 
 const editTeamEventInfoModal: ModalSubmit = {
 	customId: 'editTeamEventInfoModal',
@@ -61,7 +62,7 @@ const editTeamEventInfoModal: ModalSubmit = {
 			);
 
 			const editedEmbed = new MessageEmbed()
-				.setColor('#3a9ce2')
+				.setColor(botConfig.color.default)
 				.setTitle(eventName)
 				.setDescription(
 					`**----------------------------------------** \n **Event description:** \n \n >>> ${description}  \n \n`,

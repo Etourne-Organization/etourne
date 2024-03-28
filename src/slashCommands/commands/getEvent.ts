@@ -19,6 +19,7 @@ import { getAllPlayers } from '../../supabase/supabaseFunctions/singlePlayers';
 import { checkServerExists } from '../../supabase/supabaseFunctions/servers';
 import commandIds from '../../commandIds';
 import errorMessageTemplate from '../../globalUtils/errorMessageTemplate';
+import botConfig from '../../botConfig';
 
 const getEvent: Command = {
 	name: 'getevent',
@@ -40,7 +41,7 @@ const getEvent: Command = {
 				}))
 			) {
 				const embed = new MessageEmbed()
-					.setColor('#D83C3E')
+					.setColor(botConfig.color.red)
 					.setTitle(':x: Error: Server not registered!')
 					.setDescription(
 						`Use </registerserver:${commandIds.REGISTER_SERVER}> command to register your server in Etourne database.`,
@@ -101,7 +102,7 @@ const getEvent: Command = {
 
 					if (fetchedMessage) {
 						const embed = new MessageEmbed()
-							.setColor('#D83C3E')
+							.setColor(botConfig.color.red)
 							.setTitle(':x: Event cannot be shared')
 							.setDescription(
 								`The event embed has already been shared in <#${
@@ -132,7 +133,7 @@ const getEvent: Command = {
 					}
 
 					const eventEmbed = new MessageEmbed()
-						.setColor('#3a9ce2')
+						.setColor(botConfig.color.default)
 						.setTitle(eventInfo[0].eventName)
 						.setDescription(
 							`**----------------------------------------** \n **Event description:** \n \n >>> ${eventInfo[0].description}  \n \n`,
