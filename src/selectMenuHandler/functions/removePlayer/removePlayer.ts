@@ -10,7 +10,7 @@ import {
 } from 'discord.js';
 
 import { SelectMenu } from '../../SelectMenu';
-import infoMessageEmbed from '../../../globalUtils/infoMessageEmbed';
+import infoMessageEmbed, { types } from '../../../globalUtils/infoMessageEmbed';
 import { removePlayer as removeSupabasePlayer } from '../../../supabase/supabaseFunctions/singlePlayers';
 import { getColumnValueById } from '../../../supabase/supabaseFunctions/events';
 
@@ -36,7 +36,9 @@ const removePlayer: SelectMenu = {
 
 			await interaction.update({
 				embeds: [
-					infoMessageEmbed(`Are you sure you want to remove ${username}?`),
+					infoMessageEmbed({
+						title: `Are you sure you want to remove ${username}?`,
+					}),
 				],
 				components: [confirmationButtons],
 			});
@@ -126,10 +128,10 @@ const removePlayer: SelectMenu = {
 
 					await i.reply({
 						embeds: [
-							infoMessageEmbed(
-								`:white_check_mark: Removed ${username} successfully!`,
-								'SUCCESS',
-							),
+							infoMessageEmbed({
+								title: `:white_check_mark: Removed ${username} successfully!`,
+								type: types.SUCCESS,
+							}),
 						],
 						ephemeral: true,
 					});
@@ -138,7 +140,10 @@ const removePlayer: SelectMenu = {
 
 					await i.reply({
 						embeds: [
-							infoMessageEmbed(`:x: Player ${username} was not deleted`),
+							infoMessageEmbed({
+								title: `:x: Player ${username} was not removed`,
+								type: types.ERROR,
+							}),
 						],
 						ephemeral: true,
 					});

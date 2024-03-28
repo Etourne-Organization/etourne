@@ -5,7 +5,7 @@ const PREFIX: any = process.env.PREFIX;
 import legacyCommands, {
 	legacyCommands as legacyCommandsInterface,
 } from './commandsList';
-import infoMessageEmbed from '../globalUtils/infoMessageEmbed';
+import infoMessageEmbed, { types } from '../globalUtils/infoMessageEmbed';
 
 const commands = (message: Message, client: Client) => {
 	if (!message.author.bot && message.content.startsWith(PREFIX)) {
@@ -23,7 +23,12 @@ const commands = (message: Message, client: Client) => {
 			);
 		} else {
 			message.channel.send({
-				embeds: [infoMessageEmbed(':x: Wrong Command :x:')],
+				embeds: [
+					infoMessageEmbed({
+						title: ':x: Wrong Command :x:',
+						type: types.ERROR,
+					}),
+				],
 			});
 		}
 	}
