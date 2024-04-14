@@ -1,11 +1,9 @@
 import {
 	BaseCommandInteraction,
 	Client,
-	MessageActionRow,
-	Modal,
-	TextInputComponent,
-	ModalActionRowComponent,
 	MessageEmbed,
+	MessageActionRow,
+	MessageSelectMenu,
 } from 'discord.js';
 
 import logFile from '../../globalUtils/logFile';
@@ -48,8 +46,6 @@ const createEvent: Command = {
 				discordServerId: interaction.guild!.id,
 			});
 
-			console.log(userRoleDB.length);
-
 			if (
 				userRoleDB.length === 0 ||
 				(userRoleDB[0]['roleId'] !== 3 && userRoleDB[0]['roleId'] !== 2)
@@ -65,80 +61,39 @@ const createEvent: Command = {
 				});
 			}
 
-			/* modal */
-			const modal = new Modal()
-				.setCustomId(`normalEventModalSubmit-${interaction.id}`)
-				.setTitle('Create Event');
+			const selectMenuOptions: Array<{
+				label: string;
+				description: string;
+				value: string;
+			}> = [
+				{
+					label: 'Create normal event',
+					description: 'Create normal event with no team feature',
+					value: 'createEvent',
+				},
+				{
+					label: 'Create team event',
+					description: 'Create team event with team creation feature',
+					value: 'createTeamEvent',
+				},
+			];
 
-			const eventNameInput = new TextInputComponent()
-				.setCustomId('eventName')
-				.setLabel('Event name')
-				.setStyle('SHORT')
-				.setPlaceholder('Event name')
-				.setRequired(true);
-
-			const gameNameInput = new TextInputComponent()
-				.setCustomId('gameName')
-				.setLabel('Game name')
-				.setStyle('SHORT')
-				.setPlaceholder('Game name')
-				.setRequired(true);
-
-			const eventDateTimeInput = new TextInputComponent()
-				.setCustomId('dateTime')
-				.setLabel('Date (format: DD/MM/YYYY HH:mm)')
-				.setStyle('SHORT')
-				.setPlaceholder('Event date and time')
-				.setRequired(true);
-
-			const eventTimezoneInput = new TextInputComponent()
-				.setCustomId('timezone')
-				.setLabel('Your timezone: timezones.etourne.com')
-				.setStyle('SHORT')
-				.setPlaceholder('Your timezone')
-				.setRequired(true);
-
-			const eventDescriptionInput = new TextInputComponent()
-				.setCustomId('eventDescription')
-				.setLabel('Event description')
-				.setStyle('PARAGRAPH')
-				.setPlaceholder('Event description')
-				.setRequired(true);
-
-			const eventNameActionRow =
-				new MessageActionRow<ModalActionRowComponent>().addComponents(
-					eventNameInput,
-				);
-
-			const gameNameActionRow =
-				new MessageActionRow<ModalActionRowComponent>().addComponents(
-					gameNameInput,
-				);
-
-			const eventTimezoneActionRow =
-				new MessageActionRow<ModalActionRowComponent>().addComponents(
-					eventTimezoneInput,
-				);
-
-			const eventDateTimeActionRow =
-				new MessageActionRow<ModalActionRowComponent>().addComponents(
-					eventDateTimeInput,
-				);
-
-			const eventDescriptionActionRow =
-				new MessageActionRow<ModalActionRowComponent>().addComponents(
-					eventDescriptionInput,
-				);
-
-			modal.addComponents(
-				eventNameActionRow,
-				gameNameActionRow,
-				eventTimezoneActionRow,
-				eventDateTimeActionRow,
-				eventDescriptionActionRow,
+			const selectMenu = new MessageActionRow().addComponents(
+				new MessageSelectMenu()
+					.setCustomId('selectEventType')
+					.setPlaceholder('Select event type you would like to create')
+					.addOptions(selectMenuOptions),
 			);
 
-			await interaction.showModal(modal);
+			return await interaction.reply({
+				embeds: [
+					infoMessageEmbed({
+						title: 'Select event type you would like to create',
+					}),
+				],
+				ephemeral: true,
+				components: [selectMenu],
+			});
 		} catch (err) {
 			await interaction.reply({
 				embeds: [

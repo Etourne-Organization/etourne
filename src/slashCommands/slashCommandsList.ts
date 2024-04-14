@@ -1,5 +1,6 @@
 import { Command } from './Command';
 
+// import createEventOld from './commands/createEventOld';
 import createEvent from './commands/createEvent';
 import help from './commands/help';
 import botInfo from './commands/botInfo';
@@ -14,6 +15,7 @@ import requestSupport from './commands/requestSupport';
 import registerAdmin from './commands/registerAdmin';
 
 const slashCommandsList: Command[] = [
+	// createEventOld,
 	createEvent,
 	help,
 	botInfo,

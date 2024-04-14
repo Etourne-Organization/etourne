@@ -44,7 +44,7 @@
 3. Create `logs` folder in the root directory as well as two files inside it:
 
    1. `restart.txt`
-   2. `crash_logs.txt`
+   2. `err_logs.txt`
 
 4. Install all the packages using: `npm install`.
 5. To start the bot, run: `npm run dev-doppler` (make sure to be in the directory).
@@ -55,7 +55,7 @@
 2. Clone the repo.
 3. Create `logs` folder in the root directory as well as two files inside it:
    1. `restart.txt`
-   2. `crash_logs.txt`
+   2. `err_logs.txt`
 4. Install all the packages using: `npm install`.
 5. To start the bot, run: `pm2 start bin/etourne-bot.sh`. **Make sure to setup [PM2](https://pm2.io/) beforehand**.
 
