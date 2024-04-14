@@ -7,24 +7,21 @@ import {
 	MessageEmbed,
 } from 'discord.js';
 
-import logFile from '../../../globalUtils/logFile';
-import { SelectMenu } from '../../SelectMenu';
-import infoMessageEmbed, { types } from '../../../globalUtils/infoMessageEmbed';
-import { removePlayer } from '../../../supabase/supabaseFunctions/teamPlayers';
-import { checkTeamExists } from '../../../supabase/supabaseFunctions/teams';
-import { getColumnValueById } from '../../../supabase/supabaseFunctions/teams';
-import botConfig from '../../../botConfig';
+import logFile from '../../globalUtils/logFile';
+import { SelectMenu } from '../SelectMenu';
+import infoMessageEmbed, { types } from '../../globalUtils/infoMessageEmbed';
+import { removePlayer as removeSupabasePlayer } from '../../supabase/supabaseFunctions/singlePlayers';
+import { getColumnValueById } from '../../supabase/supabaseFunctions/events';
+import botConfig from '../../botConfig';
 
-const removeTeamPlayer: SelectMenu = {
-	customId: 'removeTeamPlayer',
+const removePlayer: SelectMenu = {
+	customId: 'removePlayer',
 	run: async (client: Client, interaction: SelectMenuInteraction) => {
 		try {
 			const username: string = interaction.values[0].split('||')[0];
 			const userId: string = interaction.values[0].split('||')[1];
-			const teamId: string | any =
-				interaction.message.embeds[0].footer?.text.split(' ')[2];
 			const eventId: string | any =
-				interaction.message.embeds[0].footer?.text.split(' ')[5];
+				interaction.message.embeds[0].footer?.text.split(': ')[1];
 
 			const confirmationButtons = new MessageActionRow().addComponents(
 				new MessageButton()
@@ -63,15 +60,9 @@ const removeTeamPlayer: SelectMenu = {
 				if (i.customId === 'deleteYes') {
 					await interaction.deleteReply();
 
-					if (await checkTeamExists({ teamId: teamId }))
-						await removePlayer({
-							discordUserId: userId,
-							teamId: parseInt(teamId),
-						});
-
 					const messageId: any = await getColumnValueById({
 						columnName: 'messageId',
-						id: parseInt(teamId),
+						id: parseInt(eventId),
 					});
 
 					const fetchedMessage = await interaction.channel?.messages.fetch(
@@ -112,6 +103,11 @@ const removeTeamPlayer: SelectMenu = {
 									newPlayersList.length > 0 ? '>>>' : ' '
 								} ${newPlayersList}`;
 							}
+						});
+
+						await removeSupabasePlayer({
+							discordUserId: userId,
+							eventId: eventId,
 						});
 
 						const editedEmbed = new MessageEmbed()
@@ -157,10 +153,10 @@ const removeTeamPlayer: SelectMenu = {
 			logFile({
 				error: err,
 				folder: 'selectMenuHandler/functions',
-				file: 'removeTeamPlayer/removeTeamPlayer',
+				file: 'removePlayer',
 			});
 		}
 	},
 };
 
-export default removeTeamPlayer;
+export default removePlayer;

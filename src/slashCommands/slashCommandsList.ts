@@ -4,7 +4,7 @@ import { Command } from './Command';
 import createEvent from './commands/createEvent';
 import help from './commands/help';
 import botInfo from './commands/botInfo';
-import createTeamEvent from './commands/createTeamEvent';
+// import createTeamEvent from './commands/createTeamEvent';
 import setUserRole from './commands/setUserRole';
 import getStarted from './commands/getStarted';
 import feedback from './commands/feedback';
@@ -19,7 +19,7 @@ const slashCommandsList: Command[] = [
 	createEvent,
 	help,
 	botInfo,
-	createTeamEvent,
+	// createTeamEvent,
 	setUserRole,
 	getStarted,
 	feedback,

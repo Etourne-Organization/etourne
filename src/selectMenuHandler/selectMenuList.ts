@@ -1,8 +1,13 @@
 import { SelectMenu } from './SelectMenu';
 
-import removeTeamPlayer from './functions/removeTeamPlayer/removeTeamPlayer';
-import removePlayer from './functions/removePlayer/removePlayer';
+import removeTeamPlayer from './functions/removeTeamPlayer';
+import removePlayer from './functions/removePlayer';
+import createEvent from './functions/selectEventType';
 
-const selectMenuList: SelectMenu[] = [removeTeamPlayer, removePlayer];
+const selectMenuList: SelectMenu[] = [
+	removeTeamPlayer,
+	removePlayer,
+	createEvent,
+];
 
 export default selectMenuList;

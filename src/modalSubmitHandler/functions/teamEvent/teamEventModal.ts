@@ -29,7 +29,7 @@ const teamEventModal: ModalSubmit = {
 			const eventName = interaction.fields.getTextInputValue('eventName');
 			const gameName = interaction.fields.getTextInputValue('gameName');
 			const timezone = interaction.fields.getTextInputValue('timezone');
-			const eventDateTime = interaction.fields.getTextInputValue('date');
+			const eventDateTime = interaction.fields.getTextInputValue('dateTime');
 			const description =
 				interaction.fields.getTextInputValue('eventDescription');
 

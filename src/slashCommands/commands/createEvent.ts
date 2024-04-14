@@ -21,6 +21,11 @@ const createEvent: Command = {
 	type: 'CHAT_INPUT',
 	run: async (client: Client, interaction: BaseCommandInteraction) => {
 		try {
+			await interaction.reply({
+				content: ':hourglass_flowing_sand:  Processing...',
+				ephemeral: true,
+			});
+
 			if (
 				!(await checkServerExists({
 					discordServerId: interaction.guild!.id,
@@ -85,17 +90,18 @@ const createEvent: Command = {
 					.addOptions(selectMenuOptions),
 			);
 
-			return await interaction.reply({
+			return await interaction.editReply({
+				content: ' ',
 				embeds: [
 					infoMessageEmbed({
 						title: 'Select event type you would like to create',
 					}),
 				],
-				ephemeral: true,
 				components: [selectMenu],
 			});
 		} catch (err) {
-			await interaction.reply({
+			await interaction.editReply({
+				content: ' ',
 				embeds: [
 					infoMessageEmbed({
 						title: errorMessageTemplate().title,
@@ -103,7 +109,6 @@ const createEvent: Command = {
 						type: types.ERROR,
 					}),
 				],
-				ephemeral: true,
 			});
 
 			logFile({

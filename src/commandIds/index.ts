@@ -6,7 +6,7 @@ const commandIds = {
 	CREATE_EVENT:
 		process.env.MODE === 'PROD'
 			? '1044182617563602955'
-			: '1210129308107149312',
+			: '1229053736823820320',
 	CREATE_TEAM_EVENT:
 		process.env.MODE === 'PROD'
 			? '1065332732210724874'
