@@ -19,6 +19,11 @@ const deleteTeam: ButtonFunction = {
 	customId: 'deleteTeam',
 	run: async (client: Client, interaction: ButtonInteraction) => {
 		try {
+			await interaction.reply({
+				content: ':hourglass_flowing_sand:  Processing...',
+				ephemeral: true,
+			});
+
 			const teamLeader:
 				| {
 						name: string;
@@ -40,14 +45,13 @@ const deleteTeam: ButtonFunction = {
 				(userRoleDB.length === 0 ||
 					(userRoleDB[0]['roleId'] !== 3 && userRoleDB[0]['roleId'] !== 2))
 			) {
-				return interaction.reply({
+				return interaction.editReply({
 					embeds: [
 						infoMessageEmbed({
 							title: ':warning: You are not allowed to use this button!',
 							type: types.ERROR,
 						}),
 					],
-					ephemeral: true,
 				});
 			}
 
@@ -63,21 +67,20 @@ const deleteTeam: ButtonFunction = {
 					new MessageButton()
 						.setCustomId('deleteYes')
 						.setLabel('✔')
-						.setStyle('PRIMARY'),
+						.setStyle('SUCCESS'),
 					new MessageButton()
 						.setCustomId('deleteNo')
 						.setLabel('✖')
-						.setStyle('SECONDARY'),
+						.setStyle('DANGER'),
 				);
 
-				await interaction.reply({
+				await interaction.editReply({
 					embeds: [
 						infoMessageEmbed({
 							title: ':question: Are you sure you want to delete your team?',
 						}),
 					],
 					components: [confirmationButtons],
-					ephemeral: true,
 				});
 
 				const filter: any = (i: ButtonInteraction) =>
@@ -124,18 +127,17 @@ const deleteTeam: ButtonFunction = {
 					}
 				});
 			} else {
-				await interaction.reply({
+				await interaction.editReply({
 					embeds: [
 						infoMessageEmbed({
 							title: ':x: Something went wrong',
 							type: types.ERROR,
 						}),
 					],
-					ephemeral: true,
 				});
 			}
 		} catch (err) {
-			await interaction.reply({
+			await interaction.editReply({
 				embeds: [
 					infoMessageEmbed({
 						title: errorMessageTemplate().title,
@@ -143,7 +145,6 @@ const deleteTeam: ButtonFunction = {
 						type: types.ERROR,
 					}),
 				],
-				ephemeral: true,
 			});
 
 			logFile({

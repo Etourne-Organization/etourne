@@ -56,6 +56,7 @@ const createEvent: Command = {
 				(userRoleDB[0]['roleId'] !== 3 && userRoleDB[0]['roleId'] !== 2)
 			) {
 				return await interaction.reply({
+					content: ' ',
 					embeds: [
 						infoMessageEmbed({
 							title: ':warning: You are not allowed run this command!',

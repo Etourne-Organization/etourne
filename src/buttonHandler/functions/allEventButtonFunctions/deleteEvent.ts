@@ -16,6 +16,11 @@ const deleteEvent: ButtonFunction = {
 	customId: 'deleteEvent',
 	run: async (client: Client, interaction: ButtonInteraction) => {
 		try {
+			await interaction.reply({
+				content: ':hourglass_flowing_sand:  Processing...',
+				ephemeral: true,
+			});
+
 			// check user role in DB
 			const userRoleDB: any = await getUserRole({
 				discordUserId: interaction.user.id,
@@ -26,14 +31,14 @@ const deleteEvent: ButtonFunction = {
 				userRoleDB.length === 0 ||
 				(userRoleDB[0]['roleId'] !== 3 && userRoleDB[0]['roleId'] !== 2)
 			) {
-				return await interaction.reply({
+				return await interaction.editReply({
+					content: ' ',
 					embeds: [
 						infoMessageEmbed({
 							title: ':warning: You are not allowed to use this button!',
 							type: types.ERROR,
 						}),
 					],
-					ephemeral: true,
 				});
 			}
 
@@ -69,21 +74,21 @@ const deleteEvent: ButtonFunction = {
 					new MessageButton()
 						.setCustomId(`deleteYes-${interaction.id}`)
 						.setLabel('✔')
-						.setStyle('PRIMARY'),
+						.setStyle('SUCCESS'),
 					new MessageButton()
 						.setCustomId(`deleteNo-${interaction.id}`)
 						.setLabel('✖')
-						.setStyle('SECONDARY'),
+						.setStyle('DANGER'),
 				);
 
-				await interaction.reply({
+				await interaction.editReply({
+					content: ' ',
 					embeds: [
 						infoMessageEmbed({
 							title: ':question: Are you sure you want to delete the event?',
 						}),
 					],
 					components: [confirmationButtons],
-					ephemeral: true,
 				});
 
 				const filter: any = (i: ButtonInteraction) =>
@@ -130,18 +135,18 @@ const deleteEvent: ButtonFunction = {
 					}
 				});
 			} else {
-				await interaction.reply({
+				await interaction.editReply({
+					content: ' ',
 					embeds: [
 						infoMessageEmbed({
 							title: ':x: Something went wrong',
 							type: types.ERROR,
 						}),
 					],
-					ephemeral: true,
 				});
 			}
 		} catch (err) {
-			await interaction.reply({
+			await interaction.editReply({
 				embeds: [
 					infoMessageEmbed({
 						title: errorMessageTemplate().title,
@@ -149,7 +154,6 @@ const deleteEvent: ButtonFunction = {
 						type: types.ERROR,
 					}),
 				],
-				ephemeral: true,
 			});
 
 			logFile({
