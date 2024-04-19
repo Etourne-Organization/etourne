@@ -17,6 +17,13 @@ const register: ButtonFunction = {
 	customId: 'normalEventRegister',
 	run: async (client: Client, interaction: ButtonInteraction) => {
 		try {
+			await interaction.deferUpdate();
+
+			// await interaction.reply({
+			// 	content: ':hourglass_flowing_sand:  Registering...',
+			// 	ephemeral: true,
+			// });
+
 			const eventId: string | any =
 				interaction.message.embeds[0].footer?.text.split(': ')[1];
 
@@ -114,7 +121,17 @@ const register: ButtonFunction = {
 				.addFields(interaction.message.embeds[0].fields || [])
 				.setFooter({ text: `Event ID: ${eventId}` });
 
-			await interaction.update({ embeds: [editedEmbed] });
+			await interaction.editReply({ embeds: [editedEmbed] });
+
+			await interaction.followUp({
+				embeds: [
+					infoMessageEmbed({
+						title: ':white_check_mark: Registered',
+						type: types.SUCCESS,
+					}),
+				],
+				ephemeral: true,
+			});
 		} catch (err) {
 			await interaction.reply({
 				embeds: [

@@ -77,6 +77,8 @@ const removePlayer: ButtonFunction = {
 				},
 			);
 
+			console.log(players);
+
 			const selectMenu = new MessageActionRow().addComponents(
 				new MessageSelectMenu()
 					.setCustomId('removePlayer')
@@ -110,7 +112,7 @@ const removePlayer: ButtonFunction = {
 			logFile({
 				error: err,
 				folder: 'buttonHandler/functions',
-				file: 'normalEvent/editEvent',
+				file: 'normalEvent/removePlayer',
 			});
 		}
 	},
