@@ -21,7 +21,7 @@ const botInfo: Command = {
 				})
 				.addFields(
 					{ name: 'Bot Tag', value: `${client.user!.username}` },
-					{ name: 'Bot version', value: `1.0.0` },
+					{ name: 'Bot version', value: `1.2` },
 					{
 						name: 'Bot command prefix',
 						value: `\`${process.env.PREFIX}\``,
@@ -32,7 +32,7 @@ const botInfo: Command = {
 						value: `${client.guilds.cache.size}`,
 					},
 				)
-				.setFooter({ text: 'Creator: mz10ah#0054' })
+				.setFooter({ text: 'Creator: mz10ah' })
 				.setTimestamp();
 
 			if (interaction.user.id === process.env.OWNER_ID) {
