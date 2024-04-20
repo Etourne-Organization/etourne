@@ -265,15 +265,19 @@ const getEvent: Command = {
 							},
 							{
 								name: 'Max num of teams',
-								value: eventInfo[0].maxNumTeams
-									? eventInfo[0].maxNumTeams
-									: 'Unlimited',
+								value: `${
+									eventInfo[0].maxNumTeams
+										? eventInfo[0].maxNumTeams
+										: 'Unlimited'
+								}`,
 							},
 							{
 								name: 'Max num of team players',
-								value: eventInfo[0].maxNumTeamPlayers
-									? eventInfo[0].maxNumTeamPlayers
-									: 'Unlimited',
+								value: `${
+									eventInfo[0].maxNumTeamPlayers
+										? eventInfo[0].maxNumTeamPlayers
+										: 'Unlimited'
+								}`,
 							},
 							{ name: 'Hosted by', value: eventInfo[0].eventHost },
 						])

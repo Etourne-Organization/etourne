@@ -51,7 +51,7 @@ const unregisterTeamPlayer: ButtonFunction = {
 					.split('>>> ')[1]
 					.split('\n');
 
-				if (oldPlayersList.indexOf(interaction.user.tag) === -1) {
+				if (oldPlayersList.indexOf(interaction.user.username) === -1) {
 					return await interaction.followUp({
 						embeds: [
 							infoMessageEmbed({
@@ -63,7 +63,7 @@ const unregisterTeamPlayer: ButtonFunction = {
 					});
 				}
 
-				const index = oldPlayersList.indexOf(interaction.user.tag);
+				const index = oldPlayersList.indexOf(interaction.user.username);
 				oldPlayersList.splice(index, 1);
 
 				newPlayersList = oldPlayersList.join('\n');

@@ -57,7 +57,7 @@ const removeTeamPlayer: ButtonFunction = {
 			});
 
 			if (
-				interaction.user.tag !== teamLeader.value &&
+				interaction.user.username !== teamLeader.value &&
 				(userRoleDB.length === 0 ||
 					(userRoleDB[0]['roleId'] !== 3 && userRoleDB[0]['roleId'] !== 2))
 			) {
@@ -96,7 +96,7 @@ const removeTeamPlayer: ButtonFunction = {
 
 			teamPlayers!.forEach(
 				(tp: { username: string; userId: string }, i: number) => {
-					if (tp.username === interaction.user.tag) return;
+					if (tp.username === interaction.user.username) return;
 
 					selectMenuOptions.push({
 						label: tp.username,
@@ -105,6 +105,8 @@ const removeTeamPlayer: ButtonFunction = {
 					});
 				},
 			);
+
+			console.log(selectMenuOptions);
 
 			const selectMenu = new MessageActionRow().addComponents(
 				new MessageSelectMenu()

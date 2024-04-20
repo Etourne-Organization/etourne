@@ -123,6 +123,7 @@ const deleteEvent: ButtonFunction = {
 									type: types.SUCCESS,
 								}),
 							],
+							content: ' ',
 						});
 					} else if (i.customId.includes('deleteNo')) {
 						await interaction.deleteReply();
@@ -157,6 +158,7 @@ const deleteEvent: ButtonFunction = {
 						type: types.ERROR,
 					}),
 				],
+				content: ' ',
 			});
 
 			logFile({

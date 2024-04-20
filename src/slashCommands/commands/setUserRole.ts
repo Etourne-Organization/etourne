@@ -104,13 +104,15 @@ const setUserRole: Command = {
 				discordServerId: interaction.guild!.id,
 				discordUserId: user!.id,
 				roleId: parseInt(role.value),
-				username: user!.tag,
+				username: user!.username,
 			});
 
 			await interaction.editReply({
 				embeds: [
 					infoMessageEmbed({
-						title: `:white_check_mark: ${user!.tag}'s role has been set!`,
+						title: `:white_check_mark: ${
+							user!.username
+						}'s role has been set!`,
 						type: types.SUCCESS,
 					}),
 				],

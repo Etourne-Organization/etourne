@@ -72,7 +72,7 @@ const removePlayer: ButtonFunction = {
 
 			players!.forEach(
 				(tp: { username: string; userId: string }, i: number) => {
-					if (tp.username === interaction.user.tag) return;
+					if (tp.username === interaction.user.username) return;
 
 					selectMenuOptions.push({
 						label: tp.username,
@@ -81,6 +81,8 @@ const removePlayer: ButtonFunction = {
 					});
 				},
 			);
+
+			console.log(selectMenuOptions);
 
 			const selectMenu = new MessageActionRow().addComponents(
 				new MessageSelectMenu()

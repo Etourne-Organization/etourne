@@ -6,7 +6,6 @@ const getMessageFromGuild = async (
 	interaction: BaseCommandInteraction,
 	messageId: string,
 ) => {
-	console.log(messageId);
 	let target: any;
 
 	const channels: any = interaction.guild!.channels.cache.filter(
@@ -21,7 +20,6 @@ const getMessageFromGuild = async (
 		if (target) return target;
 	}
 
-	console.log('target', target);
 	return target;
 };
 

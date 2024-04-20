@@ -12,7 +12,7 @@ const help: Command = {
 	type: 'CHAT_INPUT',
 	run: async (client: Client, interaction: BaseCommandInteraction) => {
 		try {
-			const member: string = interaction.user.tag;
+			const member: string = interaction.user.username;
 
 			const helpEmbed = new MessageEmbed()
 				.setColor(botConfig.color.default)

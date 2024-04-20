@@ -59,7 +59,7 @@ const normalEventModal: ModalSubmit = {
 						inline: true,
 					},
 					{ name: 'Game name', value: gameName, inline: true },
-					{ name: 'Hosted by', value: `${interaction.user.tag}` },
+					{ name: 'Hosted by', value: `${interaction.user.username}` },
 					{ name: `Registered players 0/unlimited`, value: ` ` },
 				]);
 
@@ -117,7 +117,7 @@ const normalEventModal: ModalSubmit = {
 				isTeamEvent: false,
 				discordServerId: interaction.guild.id,
 				timezone: timezone,
-				eventHost: interaction.user.tag,
+				eventHost: interaction.user.username,
 				channelId: interaction.channel!.id,
 				discordServerName: interaction.guild.name,
 			});

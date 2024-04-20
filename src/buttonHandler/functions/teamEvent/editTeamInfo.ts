@@ -55,7 +55,7 @@ const editTeamInfo: ButtonFunction = {
 			});
 
 			if (
-				interaction.user.tag !== teamLeader.value &&
+				interaction.user.username !== teamLeader.value &&
 				(userRoleDB.length === 0 ||
 					(userRoleDB[0]['roleId'] !== 3 && userRoleDB[0]['roleId'] !== 2))
 			) {

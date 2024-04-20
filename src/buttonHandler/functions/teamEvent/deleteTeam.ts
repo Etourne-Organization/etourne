@@ -41,7 +41,7 @@ const deleteTeam: ButtonFunction = {
 			});
 
 			if (
-				interaction.user.tag !== teamLeader.value &&
+				interaction.user.username !== teamLeader.value &&
 				(userRoleDB.length === 0 ||
 					(userRoleDB[0]['roleId'] !== 3 && userRoleDB[0]['roleId'] !== 2))
 			) {
@@ -52,6 +52,7 @@ const deleteTeam: ButtonFunction = {
 							type: types.ERROR,
 						}),
 					],
+					content: ' ',
 				});
 			}
 
@@ -81,6 +82,7 @@ const deleteTeam: ButtonFunction = {
 						}),
 					],
 					components: [confirmationButtons],
+					content: ' ',
 				});
 
 				const filter: any = (i: ButtonInteraction) =>
@@ -115,6 +117,7 @@ const deleteTeam: ButtonFunction = {
 									type: types.SUCCESS,
 								}),
 							],
+							content: ' ',
 						});
 					} else if (i.customId === 'deleteNo') {
 						await interaction.deleteReply();
@@ -137,6 +140,7 @@ const deleteTeam: ButtonFunction = {
 							type: types.ERROR,
 						}),
 					],
+					content: ' ',
 				});
 			}
 		} catch (err) {
@@ -148,6 +152,7 @@ const deleteTeam: ButtonFunction = {
 						type: types.ERROR,
 					}),
 				],
+				content: ' ',
 			});
 
 			logFile({

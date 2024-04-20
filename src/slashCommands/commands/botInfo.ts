@@ -20,7 +20,7 @@ const botInfo: Command = {
 					iconURL: `${client.user!.displayAvatarURL()}`,
 				})
 				.addFields(
-					{ name: 'Bot Tag', value: `${client.user!.tag}` },
+					{ name: 'Bot Tag', value: `${client.user!.username}` },
 					{ name: 'Bot version', value: `1.0.0` },
 					{
 						name: 'Bot command prefix',

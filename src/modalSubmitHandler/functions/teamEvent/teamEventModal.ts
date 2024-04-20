@@ -67,7 +67,7 @@ const teamEventModal: ModalSubmit = {
 						name: 'Max num of team players',
 						value: 'Unlimited',
 					},
-					{ name: 'Hosted by', value: `${interaction.user.tag}` },
+					{ name: 'Hosted by', value: `${interaction.user.username}` },
 				]);
 
 			const buttons = new MessageActionRow().addComponents(
@@ -103,7 +103,7 @@ const teamEventModal: ModalSubmit = {
 
 			const id = await addEvent({
 				eventName: eventName,
-				eventHost: interaction.user.tag,
+				eventHost: interaction.user.username,
 				gameName: gameName,
 				description: description,
 				dateTime: new Date(

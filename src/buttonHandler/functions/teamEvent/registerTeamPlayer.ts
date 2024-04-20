@@ -66,13 +66,13 @@ const registerTeamPlayer: ButtonFunction = {
 
 			let newPlayersList: string = ' ';
 			if (registeredPlayers.value.length === 0) {
-				newPlayersList = `${interaction.user.tag}\n`;
+				newPlayersList = `${interaction.user.username}\n`;
 			} else {
 				if (
 					registeredPlayers.value
 						.split('>>> ')[1]
 						.split('\n')
-						.indexOf(interaction.user.tag) !== -1
+						.indexOf(interaction.user.username) !== -1
 				) {
 					return await interaction.followUp({
 						embeds: [
@@ -88,7 +88,7 @@ const registerTeamPlayer: ButtonFunction = {
 						.split('>>> ')[1]
 						.split('\n');
 
-					oldPlayersList.push(interaction.user.tag);
+					oldPlayersList.push(interaction.user.username);
 
 					newPlayersList = oldPlayersList.join('\n');
 				}
@@ -112,7 +112,7 @@ const registerTeamPlayer: ButtonFunction = {
 			});
 
 			await addPlayer({
-				username: interaction.user.tag,
+				username: interaction.user.username,
 				discordUserId: interaction.user.id,
 				teamId: parseInt(teamId),
 				discordServerId: interaction.guild?.id!,

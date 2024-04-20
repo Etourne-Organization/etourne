@@ -55,7 +55,7 @@ const updateAllTeamInfo = async (props: updateAllTeamInfo) => {
 						.addFields([
 							{
 								name: 'Team Leader',
-								value: interaction.user.tag,
+								value: interaction.user.username,
 							},
 							{
 								name: 'Event Name',

@@ -60,7 +60,7 @@ const registerServer: Command = {
 				});
 
 				await checkAddUser({
-					username: log!.executor!.tag,
+					username: log!.executor!.username,
 					discordServerId: interaction.guild!.id,
 					discordUserId: log!.executor!.id,
 					roleId: 3,

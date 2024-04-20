@@ -80,7 +80,7 @@ const teamModal: ModalSubmit = {
 				.addFields([
 					{
 						name: 'Team Leader',
-						value: interaction.user.tag,
+						value: interaction.user.username,
 					},
 					{
 						name: 'Event Name',
@@ -105,7 +105,7 @@ const teamModal: ModalSubmit = {
 				teamName: teamName,
 				teamDescription: teamShortDescription,
 				teamLeaderDiscordUserId: interaction.user.id,
-				teamLeaderUsername: interaction.user.tag,
+				teamLeaderUsername: interaction.user.username,
 				discordServerId: interaction.guild!.id,
 			});
 

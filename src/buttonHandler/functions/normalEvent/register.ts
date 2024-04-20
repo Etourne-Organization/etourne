@@ -53,15 +53,17 @@ const register: ButtonFunction = {
 				r.name.includes('Registered players'),
 			);
 
+			console.log(interaction.user.username);
+
 			let newPlayersList: string = ' ';
 			if (registeredPlayers.value.length === 0) {
-				newPlayersList = `${interaction.user.tag}\n`;
+				newPlayersList = `${interaction.user.username}\n`;
 			} else {
 				if (
 					registeredPlayers.value
 						.split('>>> ')[1]
 						.split('\n')
-						.indexOf(interaction.user.tag) !== -1
+						.indexOf(interaction.user.username) !== -1
 				) {
 					return await interaction.followUp({
 						embeds: [
@@ -77,7 +79,7 @@ const register: ButtonFunction = {
 						.split('>>> ')[1]
 						.split('\n');
 
-					oldPlayersList.push(interaction.user.tag);
+					oldPlayersList.push(interaction.user.username);
 
 					newPlayersList = oldPlayersList.join('\n');
 				}
@@ -101,7 +103,7 @@ const register: ButtonFunction = {
 			});
 
 			await addPlayer({
-				username: interaction.user.tag,
+				username: interaction.user.username,
 				discordUserId: interaction.user.id,
 				eventId: parseInt(eventId),
 				discordServerId: interaction.guild?.id!,
