@@ -27,11 +27,11 @@ const removePlayer: SelectMenu = {
 				new MessageButton()
 					.setCustomId('deleteYes')
 					.setLabel('✔')
-					.setStyle('PRIMARY'),
+					.setStyle('SUCCESS'),
 				new MessageButton()
 					.setCustomId('deleteNo')
 					.setLabel('✖')
-					.setStyle('SECONDARY'),
+					.setStyle('DANGER'),
 			);
 
 			await interaction.update({
@@ -59,6 +59,10 @@ const removePlayer: SelectMenu = {
 			collector?.on('collect', async (i: ButtonInteraction) => {
 				if (i.customId === 'deleteYes') {
 					await interaction.deleteReply();
+					await i.reply({
+						content: ':hourglass_flowing_sand:  Processing...',
+						ephemeral: true,
+					});
 
 					const messageId: any = await getColumnValueById({
 						columnName: 'messageId',
@@ -126,14 +130,13 @@ const removePlayer: SelectMenu = {
 						});
 					}
 
-					await i.reply({
+					await i.editReply({
 						embeds: [
 							infoMessageEmbed({
 								title: `:white_check_mark: Removed ${username} successfully!`,
 								type: types.SUCCESS,
 							}),
 						],
-						ephemeral: true,
 					});
 				} else if (i.customId === 'deleteNo') {
 					await interaction.deleteReply();

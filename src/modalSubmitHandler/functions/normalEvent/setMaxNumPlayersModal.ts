@@ -11,6 +11,8 @@ const setMaxNumPlayersModal: ModalSubmit = {
 	customId: 'maxNumPlayersModalSubmit',
 	run: async (client: Client, interaction: ModalSubmitInteraction) => {
 		try {
+			await interaction.deferUpdate();
+
 			const eventId: string | any =
 				interaction.message?.embeds[0].footer?.text.split(': ')[1];
 
@@ -47,9 +49,19 @@ const setMaxNumPlayersModal: ModalSubmit = {
 				.addFields(interaction.message?.embeds[0].fields || [])
 				.setFooter({ text: `Event ID: ${eventId}` });
 
-			return await interaction.update({ embeds: [editedEmbed] });
+			await interaction.editReply({ embeds: [editedEmbed] });
+
+			return await interaction.followUp({
+				embeds: [
+					infoMessageEmbed({
+						title: ':white_check_mark: Max num of players set successfully!',
+						type: types.SUCCESS,
+					}),
+				],
+				ephemeral: true,
+			});
 		} catch (err) {
-			await interaction.reply({
+			await interaction.followUp({
 				embeds: [
 					infoMessageEmbed({
 						title: errorMessageTemplate().title,

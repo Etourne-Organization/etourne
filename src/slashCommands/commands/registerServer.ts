@@ -16,16 +16,21 @@ const registerServer: Command = {
 	type: 'CHAT_INPUT',
 	run: async (client: Client, interaction: BaseCommandInteraction) => {
 		try {
+			await interaction.reply({
+				content: ':hourglass_flowing_sand:  Processing...',
+			});
+
 			if (
 				await checkServerExists({ discordServerId: interaction.guild!.id })
 			) {
-				return await interaction.reply({
+				return await interaction.editReply({
 					embeds: [
 						infoMessageEmbed({
 							title: ':warning: Your server is already registered!',
 							type: types.ERROR,
 						}),
 					],
+					content: ' ',
 				});
 			} else if (
 				interaction.guild!.members.me?.permissions.has('VIEW_AUDIT_LOG')
@@ -38,13 +43,14 @@ const registerServer: Command = {
 				const log = fetchedLog.entries.first();
 
 				if (log?.executor!.id !== interaction.user.id) {
-					return await interaction.reply({
+					return await interaction.editReply({
 						embeds: [
 							infoMessageEmbed({
 								title: ':warning: You are not the user who added the bot into this server!',
 								type: types.ERROR,
 							}),
 						],
+						content: ' ',
 					});
 				}
 
@@ -60,13 +66,14 @@ const registerServer: Command = {
 					roleId: 3,
 				});
 
-				return await interaction.reply({
+				return await interaction.editReply({
 					embeds: [
 						infoMessageEmbed({
 							title: ':white_check_mark:  Discord server registered!',
 							type: types.SUCCESS,
 						}),
 					],
+					content: ' ',
 				});
 			} else {
 				const embed = new MessageEmbed()
@@ -77,19 +84,20 @@ const registerServer: Command = {
 					)
 					.setTimestamp();
 
-				return await interaction.reply({
+				return await interaction.editReply({
 					embeds: [embed],
+					content: ' ',
 				});
 			}
 		} catch (err) {
-			await interaction.reply({
+			await interaction.editReply({
 				embeds: [
 					infoMessageEmbed({
 						title: ':x: There has been an error',
 						type: types.ERROR,
 					}),
 				],
-				ephemeral: true,
+				content: ' ',
 			});
 
 			logFile({

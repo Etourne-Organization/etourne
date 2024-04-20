@@ -98,20 +98,23 @@ const deleteTeam: ButtonFunction = {
 				collector?.on('collect', async (i: ButtonInteraction) => {
 					if (i.customId === 'deleteYes') {
 						await fetchedMessage.delete();
-
 						await interaction.deleteReply();
+
+						await i.reply({
+							content: ':hourglass_flowing_sand:  Processing...',
+							ephemeral: true,
+						});
 
 						if (await checkTeamExists({ teamId: teamId }))
 							await deleteTeamSupabase({ teamId: parseInt(teamId) });
 
-						await i.reply({
+						await i.editReply({
 							embeds: [
 								infoMessageEmbed({
 									title: ':white_check_mark: Team deleted successfully!',
 									type: types.SUCCESS,
 								}),
 							],
-							ephemeral: true,
 						});
 					} else if (i.customId === 'deleteNo') {
 						await interaction.deleteReply();

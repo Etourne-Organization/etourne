@@ -26,6 +26,11 @@ const teamEventModal: ModalSubmit = {
 	customId: 'teamEventModalSubmit',
 	run: async (client: Client, interaction: ModalSubmitInteraction) => {
 		try {
+			await interaction.reply({
+				content: ':hourglass_flowing_sand:  Creating event...',
+				ephemeral: true,
+			});
+
 			const eventName = interaction.fields.getTextInputValue('eventName');
 			const gameName = interaction.fields.getTextInputValue('gameName');
 			const timezone = interaction.fields.getTextInputValue('timezone');
@@ -138,17 +143,17 @@ const teamEventModal: ModalSubmit = {
 				],
 			});
 
-			await interaction.reply({
+			await interaction.editReply({
 				embeds: [
 					infoMessageEmbed({
-						title: ':white_check_mark: Team event created successfully',
+						title: ':white_check_mark: Team event created successfully!',
 						type: types.SUCCESS,
 					}),
 				],
-				ephemeral: true,
+				content: ' ',
 			});
 		} catch (err) {
-			await interaction.reply({
+			await interaction.editReply({
 				embeds: [
 					infoMessageEmbed({
 						title: errorMessageTemplate().title,
@@ -156,7 +161,7 @@ const teamEventModal: ModalSubmit = {
 						type: types.ERROR,
 					}),
 				],
-				ephemeral: true,
+				content: ' ',
 			});
 
 			logFile({

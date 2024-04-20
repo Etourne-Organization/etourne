@@ -46,6 +46,10 @@ const setUserRole: Command = {
 	],
 	run: async (client: Client, interaction: BaseCommandInteraction) => {
 		try {
+			await interaction.reply({
+				content: ':hourglass_flowing_sand:  Processing...',
+			});
+
 			if (
 				!(await checkServerExists({
 					discordServerId: interaction.guild!.id,
@@ -62,8 +66,9 @@ const setUserRole: Command = {
 					})
 					.setTimestamp();
 
-				return await interaction.reply({
+				return await interaction.editReply({
 					embeds: [embed],
+					content: ' ',
 				});
 			}
 
@@ -83,14 +88,14 @@ const setUserRole: Command = {
 			*/
 			if (interaction.user.id !== '374230181889572876') {
 				if (userRoleDB.length === 0 || userRoleDB[0]['roleId'] !== 3) {
-					return await interaction.reply({
+					return await interaction.editReply({
 						embeds: [
 							infoMessageEmbed({
 								title: ':warning: You are not allowed run this command!',
 								type: types.ERROR,
 							}),
 						],
-						ephemeral: true,
+						content: ' ',
 					});
 				}
 			}
@@ -102,17 +107,17 @@ const setUserRole: Command = {
 				username: user!.tag,
 			});
 
-			await interaction.reply({
+			await interaction.editReply({
 				embeds: [
 					infoMessageEmbed({
 						title: `:white_check_mark: ${user!.tag}'s role has been set!`,
 						type: types.SUCCESS,
 					}),
 				],
-				ephemeral: true,
+				content: ' ',
 			});
 		} catch (err) {
-			await interaction.reply({
+			await interaction.editReply({
 				embeds: [
 					infoMessageEmbed({
 						title: errorMessageTemplate().title,
@@ -120,7 +125,7 @@ const setUserRole: Command = {
 						type: types.ERROR,
 					}),
 				],
-				ephemeral: true,
+				content: ' ',
 			});
 
 			logFile({

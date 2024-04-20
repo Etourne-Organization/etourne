@@ -129,14 +129,14 @@ const registerTeamPlayer: ButtonFunction = {
 			return await interaction.followUp({
 				embeds: [
 					infoMessageEmbed({
-						title: ':white_check_mark: Registered',
+						title: ':white_check_mark: Registered successfully!',
 						type: types.SUCCESS,
 					}),
 				],
 				ephemeral: true,
 			});
 		} catch (err) {
-			await interaction.editReply({
+			await interaction.followUp({
 				embeds: [
 					infoMessageEmbed({
 						title: errorMessageTemplate({
@@ -148,7 +148,7 @@ const registerTeamPlayer: ButtonFunction = {
 						type: types.ERROR,
 					}),
 				],
-				content: ' ',
+				ephemeral: true,
 			});
 
 			logFile({

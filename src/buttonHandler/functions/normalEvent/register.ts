@@ -121,14 +121,14 @@ const register: ButtonFunction = {
 			return await interaction.followUp({
 				embeds: [
 					infoMessageEmbed({
-						title: ':white_check_mark: Registered',
+						title: ':white_check_mark: Registered successfully!',
 						type: types.SUCCESS,
 					}),
 				],
 				ephemeral: true,
 			});
 		} catch (err) {
-			await interaction.reply({
+			await interaction.followUp({
 				embeds: [
 					infoMessageEmbed({
 						title: errorMessageTemplate({

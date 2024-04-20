@@ -104,14 +104,14 @@ const unregisterTeamPlayer: ButtonFunction = {
 			return await interaction.followUp({
 				embeds: [
 					infoMessageEmbed({
-						title: ':white_check_mark: Unregistered',
+						title: ':white_check_mark: Unregistered successfully!',
 						type: types.SUCCESS,
 					}),
 				],
 				ephemeral: true,
 			});
 		} catch (err) {
-			await interaction.editReply({
+			await interaction.followUp({
 				embeds: [
 					infoMessageEmbed({
 						title: errorMessageTemplate().title,
@@ -119,6 +119,7 @@ const unregisterTeamPlayer: ButtonFunction = {
 						type: types.ERROR,
 					}),
 				],
+				ephemeral: true,
 			});
 
 			logFile({

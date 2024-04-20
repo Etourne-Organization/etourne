@@ -35,6 +35,11 @@ const getEvent: Command = {
 	],
 	run: async (client: Client, interaction: BaseCommandInteraction) => {
 		try {
+			await interaction.reply({
+				content: ':hourglass_flowing_sand:  Processing...',
+				ephemeral: true,
+			});
+
 			if (
 				!(await checkServerExists({
 					discordServerId: interaction.guild!.id,
@@ -51,8 +56,9 @@ const getEvent: Command = {
 					})
 					.setTimestamp();
 
-				return await interaction.reply({
+				return await interaction.editReply({
 					embeds: [embed],
+					content: ' ',
 				});
 			}
 
@@ -77,9 +83,8 @@ const getEvent: Command = {
 				});
 			}
 
-			await interaction.reply({
-				content: 'Getting event ...',
-				ephemeral: true,
+			await interaction.editReply({
+				content: ':arrows_counterclockwise:  Getting event ...',
 			});
 
 			const eventInfo: any = await getAllColumnValueById({
@@ -199,7 +204,7 @@ const getEvent: Command = {
 							.setStyle('DANGER'),
 					);
 
-					const editReply = await interaction.channel?.send({
+					const newEventEmbed = await interaction.channel?.send({
 						embeds: [eventEmbed],
 						components: [
 							buttons,
@@ -213,7 +218,7 @@ const getEvent: Command = {
 							{
 								id: eventId.value,
 								key: 'messageId',
-								value: editReply!.id,
+								value: newEventEmbed!.id,
 							},
 							{
 								id: eventId.value,
@@ -253,6 +258,7 @@ const getEvent: Command = {
 						type: types.ERROR,
 					}),
 				],
+				content: ' ',
 			});
 
 			logFile({

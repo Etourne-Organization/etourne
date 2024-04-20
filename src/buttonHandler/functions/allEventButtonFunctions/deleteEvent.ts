@@ -107,19 +107,22 @@ const deleteEvent: ButtonFunction = {
 				collector?.on('collect', async (i: ButtonInteraction) => {
 					if (i.customId.includes('deleteYes')) {
 						await fetchedMessage.delete();
+						await i.reply({
+							content: ':hourglass_flowing_sand:  Processing...',
+							ephemeral: true,
+						});
 
 						await deleteEventSupabase({ eventId: parseInt(eventId) });
 
 						await interaction.deleteReply();
 
-						await i.reply({
+						await i.editReply({
 							embeds: [
 								infoMessageEmbed({
 									title: ':white_check_mark: Event deleted successfully!',
 									type: types.SUCCESS,
 								}),
 							],
-							ephemeral: true,
 						});
 					} else if (i.customId.includes('deleteNo')) {
 						await interaction.deleteReply();

@@ -15,6 +15,11 @@ const listServerEvents: Command = {
 	description: 'View the list of all the servers',
 	run: async (client: Client, interaction: BaseCommandInteraction) => {
 		try {
+			await interaction.reply({
+				content: ':hourglass_flowing_sand:  Processing...',
+				ephemeral: true,
+			});
+
 			if (
 				!(await checkServerExists({
 					discordServerId: interaction.guild!.id,
@@ -31,7 +36,7 @@ const listServerEvents: Command = {
 					})
 					.setTimestamp();
 
-				return await interaction.reply({
+				return await interaction.editReply({
 					embeds: [embed],
 				});
 			}
@@ -58,11 +63,21 @@ const listServerEvents: Command = {
 				.setThumbnail(`${interaction.guild!.iconURL()}`)
 				.setDescription(eventString);
 
-			await interaction.reply({
+			await interaction.channel?.send({
 				embeds: [embed],
 			});
+
+			return await interaction.editReply({
+				content: ' ',
+				embeds: [
+					infoMessageEmbed({
+						title: ':white_check_mark: List of all events shared successfully',
+						type: types.SUCCESS,
+					}),
+				],
+			});
 		} catch (err) {
-			await interaction.reply({
+			await interaction.editReply({
 				embeds: [
 					infoMessageEmbed({
 						title: errorMessageTemplate().title,
@@ -70,7 +85,7 @@ const listServerEvents: Command = {
 						type: types.ERROR,
 					}),
 				],
-				ephemeral: true,
+				content: ' ',
 			});
 
 			logFile({

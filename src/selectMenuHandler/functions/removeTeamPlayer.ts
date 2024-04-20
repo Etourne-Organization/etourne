@@ -30,11 +30,11 @@ const removeTeamPlayer: SelectMenu = {
 				new MessageButton()
 					.setCustomId('deleteYes')
 					.setLabel('✔')
-					.setStyle('PRIMARY'),
+					.setStyle('SUCCESS'),
 				new MessageButton()
 					.setCustomId('deleteNo')
 					.setLabel('✖')
-					.setStyle('SECONDARY'),
+					.setStyle('DANGER'),
 			);
 
 			await interaction.update({
@@ -62,6 +62,10 @@ const removeTeamPlayer: SelectMenu = {
 			collector?.on('collect', async (i: ButtonInteraction) => {
 				if (i.customId === 'deleteYes') {
 					await interaction.deleteReply();
+					await i.reply({
+						content: ':hourglass_flowing_sand:  Processing...',
+						ephemeral: true,
+					});
 
 					if (await checkTeamExists({ teamId: teamId }))
 						await removePlayer({
@@ -81,7 +85,6 @@ const removeTeamPlayer: SelectMenu = {
 					if (fetchedMessage) {
 						const footer = fetchedMessage.embeds[0].footer?.text;
 
-						let FOUND: boolean = false;
 						const registeredPlayers: any =
 							fetchedMessage.embeds[0].fields?.find((r) =>
 								r.name.includes('Registered players'),
@@ -123,21 +126,18 @@ const removeTeamPlayer: SelectMenu = {
 							.addFields(fetchedMessage.embeds[0].fields || [])
 							.setFooter({ text: `${footer}` });
 
-						FOUND = true;
-
 						await fetchedMessage.edit({
 							embeds: [editedEmbed],
 						});
 					}
 
-					await i.reply({
+					await i.editReply({
 						embeds: [
 							infoMessageEmbed({
 								title: `:white_check_mark: Removed ${username} successfully!`,
 								type: types.SUCCESS,
 							}),
 						],
-						ephemeral: true,
 					});
 				} else if (i.customId === 'deleteNo') {
 					await interaction.deleteReply();

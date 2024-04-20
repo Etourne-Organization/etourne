@@ -21,6 +21,11 @@ const teamModal: ModalSubmit = {
 	customId: 'teamModalSubmit',
 	run: async (client: Client, interaction: ModalSubmitInteraction) => {
 		try {
+			await interaction.reply({
+				content: ':hourglass_flowing_sand:  Creating team...',
+				ephemeral: true,
+			});
+
 			const eventId: string | any =
 				interaction.message?.embeds[0].footer?.text.split(': ')[1];
 
@@ -123,17 +128,17 @@ const teamModal: ModalSubmit = {
 				],
 			});
 
-			await interaction.reply({
+			await interaction.editReply({
 				embeds: [
 					infoMessageEmbed({
 						title: ':white_check_mark: Team created successfully',
 						type: types.SUCCESS,
 					}),
 				],
-				ephemeral: true,
+				content: ' ',
 			});
 		} catch (err) {
-			await interaction.reply({
+			await interaction.editReply({
 				embeds: [
 					infoMessageEmbed({
 						title: errorMessageTemplate().title,
@@ -141,7 +146,7 @@ const teamModal: ModalSubmit = {
 						type: types.ERROR,
 					}),
 				],
-				ephemeral: true,
+				content: ' ',
 			});
 
 			logFile({

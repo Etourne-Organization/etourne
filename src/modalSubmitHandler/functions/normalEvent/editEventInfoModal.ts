@@ -17,6 +17,8 @@ const editEventInfoModal: ModalSubmit = {
 	customId: 'editEventInfoModal',
 	run: async (client: Client, interaction: ModalSubmitInteraction) => {
 		try {
+			await interaction.deferUpdate();
+
 			const eventId: string | any =
 				interaction.message?.embeds[0].footer?.text.split(': ')[1];
 
@@ -118,11 +120,21 @@ const editEventInfoModal: ModalSubmit = {
 				timezone: timezone,
 			});
 
-			return await interaction.update({
+			await interaction.editReply({
 				embeds: [editedEmbed],
 			});
+
+			return await interaction.followUp({
+				embeds: [
+					infoMessageEmbed({
+						title: ':white_check_mark: Event updated successfully!',
+						type: types.SUCCESS,
+					}),
+				],
+				ephemeral: true,
+			});
 		} catch (err) {
-			await interaction.reply({
+			await interaction.followUp({
 				embeds: [
 					infoMessageEmbed({
 						title: errorMessageTemplate().title,

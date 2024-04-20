@@ -11,6 +11,8 @@ const editTeamInfoModal: ModalSubmit = {
 	customId: 'editTeamInfoModal',
 	run: async (client: Client, interaction: ModalSubmitInteraction) => {
 		try {
+			await interaction.deferUpdate();
+
 			const teamId: string | any =
 				interaction.message?.embeds[0].footer?.text.split(' ')[2];
 			const eventId: string | any =
@@ -98,11 +100,21 @@ const editTeamInfoModal: ModalSubmit = {
 				teamDescription: teamShortDescription,
 			});
 
-			return await interaction.update({
+			await interaction.editReply({
 				embeds: [editedEmbed],
 			});
+
+			return await interaction.followUp({
+				embeds: [
+					infoMessageEmbed({
+						title: ':white_check_mark: Team info updated successfully!',
+						type: types.SUCCESS,
+					}),
+				],
+				ephemeral: true,
+			});
 		} catch (err) {
-			await interaction.reply({
+			await interaction.followUp({
 				embeds: [
 					infoMessageEmbed({
 						title: errorMessageTemplate().title,
