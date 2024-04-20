@@ -32,7 +32,7 @@ const botInfo: Command = {
 						value: `${client.guilds.cache.size}`,
 					},
 				)
-				.setFooter({ text: 'Creator: mz10ah#0054' })
+				.setFooter({ text: 'Creator: mz10ah' })
 				.setTimestamp();
 
 			if (interaction.user.id === process.env.OWNER_ID) {
