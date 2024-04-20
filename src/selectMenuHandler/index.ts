@@ -1,8 +1,7 @@
-import fs from 'fs';
-
 import { SelectMenuInteraction, Client } from 'discord.js';
 
 import selectMenuList from './selectMenuList';
+import logFile from '../globalUtils/logFile';
 
 export default async (
 	client: Client,
@@ -21,16 +20,10 @@ export default async (
 
 		selectMenuFunction.run(client, interaction);
 	} catch (err) {
-		try {
-			fs.appendFile(
-				'logs/crash_logs.txt',
-				`${new Date()} : Something went wrong in buttonHandler.ts \n Actual error: ${err} \n \n`,
-				(err) => {
-					if (err) throw err;
-				},
-			);
-		} catch (err) {
-			console.log('Error logging failed');
-		}
+		logFile({
+			error: err,
+			folder: 'selectMenuHandler',
+			file: 'index',
+		});
 	}
 };

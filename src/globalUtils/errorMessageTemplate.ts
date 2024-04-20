@@ -1,5 +1,4 @@
-import originalCommandIDs from '../ORIGINAL_COMMAND_IDS/commandIDs.json';
-import testCommandIDs from '../TEST_COMMAND_IDS/commandIDs.json';
+import commandIds from '../commandIds';
 
 export enum MessageType {
 	LONG,
@@ -20,17 +19,7 @@ const errorMessageTemplate = ({
 		case MessageType.LONG: {
 			message = {
 				title: ':x: There has been an error',
-				description: `- Recently Discord has changed its API to remove hashtag from usernames (\`#0001\`) and our Database has been storing usernames with hashtags which could be the cause of this error. \n- If you are the user who added the bot into the server, you can run ${
-					process.env.COMMAND_ID === 'TEST_COMMAND_IDS'
-						? `</registerserver:${testCommandIDs.REGISTER_ADMIN}>`
-						: `</registerserver:${
-								originalCommandIDs.REGISTER_ADMIN
-						  }> to re-register yourself in the database again\n- You can also run ${
-								process.env.COMMAND_ID === 'TEST_COMMAND_IDS'
-									? `</registerserver:${testCommandIDs.REGISTER_SERVER}>`
-									: `</registerserver:${originalCommandIDs.REGISTER_SERVER}>`
-						  } to make sure your server is registered in Etourne DB.`
-				}`,
+				description: `- Recently Discord has changed its API to remove hashtag from usernames (\`#0001\`) and our Database has been storing usernames with hashtags which could be the cause of this error. \n- If you are the user who added the bot into the server, you can run </registeradmin:${commandIds.REGISTER_ADMIN}> to re-register yourself in the database again\n- You can also run </registerserver:${commandIds.REGISTER_SERVER}> to make sure your server is registered in Etourne DB.`,
 			};
 		}
 
@@ -38,6 +27,13 @@ const errorMessageTemplate = ({
 			message = {
 				title: ':x: There has been an error',
 				description: `Please contact your admin or join the [support](https://discord.gg/vNe9QVrWNa) server to raise this issue.`,
+			};
+		}
+
+		default: {
+			message = {
+				title: ':x: There has been an error',
+				description: `- Recently Discord has changed its API to remove hashtag from usernames (\`#0001\`) and our Database has been storing usernames with hashtags which could be the cause of this error. \n- If you are the user who added the bot into the server, you can run </registeradmin:${commandIds.REGISTER_ADMIN}> to re-register yourself in the database again\n- You can also run </registerserver:${commandIds.REGISTER_SERVER}> to make sure your server is registered in Etourne DB.`,
 			};
 		}
 	}

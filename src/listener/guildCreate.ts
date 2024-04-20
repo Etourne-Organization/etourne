@@ -1,7 +1,6 @@
-import fs from 'fs';
-
 import { Guild, Client } from 'discord.js';
 
+import logFile from '../globalUtils/logFile';
 import { checkAddUser } from '../supabase/supabaseFunctions/users';
 import { checkAddServer } from '../supabase/supabaseFunctions/servers';
 
@@ -22,7 +21,7 @@ export default (client: Client): void => {
 			});
 
 			await checkAddUser({
-				username: log!.executor!.tag,
+				username: log!.executor!.username,
 				discordServerId: guild.id,
 				discordUserId: log!.executor!.id,
 				roleId: 3,
@@ -30,13 +29,11 @@ export default (client: Client): void => {
 		});
 	} catch (err) {
 		try {
-			fs.appendFile(
-				'logs/crash_logs.txt',
-				`${new Date()} : Something went wrong in listener/guildCreate.ts \n Actual error: ${err} \n \n`,
-				(err) => {
-					if (err) throw err;
-				},
-			);
+			logFile({
+				error: err,
+				folder: 'listener',
+				file: 'guildCreate',
+			});
 		} catch (err) {
 			console.log('Error logging failed');
 		}

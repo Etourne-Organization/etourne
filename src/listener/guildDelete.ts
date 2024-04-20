@@ -10,7 +10,5 @@ export default (client: Client): void => {
 			// limit: 1,
 		});
 		const log = fetchedLog.entries.first();
-
-		console.log(log);
 	});
 };

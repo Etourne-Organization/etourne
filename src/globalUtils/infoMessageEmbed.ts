@@ -1,25 +1,52 @@
 import { MessageEmbed } from 'discord.js';
+import botConfig from '../botConfig';
 
-const infoMessageEmbed = (
-	title: string,
-	status?: string,
-	description?: string,
-) => {
-	const infoEmbed = new MessageEmbed().setTitle(title).setTimestamp();
+export enum types {
+	INFO,
+	ERROR,
+	SUCCESS,
+	WARNING,
+}
+
+interface infoMessageEmbed {
+	title: string;
+	description?: string;
+	fields?: { name: string; value: string; inline?: boolean }[];
+	type?: types;
+}
+
+const infoMessageEmbed = (props: infoMessageEmbed) => {
+	const { title, description, fields, type } = props;
+
+	const embed = new MessageEmbed().setTitle(title).setTimestamp();
 
 	if (description) {
-		infoEmbed.setDescription(description);
+		embed.setDescription(description);
 	}
 
-	if (status === 'WARNING' || status === 'ERROR') {
-		infoEmbed.setColor('#D83C3E');
-	} else if (status === 'SUCCESS') {
-		infoEmbed.setColor('#3BA55C');
-	} else {
-		infoEmbed.setColor('#3A9CE2');
+	if (fields && fields?.length > 0) {
+		embed.addFields(fields);
 	}
 
-	return infoEmbed;
+	switch (type) {
+		case types.ERROR:
+			embed.setColor(botConfig.color.red);
+			break;
+		case types.WARNING:
+			embed.setColor(botConfig.color.red);
+			break;
+		case types.SUCCESS:
+			embed.setColor(botConfig.color.green);
+			break;
+		case types.INFO:
+			embed.setColor(botConfig.color.orange);
+			break;
+		default:
+			embed.setColor(botConfig.color.default);
+			break;
+	}
+
+	return embed;
 };
 
 export default infoMessageEmbed;

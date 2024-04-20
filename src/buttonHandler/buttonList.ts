@@ -1,19 +1,19 @@
-import { ButtonFunction } from './ButtonStructure';
-import register from './buttonFunctions/normalEvent/register';
-import unregister from './buttonFunctions/normalEvent/unregister';
-import createTeam from './buttonFunctions/teamEvent/createTeam';
-import registerTeamPlayer from './buttonFunctions/teamEvent/registerTeamPlayer';
-import unregisterTeamPlayer from './buttonFunctions/teamEvent/unregisterTeamPlayer';
-import deleteTeam from './buttonFunctions/teamEvent/deleteTeam';
-import setMaxNumTeamPlayers from './buttonFunctions/teamEvent/setMaxNumTeamPlayers';
-import setMaxNumTeams from './buttonFunctions/teamEvent/setMaxNumTeams';
-import deleteEvent from './buttonFunctions/allEventButtonFunctions/deleteEvent';
-import removeTeamPlayer from './buttonFunctions/teamEvent/removeTeamPlayer';
-import removePlayer from './buttonFunctions/normalEvent/removePlayer';
-import editEventInfo from './buttonFunctions/normalEvent/editEventInfo';
-import editTeamEventInfo from './buttonFunctions/teamEvent/editTeamEventInfo';
-import editTeamInfo from './buttonFunctions/teamEvent/editTeamInfo';
-import setMaxNumPlayers from './buttonFunctions/normalEvent/setMaxNumPlayers';
+import { ButtonFunction } from './Button';
+import register from './functions/normalEvent/register';
+import unregister from './functions/normalEvent/unregister';
+import createTeam from './functions/teamEvent/createTeam';
+import registerTeamPlayer from './functions/teamEvent/registerTeamPlayer';
+import unregisterTeamPlayer from './functions/teamEvent/unregisterTeamPlayer';
+import deleteTeam from './functions/teamEvent/deleteTeam';
+import setMaxNumTeamPlayers from './functions/teamEvent/setMaxNumTeamPlayers';
+import setMaxNumTeams from './functions/teamEvent/setMaxNumTeams';
+import deleteEvent from './functions/allEventButtonFunctions/deleteEvent';
+import removeTeamPlayer from './functions/teamEvent/removeTeamPlayer';
+import removePlayer from './functions/normalEvent/removePlayer';
+import editEventInfo from './functions/normalEvent/editEventInfo';
+import editTeamEventInfo from './functions/teamEvent/editTeamEventInfo';
+import editTeamInfo from './functions/teamEvent/editTeamInfo';
+import setMaxNumPlayers from './functions/normalEvent/setMaxNumPlayers';
 
 const buttonList: ButtonFunction[] = [
 	register,
