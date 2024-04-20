@@ -106,8 +106,6 @@ const removeTeamPlayer: ButtonFunction = {
 				},
 			);
 
-			console.log(selectMenuOptions);
-
 			const selectMenu = new MessageActionRow().addComponents(
 				new MessageSelectMenu()
 					.setCustomId('removeTeamPlayer')

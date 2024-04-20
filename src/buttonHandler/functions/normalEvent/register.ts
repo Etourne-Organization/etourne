@@ -53,8 +53,6 @@ const register: ButtonFunction = {
 				r.name.includes('Registered players'),
 			);
 
-			console.log(interaction.user.username);
-
 			let newPlayersList: string = ' ';
 			if (registeredPlayers.value.length === 0) {
 				newPlayersList = `${interaction.user.username}\n`;
