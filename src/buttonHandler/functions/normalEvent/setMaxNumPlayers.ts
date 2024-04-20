@@ -27,13 +27,13 @@ const setMaxNumPlayers: ButtonFunction = {
 
 			const modal = new Modal()
 				.setCustomId(`maxNumPlayersModalSubmit-${interaction.id}`)
-				.setTitle('Create Team');
+				.setTitle('Set max number of players');
 
 			const input = new TextInputComponent()
 				.setCustomId('maxNumPlayersInput')
-				.setLabel('Num of team member limit')
+				.setLabel('Num of players limit')
 				.setStyle('SHORT')
-				.setPlaceholder('Enter limit for num of team members in each team')
+				.setPlaceholder('Enter limit for num of players')
 				.setValue(
 					maxNumPlayers[0]['maxNumPlayers']
 						? maxNumPlayers[0]['maxNumPlayers'].toString()

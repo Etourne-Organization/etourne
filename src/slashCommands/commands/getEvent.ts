@@ -80,6 +80,7 @@ const getEvent: Command = {
 							type: types.ERROR,
 						}),
 					],
+					content: ' ',
 				});
 			}
 
@@ -97,13 +98,15 @@ const getEvent: Command = {
 						eventInfo[0].channelId,
 					);
 
-					let fetchedMessage;
+					let fetchedMessage: any;
 
-					if (fetchedChannel!.isText()) {
-						fetchedMessage = await fetchedChannel.messages
-							.fetch(eventInfo[0].messageId)
-							.catch();
-					}
+					try {
+						if (fetchedChannel!.isText()) {
+							fetchedMessage = await fetchedChannel.messages.fetch(
+								eventInfo[0].messageId,
+							);
+						}
+					} catch (err) {}
 
 					if (fetchedMessage) {
 						const embed = new MessageEmbed()
@@ -125,7 +128,10 @@ const getEvent: Command = {
 							embeds: [embed],
 						});
 					}
-				} else {
+				}
+
+				// check if the event is team or normal
+				if (!eventInfo[0].isTeamEvent) {
 					const dbPlayers: [{ username: string; userId: string }?] =
 						await getAllPlayers({ eventId: eventId.value });
 
@@ -174,11 +180,11 @@ const getEvent: Command = {
 					const buttons = new MessageActionRow().addComponents(
 						new MessageButton()
 							.setCustomId('normalEventRegister')
-							.setLabel('Register')
+							.setLabel('Register yourself')
 							.setStyle('PRIMARY'),
 						new MessageButton()
 							.setCustomId('normalEventUnregister')
-							.setLabel('Unregister')
+							.setLabel('Unregister yourself')
 							.setStyle('DANGER'),
 					);
 
@@ -211,6 +217,102 @@ const getEvent: Command = {
 							managePlayerButtons,
 							manageEventButtons,
 						],
+					});
+
+					await setColumnValue({
+						data: [
+							{
+								id: eventId.value,
+								key: 'messageId',
+								value: newEventEmbed!.id,
+							},
+							{
+								id: eventId.value,
+								key: 'channelId',
+								value: interaction.channel!.id,
+							},
+						],
+					});
+
+					return await interaction.editReply({
+						content: ' ',
+						embeds: [
+							infoMessageEmbed({
+								title: ':white_check_mark: Event reshared Successfully',
+								type: types.SUCCESS,
+							}),
+						],
+					});
+				} else {
+					const eventEmbed = new MessageEmbed()
+						.setColor(botConfig.color.default)
+						.setTitle(eventInfo[0].eventName)
+						.setDescription(
+							`**----------------------------------------** \n **Event description:** \n \n >>> ${eventInfo[0].description}  \n \n`,
+						)
+						.addFields([
+							{
+								name: 'Event date & time',
+								value: `<t:${dayjs(
+									eventInfo[0]['dateTime'],
+								).unix()}:F>`,
+								inline: true,
+							},
+							{
+								name: 'Game name',
+								value: eventInfo[0].gameName,
+								inline: true,
+							},
+							{
+								name: 'Max num of teams',
+								value: eventInfo[0].maxNumTeams
+									? eventInfo[0].maxNumTeams
+									: 'Unlimited',
+							},
+							{
+								name: 'Max num of team players',
+								value: eventInfo[0].maxNumTeamPlayers
+									? eventInfo[0].maxNumTeamPlayers
+									: 'Unlimited',
+							},
+							{ name: 'Hosted by', value: eventInfo[0].eventHost },
+						])
+						.setFooter({
+							text: `Event ID: ${eventId.value}`,
+						});
+
+					const buttons = new MessageActionRow().addComponents(
+						new MessageButton()
+							.setCustomId('createTeam')
+							.setLabel('Create Team')
+							.setStyle('PRIMARY'),
+					);
+
+					const setMaxNumButtons = new MessageActionRow().addComponents(
+						new MessageButton()
+							.setCustomId('setMaxNumTeams')
+							.setLabel('Set max num of teams')
+							.setStyle('SECONDARY'),
+						new MessageButton()
+							.setCustomId('setMaxNumTeamPlayers')
+							.setLabel('Set max num of team players')
+							.setStyle('SECONDARY'),
+					);
+
+					const manageEventButtons = new MessageActionRow().addComponents(
+						new MessageButton()
+							.setCustomId('editTeamEventInfo')
+							.setLabel('⚙️  Edit event info')
+							.setStyle('SECONDARY'),
+						new MessageButton()
+							.setCustomId('deleteEvent')
+							.setLabel('🗑️  Delete event')
+							.setStyle('DANGER'),
+					);
+
+					const newEventEmbed = await interaction.channel?.send({
+						embeds: [eventEmbed],
+						components: [buttons, setMaxNumButtons, manageEventButtons],
 					});
 
 					await setColumnValue({

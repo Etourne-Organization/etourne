@@ -47,11 +47,11 @@ const teamModal: ModalSubmit = {
 			const buttons = new MessageActionRow().addComponents(
 				new MessageButton()
 					.setCustomId('registerTeamPlayer')
-					.setLabel('Register')
+					.setLabel('Register yourself')
 					.setStyle('PRIMARY'),
 				new MessageButton()
 					.setCustomId('unregisterTeamPlayer')
-					.setLabel('Unregister')
+					.setLabel('Unregister yourself')
 					.setStyle('DANGER'),
 			);
 

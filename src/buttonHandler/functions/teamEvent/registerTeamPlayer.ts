@@ -32,13 +32,14 @@ const registerTeamPlayer: ButtonFunction = {
 			});
 
 			if (!(await checkTeamExists({ teamId: parseInt(teamId) }))) {
-				return interaction.editReply({
+				return interaction.followUp({
 					embeds: [
 						infoMessageEmbed({
 							title: 'The team does not exist anymore, maybe it was deleted?',
 							type: types.ERROR,
 						}),
 					],
+					ephemeral: true,
 				});
 			}
 
@@ -47,13 +48,14 @@ const registerTeamPlayer: ButtonFunction = {
 				(await getNumOfTeamPlayers({ teamId: teamId })) ===
 					maxNumTeamPlayers[0]['maxNumTeamPlayers']
 			) {
-				return await interaction.editReply({
+				return await interaction.followUp({
 					embeds: [
 						infoMessageEmbed({
 							title: 'Number of players has reached the limit!',
 							type: types.ERROR,
 						}),
 					],
+					ephemeral: true,
 				});
 			}
 
@@ -72,13 +74,14 @@ const registerTeamPlayer: ButtonFunction = {
 						.split('\n')
 						.indexOf(interaction.user.tag) !== -1
 				) {
-					return await interaction.editReply({
+					return await interaction.followUp({
 						embeds: [
 							infoMessageEmbed({
 								title: 'You are already registered!',
 								type: types.ERROR,
 							}),
 						],
+						ephemeral: true,
 					});
 				} else {
 					const oldPlayersList: [string] = registeredPlayers.value

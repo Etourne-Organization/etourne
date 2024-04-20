@@ -67,11 +67,11 @@ const normalEventModal: ModalSubmit = {
 			const buttons = new MessageActionRow().addComponents(
 				new MessageButton()
 					.setCustomId('normalEventRegister')
-					.setLabel('Register')
+					.setLabel('Register yourself')
 					.setStyle('PRIMARY'),
 				new MessageButton()
 					.setCustomId('normalEventUnregister')
-					.setLabel('Unregister')
+					.setLabel('Unregister yourself')
 					.setStyle('DANGER'),
 			);
 

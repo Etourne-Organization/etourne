@@ -32,7 +32,7 @@ const register: ButtonFunction = {
 				(await getNumOfPlayers({ eventId: eventId })) ===
 					maxNumPlayers[0]['maxNumPlayers']
 			) {
-				return await interaction.reply({
+				return await interaction.followUp({
 					embeds: [
 						infoMessageEmbed({
 							title: ':warning: Number of players has reached the limit!',
@@ -63,7 +63,7 @@ const register: ButtonFunction = {
 						.split('\n')
 						.indexOf(interaction.user.tag) !== -1
 				) {
-					return await interaction.reply({
+					return await interaction.followUp({
 						embeds: [
 							infoMessageEmbed({
 								title: 'You are already registered!',

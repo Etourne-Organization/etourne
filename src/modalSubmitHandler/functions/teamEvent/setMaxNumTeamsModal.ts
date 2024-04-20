@@ -33,7 +33,7 @@ const setMaxNumTeamsModal: ModalSubmit = {
 					)
 					.setTimestamp();
 
-				return await interaction.reply({
+				return await interaction.followUp({
 					embeds: [replyEmbed],
 					ephemeral: true,
 				});

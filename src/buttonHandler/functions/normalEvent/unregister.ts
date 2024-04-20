@@ -30,13 +30,14 @@ const unregister: ButtonFunction = {
 
 			let newPlayersList: string = ' ';
 			if (registeredPlayers.value.length === 0) {
-				return await interaction.editReply({
+				return await interaction.followUp({
 					embeds: [
 						infoMessageEmbed({
 							title: ':warning: The registration list is empty!',
 							type: types.ERROR,
 						}),
 					],
+					ephemeral: true,
 				});
 			} else {
 				const oldPlayersList: [string] = registeredPlayers.value
@@ -44,13 +45,14 @@ const unregister: ButtonFunction = {
 					.split('\n');
 
 				if (oldPlayersList.indexOf(interaction.user.tag) === -1) {
-					return await interaction.editReply({
+					return await interaction.followUp({
 						embeds: [
 							infoMessageEmbed({
 								title: 'You are not registered!',
 								type: types.ERROR,
 							}),
 						],
+						ephemeral: true,
 					});
 				}
 

@@ -78,14 +78,14 @@ const removeTeamPlayer: ButtonFunction = {
 				});
 
 			if (!(teamPlayers!.length > 0))
-				return interaction.reply({
+				return interaction.editReply({
 					embeds: [
 						infoMessageEmbed({
 							title: ':warning: There are no team players to remove!',
 							type: types.ERROR,
 						}),
 					],
-					ephemeral: true,
+					content: ' ',
 				});
 
 			const selectMenuOptions: Array<{

@@ -19,13 +19,14 @@ const unregisterTeamPlayer: ButtonFunction = {
 				interaction.message.embeds[0].footer?.text.split(' ')[2];
 
 			if (!(await checkTeamExists({ teamId: parseInt(teamId) }))) {
-				return interaction.editReply({
+				return interaction.followUp({
 					embeds: [
 						infoMessageEmbed({
 							title: ':warning: The team does not exist anymore, maybe it was deleted?',
 							type: types.ERROR,
 						}),
 					],
+					ephemeral: true,
 				});
 			}
 
@@ -36,13 +37,14 @@ const unregisterTeamPlayer: ButtonFunction = {
 
 			let newPlayersList: string = ' ';
 			if (registeredPlayers.value.length === 0) {
-				return await interaction.editReply({
+				return await interaction.followUp({
 					embeds: [
 						infoMessageEmbed({
 							title: ':warning: The registration list is empty!',
 							type: types.ERROR,
 						}),
 					],
+					ephemeral: true,
 				});
 			} else {
 				const oldPlayersList: [string] = registeredPlayers.value
@@ -50,13 +52,14 @@ const unregisterTeamPlayer: ButtonFunction = {
 					.split('\n');
 
 				if (oldPlayersList.indexOf(interaction.user.tag) === -1) {
-					return await interaction.editReply({
+					return await interaction.followUp({
 						embeds: [
 							infoMessageEmbed({
-								title: ':warning: ou are not registered!',
+								title: ':warning: You are not registered!',
 								type: types.ERROR,
 							}),
 						],
+						ephemeral: true,
 					});
 				}
 
