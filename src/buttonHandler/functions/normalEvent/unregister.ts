@@ -13,6 +13,8 @@ const unregister: ButtonFunction = {
 	customId: 'normalEventUnregister',
 	run: async (client: Client, interaction: ButtonInteraction) => {
 		try {
+			await interaction.deferUpdate();
+
 			const eventId: string | any =
 				interaction.message.embeds[0].footer?.text.split(': ')[1];
 
@@ -28,14 +30,13 @@ const unregister: ButtonFunction = {
 
 			let newPlayersList: string = ' ';
 			if (registeredPlayers.value.length === 0) {
-				return await interaction.reply({
+				return await interaction.editReply({
 					embeds: [
 						infoMessageEmbed({
 							title: ':warning: The registration list is empty!',
 							type: types.ERROR,
 						}),
 					],
-					ephemeral: true,
 				});
 			} else {
 				const oldPlayersList: [string] = registeredPlayers.value
@@ -43,14 +44,13 @@ const unregister: ButtonFunction = {
 					.split('\n');
 
 				if (oldPlayersList.indexOf(interaction.user.tag) === -1) {
-					return await interaction.reply({
+					return await interaction.editReply({
 						embeds: [
 							infoMessageEmbed({
 								title: 'You are not registered!',
 								type: types.ERROR,
 							}),
 						],
-						ephemeral: true,
 					});
 				}
 
@@ -93,9 +93,19 @@ const unregister: ButtonFunction = {
 				eventId: parseInt(eventId),
 			});
 
-			return await interaction.update({ embeds: [editedEmbed] });
+			await interaction.editReply({ embeds: [editedEmbed] });
+
+			return await interaction.followUp({
+				embeds: [
+					infoMessageEmbed({
+						title: ':white_check_mark: Unregistered',
+						type: types.SUCCESS,
+					}),
+				],
+				ephemeral: true,
+			});
 		} catch (err) {
-			await interaction.reply({
+			await interaction.editReply({
 				embeds: [
 					infoMessageEmbed({
 						title: errorMessageTemplate({
@@ -107,7 +117,6 @@ const unregister: ButtonFunction = {
 						type: types.ERROR,
 					}),
 				],
-				ephemeral: true,
 			});
 
 			logFile({

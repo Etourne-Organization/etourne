@@ -19,19 +19,24 @@ const removeTeamPlayer: ButtonFunction = {
 	customId: 'removeTeamPlayer',
 	run: async (client: Client, interaction: ButtonInteraction) => {
 		try {
+			await interaction.reply({
+				content: ':hourglass_flowing_sand:  Processing...',
+				ephemeral: true,
+			});
+
 			const footer = interaction.message.embeds[0].footer?.text;
 			const teamId: string | any =
 				interaction.message.embeds[0].footer?.text.split(' ')[2];
 
 			if (!(await checkTeamExists({ teamId: parseInt(teamId) }))) {
-				return interaction.reply({
+				return interaction.editReply({
 					embeds: [
 						infoMessageEmbed({
 							title: 'The team does not exist anymore, maybe it was deleted?',
 							type: types.ERROR,
 						}),
 					],
-					ephemeral: true,
+					content: ' ',
 				});
 			}
 
@@ -56,14 +61,14 @@ const removeTeamPlayer: ButtonFunction = {
 				(userRoleDB.length === 0 ||
 					(userRoleDB[0]['roleId'] !== 3 && userRoleDB[0]['roleId'] !== 2))
 			) {
-				return interaction.reply({
+				return interaction.editReply({
 					embeds: [
 						infoMessageEmbed({
 							title: ':warning: You are not allowed use this button!',
 							type: types.ERROR,
 						}),
 					],
-					ephemeral: true,
+					content: ' ',
 				});
 			}
 
@@ -114,13 +119,13 @@ const removeTeamPlayer: ButtonFunction = {
 				.setFooter({ text: `${footer}` })
 				.setTimestamp();
 
-			await interaction.reply({
+			await interaction.editReply({
 				embeds: [selectMessageEmbed],
-				ephemeral: true,
 				components: [selectMenu],
+				content: ' ',
 			});
 		} catch (err) {
-			await interaction.reply({
+			await interaction.editReply({
 				embeds: [
 					infoMessageEmbed({
 						title: errorMessageTemplate().title,
@@ -128,7 +133,7 @@ const removeTeamPlayer: ButtonFunction = {
 						type: types.ERROR,
 					}),
 				],
-				ephemeral: true,
+				content: ' ',
 			});
 
 			logFile({

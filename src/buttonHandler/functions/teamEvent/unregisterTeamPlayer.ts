@@ -12,19 +12,20 @@ const unregisterTeamPlayer: ButtonFunction = {
 	customId: 'unregisterTeamPlayer',
 	run: async (client: Client, interaction: ButtonInteraction) => {
 		try {
+			await interaction.deferUpdate();
+
 			const footer = interaction.message.embeds[0].footer?.text;
 			const teamId: string | any =
 				interaction.message.embeds[0].footer?.text.split(' ')[2];
 
 			if (!(await checkTeamExists({ teamId: parseInt(teamId) }))) {
-				return interaction.reply({
+				return interaction.editReply({
 					embeds: [
 						infoMessageEmbed({
 							title: ':warning: The team does not exist anymore, maybe it was deleted?',
 							type: types.ERROR,
 						}),
 					],
-					ephemeral: true,
 				});
 			}
 
@@ -35,14 +36,13 @@ const unregisterTeamPlayer: ButtonFunction = {
 
 			let newPlayersList: string = ' ';
 			if (registeredPlayers.value.length === 0) {
-				return await interaction.reply({
+				return await interaction.editReply({
 					embeds: [
 						infoMessageEmbed({
 							title: ':warning: The registration list is empty!',
 							type: types.ERROR,
 						}),
 					],
-					ephemeral: true,
 				});
 			} else {
 				const oldPlayersList: [string] = registeredPlayers.value
@@ -50,14 +50,13 @@ const unregisterTeamPlayer: ButtonFunction = {
 					.split('\n');
 
 				if (oldPlayersList.indexOf(interaction.user.tag) === -1) {
-					return await interaction.reply({
+					return await interaction.editReply({
 						embeds: [
 							infoMessageEmbed({
 								title: ':warning: ou are not registered!',
 								type: types.ERROR,
 							}),
 						],
-						ephemeral: true,
 					});
 				}
 
@@ -100,9 +99,19 @@ const unregisterTeamPlayer: ButtonFunction = {
 				.addFields(interaction.message.embeds[0].fields || [])
 				.setFooter({ text: `${footer}` });
 
-			return await interaction.update({ embeds: [editedEmbed] });
+			await interaction.editReply({ embeds: [editedEmbed] });
+
+			return await interaction.followUp({
+				embeds: [
+					infoMessageEmbed({
+						title: ':white_check_mark: Unregistered',
+						type: types.SUCCESS,
+					}),
+				],
+				ephemeral: true,
+			});
 		} catch (err) {
-			await interaction.reply({
+			await interaction.editReply({
 				embeds: [
 					infoMessageEmbed({
 						title: errorMessageTemplate().title,
@@ -110,7 +119,6 @@ const unregisterTeamPlayer: ButtonFunction = {
 						type: types.ERROR,
 					}),
 				],
-				ephemeral: true,
 			});
 
 			logFile({

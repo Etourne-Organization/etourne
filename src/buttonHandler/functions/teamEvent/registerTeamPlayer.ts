@@ -18,6 +18,8 @@ const registerTeamPlayer: ButtonFunction = {
 	customId: 'registerTeamPlayer',
 	run: async (client: Client, interaction: ButtonInteraction) => {
 		try {
+			await interaction.deferUpdate();
+
 			const footer = interaction.message.embeds[0].footer?.text;
 			const teamId: string | any =
 				interaction.message.embeds[0].footer?.text.split(' ')[2];
@@ -30,14 +32,13 @@ const registerTeamPlayer: ButtonFunction = {
 			});
 
 			if (!(await checkTeamExists({ teamId: parseInt(teamId) }))) {
-				return interaction.reply({
+				return interaction.editReply({
 					embeds: [
 						infoMessageEmbed({
 							title: 'The team does not exist anymore, maybe it was deleted?',
 							type: types.ERROR,
 						}),
 					],
-					ephemeral: true,
 				});
 			}
 
@@ -46,14 +47,13 @@ const registerTeamPlayer: ButtonFunction = {
 				(await getNumOfTeamPlayers({ teamId: teamId })) ===
 					maxNumTeamPlayers[0]['maxNumTeamPlayers']
 			) {
-				return await interaction.reply({
+				return await interaction.editReply({
 					embeds: [
 						infoMessageEmbed({
 							title: 'Number of players has reached the limit!',
 							type: types.ERROR,
 						}),
 					],
-					ephemeral: true,
 				});
 			}
 
@@ -72,14 +72,13 @@ const registerTeamPlayer: ButtonFunction = {
 						.split('\n')
 						.indexOf(interaction.user.tag) !== -1
 				) {
-					return await interaction.reply({
+					return await interaction.editReply({
 						embeds: [
 							infoMessageEmbed({
 								title: 'You are already registered!',
 								type: types.ERROR,
 							}),
 						],
-						ephemeral: true,
 					});
 				} else {
 					const oldPlayersList: [string] = registeredPlayers.value
@@ -125,9 +124,19 @@ const registerTeamPlayer: ButtonFunction = {
 				.addFields(interaction.message.embeds[0].fields || [])
 				.setFooter({ text: `${footer}` });
 
-			return await interaction.update({ embeds: [editedEmbed] });
+			await interaction.editReply({ embeds: [editedEmbed] });
+
+			return await interaction.followUp({
+				embeds: [
+					infoMessageEmbed({
+						title: ':white_check_mark: Registered',
+						type: types.SUCCESS,
+					}),
+				],
+				ephemeral: true,
+			});
 		} catch (err) {
-			await interaction.reply({
+			await interaction.editReply({
 				embeds: [
 					infoMessageEmbed({
 						title: errorMessageTemplate({
@@ -139,7 +148,7 @@ const registerTeamPlayer: ButtonFunction = {
 						type: types.ERROR,
 					}),
 				],
-				ephemeral: true,
+				content: ' ',
 			});
 
 			logFile({

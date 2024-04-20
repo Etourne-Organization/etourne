@@ -18,6 +18,11 @@ const removePlayer: ButtonFunction = {
 	customId: 'removePlayer',
 	run: async (client: Client, interaction: ButtonInteraction) => {
 		try {
+			await interaction.reply({
+				content: ':hourglass_flowing_sand:  Processing...',
+				ephemeral: true,
+			});
+
 			// check user role in DB
 			const userRoleDB: any = await getUserRole({
 				discordUserId: interaction.user.id,
@@ -28,14 +33,14 @@ const removePlayer: ButtonFunction = {
 				userRoleDB.length === 0 ||
 				(userRoleDB[0]['roleId'] !== 3 && userRoleDB[0]['roleId'] !== 2)
 			) {
-				return await interaction.reply({
+				return await interaction.editReply({
 					embeds: [
 						infoMessageEmbed({
 							title: ':warning: You are not allowed to use this button!',
 							type: types.ERROR,
 						}),
 					],
-					ephemeral: true,
+					content: ' ',
 				});
 			}
 
@@ -49,14 +54,14 @@ const removePlayer: ButtonFunction = {
 				});
 
 			if (!(players!.length > 0))
-				return interaction.reply({
+				return interaction.editReply({
 					embeds: [
 						infoMessageEmbed({
 							title: ':warning: There are no players to remove!',
 							type: types.ERROR,
 						}),
 					],
-					ephemeral: true,
+					content: ' ',
 				});
 
 			const selectMenuOptions: Array<{
@@ -77,8 +82,6 @@ const removePlayer: ButtonFunction = {
 				},
 			);
 
-			console.log(players);
-
 			const selectMenu = new MessageActionRow().addComponents(
 				new MessageSelectMenu()
 					.setCustomId('removePlayer')
@@ -92,13 +95,13 @@ const removePlayer: ButtonFunction = {
 				.setFooter({ text: `${footer}` })
 				.setTimestamp();
 
-			await interaction.reply({
+			await interaction.editReply({
 				embeds: [selectMessageEmbed],
-				ephemeral: true,
 				components: [selectMenu],
+				content: ' ',
 			});
 		} catch (err) {
-			await interaction.reply({
+			await interaction.editReply({
 				embeds: [
 					infoMessageEmbed({
 						title: errorMessageTemplate().title,
@@ -106,7 +109,7 @@ const removePlayer: ButtonFunction = {
 						type: types.ERROR,
 					}),
 				],
-				ephemeral: true,
+				content: ' ',
 			});
 
 			logFile({

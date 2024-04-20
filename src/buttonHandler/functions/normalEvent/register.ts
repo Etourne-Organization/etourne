@@ -19,11 +19,6 @@ const register: ButtonFunction = {
 		try {
 			await interaction.deferUpdate();
 
-			// await interaction.reply({
-			// 	content: ':hourglass_flowing_sand:  Registering...',
-			// 	ephemeral: true,
-			// });
-
 			const eventId: string | any =
 				interaction.message.embeds[0].footer?.text.split(': ')[1];
 
@@ -123,7 +118,7 @@ const register: ButtonFunction = {
 
 			await interaction.editReply({ embeds: [editedEmbed] });
 
-			await interaction.followUp({
+			return await interaction.followUp({
 				embeds: [
 					infoMessageEmbed({
 						title: ':white_check_mark: Registered',
