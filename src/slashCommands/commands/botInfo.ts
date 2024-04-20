@@ -21,7 +21,7 @@ const botInfo: Command = {
 				})
 				.addFields(
 					{ name: 'Bot Tag', value: `${client.user!.username}` },
-					{ name: 'Bot version', value: `1.0.0` },
+					{ name: 'Bot version', value: `1.2` },
 					{
 						name: 'Bot command prefix',
 						value: `\`${process.env.PREFIX}\``,
