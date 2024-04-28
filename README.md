@@ -4,6 +4,10 @@
 
 <img src="./images/Etourne%20Architecture%20Diagram.png" style="border: 1px solid; margin: 10px 0;">
 
+## Database Diagram
+
+<img src="./images/db-diagram.png" style="border: 1px solid; margin: 10px 0;">
+
 ## Prerequisites
 
 **Note for Windows:** This was tested on powershell which works properly.
