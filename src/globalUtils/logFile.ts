@@ -1,27 +1,23 @@
-import fs from 'fs';
+import { appendFile } from "fs";
 
 interface logFile {
-	error: any;
-	file: string;
-	folder: string;
+  error: any;
+  file: string;
+  folder: string;
 }
 
 const logFile = (props: logFile) => {
-	const { error, file, folder } = props;
+  const { error, file, folder } = props;
 
-	try {
-		fs.appendFile(
-			'logs/err_logs.txt',
-			`${new Date().toUTCString()} : Something went wrong in ${folder}/${file}.ts \n Actual error: ${error} \n \n`,
-			(err) => {
-				if (err) throw err;
-			},
-		);
+  try {
+    appendFile("logs/err_logs.txt", `[${new Date().toUTCString()}] \n ${error} \n \n`, (err) => {
+      if (err) throw err;
+    });
 
-		return false;
-	} catch (err) {
-		console.log('Error logging failed');
-	}
+    return false;
+  } catch (err) {
+    console.log("Error logging failed");
+  }
 };
 
 export default logFile;

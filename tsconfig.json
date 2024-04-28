@@ -1,4 +1,9 @@
 {
+	"ts-node": {
+		"require": [
+			"tsconfig-paths/register"
+		]
+	},
 	"compilerOptions": {
 		"target": "ESNext",
 		"module": "commonjs",
@@ -14,11 +19,30 @@
 		"resolveJsonModule": true,
 		"forceConsistentCasingInFileNames": true,
 		"removeComments": true,
-		"typeRoots": ["node_modules/@types"],
+		"typeRoots": [
+			"node_modules/@types"
+		],
 		"sourceMap": false,
-		"baseUrl": "./"
+		"baseUrl": "./",
+		"paths": {
+			"utilities/*": [
+				"./src/utilities/*"
+			],
+			"src/*": [
+				"./src/*"
+			],
+		}
 	},
-	"files": ["src/bot.ts"],
-	"include": ["./**/*.ts", "./*.ts", "./**/**/*.ts"],
-	"exclude": ["node_modules", "prod"]
+	"files": [
+		"src/bot.ts"
+	],
+	"include": [
+		"./**/*.ts",
+		"./*.ts",
+		"./**/**/*.ts"
+	],
+	"exclude": [
+		"node_modules",
+		"prod"
+	]
 }

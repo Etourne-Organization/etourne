@@ -6,126 +6,118 @@
 
 */
 
-import { supabase } from '../supabase';
-import { addUser, getUserId, getUsernameAndDiscordId } from './users';
+import { throwFormattedErrorLog } from "src/globalUtils/logErrorFormat";
+import { supabase } from "../supabase";
+import { addUser, getUserId, getUsernameAndDiscordId } from "./users";
 
 interface addPlayer {
-	discordUserId: string;
-	teamId: number;
-	discordServerId: string;
-	username: string;
+  discordUserId: string;
+  teamId: number;
+  discordServerId: string;
+  username: string;
 }
 
 interface removePlayer {
-	discordUserId: string;
-	teamId: number;
+  discordUserId: string;
+  teamId: number;
 }
 
 interface getAllTeamPlayers {
-	teamId: number;
+  teamId: number;
 }
 
 interface getNumOfTeamPlayers {
-	teamId: number;
+  teamId: number;
 }
 
 export const addPlayer = async (props: addPlayer) => {
-	const { discordUserId, teamId, discordServerId, username } = props;
+  const { discordUserId, teamId, discordServerId, username } = props;
 
-	let dbUserId: number;
+  let dbUserId: number;
 
-	// get user ID from DB
-	const { data: getUserIdData, error: getUserIdError } = await getUserId({
-		discordUserId: discordUserId,
-	});
+  // get user ID from DB
+  const { data: getUserIdData, error: getUserIdError } = await getUserId({
+    discordUserId: discordUserId,
+  });
 
-	if (getUserIdError)
-		throw `teamPlayers:addPlayer:getUserIdError ${getUserIdError}`;
+  if (getUserIdError) throw throwFormattedErrorLog(getUserIdError);
 
-	// add user to the Supabase DB if the user does not exist
-	if (getUserIdData!.length < 1) {
-		const { data: addUserData, error: addUserError } = await addUser({
-			username: username,
-			discordUserId: discordUserId,
-			discordServerId: discordServerId!,
-		});
+  // add user to the Supabase DB if the user does not exist
+  if (getUserIdData!.length < 1) {
+    const { data: addUserData, error: addUserError } = await addUser({
+      username: username,
+      discordUserId: discordUserId,
+      discordServerId: discordServerId!,
+    });
 
-		if (addUserError)
-			throw `teamPlayers:addPlayer:addUserError ${addUserError}`;
+    if (addUserError) throw throwFormattedErrorLog(addUserError);
 
-		dbUserId = addUserData![0]['id'];
-	} else {
-		dbUserId = getUserIdData![0]['id'];
-	}
+    dbUserId = addUserData![0]["id"];
+  } else {
+    dbUserId = getUserIdData![0]["id"];
+  }
 
-	const { data, error } = await supabase.from('TeamPlayers').insert([
-		{
-			teamId: teamId,
-			userId: dbUserId,
-		},
-	]);
+  const { data, error } = await supabase.from("TeamPlayers").insert([
+    {
+      teamId: teamId,
+      userId: dbUserId,
+    },
+  ]);
 
-	if (error) throw `teamPlayers:addPlayer ${error}`;
+  if (error) throw throwFormattedErrorLog(error);
 
-	return { data, error };
+  return { data, error };
 };
 
 export const removePlayer = async (props: removePlayer) => {
-	const { discordUserId, teamId } = props;
+  const { discordUserId, teamId } = props;
 
-	// get user ID from DB
-	const { data: getUserIdData, error: getUserIdError } = await getUserId({
-		discordUserId: discordUserId,
-	});
+  // get user ID from DB
+  const { data: getUserIdData, error: getUserIdError } = await getUserId({
+    discordUserId: discordUserId,
+  });
 
-	if (getUserIdError)
-		throw `teamPlayers:removePlayer:getUserIdError ${getUserIdError}`;
+  if (getUserIdError) throw throwFormattedErrorLog(getUserIdError);
 
-	const { data, error } = await supabase
-		.from('TeamPlayers')
-		.delete()
-		.eq('userId', getUserIdData![0]['id'])
-		.eq('teamId', teamId);
+  const { data, error } = await supabase
+    .from("TeamPlayers")
+    .delete()
+    .eq("userId", getUserIdData![0]["id"])
+    .eq("teamId", teamId);
 
-	if (error) throw `teamPlayers:removePlayer ${error}`;
+  if (error) throw throwFormattedErrorLog(error);
 
-	return { data, error };
+  return { data, error };
 };
 
 export const getAllTeamPlayers = async (props: getAllTeamPlayers) => {
-	const { teamId } = props;
+  const { teamId } = props;
 
-	let players: [{ username: string; userId: string }?] = [];
+  let players: [{ username: string; userId: string }?] = [];
 
-	const { data, error } = await supabase
-		.from('TeamPlayers')
-		.select('userId')
-		.eq('teamId', teamId);
+  const { data, error } = await supabase.from("TeamPlayers").select("userId").eq("teamId", teamId);
 
-	if (error) throw `teamPlayers:getAllTeamPlayers ${error}`;
+  if (error) throw throwFormattedErrorLog(error);
 
-	for (const d of data!) {
-		const us: [{ username: string }] | any = await getUsernameAndDiscordId({
-			userId: d.userId,
-		});
-		players.push({
-			username: us[0]['username'],
-			userId: us[0]['userId'].toString(),
-		});
-	}
+  for (const d of data!) {
+    const us: [{ username: string }] | any = await getUsernameAndDiscordId({
+      userId: d.userId,
+    });
+    players.push({
+      username: us[0]["username"],
+      userId: us[0]["userId"].toString(),
+    });
+  }
 
-	return players;
+  return players;
 };
 
 export const getNumOfTeamPlayers = async (props: getNumOfTeamPlayers) => {
-	const { teamId } = props;
+  const { teamId } = props;
 
-	const { data, error } = await supabase
-		.from('TeamPlayers')
-		.select('id')
-		.eq('teamId', teamId);
+  const { data, error } = await supabase.from("TeamPlayers").select("id").eq("teamId", teamId);
 
-	if (error) throw `teamPlayers:getNumOfTeamPlayers ${error}`;
+  if (error) throw throwFormattedErrorLog(error);
 
-	return data.length;
+  return data.length;
 };

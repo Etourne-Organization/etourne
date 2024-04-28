@@ -6,6 +6,7 @@
 
 */
 
+import { throwFormattedErrorLog } from 'src/globalUtils/logErrorFormat';
 import { supabase } from '../supabase';
 
 interface getRole {
@@ -20,7 +21,7 @@ export const getRoleId = async (props: getRole) => {
 		.select('id')
 		.eq('name', roleName);
 
-	if (error) throw `roles:getRoleId ${error}`;
+	if (error) throw throwFormattedErrorLog(error);
 
 	return { data, error };
 };

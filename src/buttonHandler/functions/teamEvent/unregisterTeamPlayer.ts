@@ -16,7 +16,7 @@ const unregisterTeamPlayer: ButtonFunction = {
 
 			const footer = interaction.message.embeds[0].footer?.text;
 			const teamId: string | any =
-				interaction.message.embeds[0].footer?.text.split(' ')[2];
+				interaction.message.embeds[0].footer?.text.split(' ')[2]
 
 			if (!(await checkTeamExists({ teamId: parseInt(teamId) }))) {
 				return interaction.followUp({

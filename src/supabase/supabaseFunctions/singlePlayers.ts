@@ -6,6 +6,7 @@
 
 */
 
+import { throwFormattedErrorLog } from 'src/globalUtils/logErrorFormat';
 import { supabase } from '../supabase';
 import { addUser, getUserId, getUsernameAndDiscordId } from './users';
 
@@ -60,7 +61,7 @@ export const addPlayer = async (props: addPlayer) => {
 		},
 	]);
 
-	if (error) throw `singlePlayers:addPlayer ${error}`;
+	if (error) throw throwFormattedErrorLog(error);
 
 	return { data, error };
 };
@@ -79,7 +80,7 @@ export const removePlayer = async (props: removePlayer) => {
 		.eq('userId', getUserIdData![0]['id'])
 		.eq('eventId', eventId);
 
-	if (error) throw `singlePlayers:removePlayer ${error}`;
+	if (error) throw throwFormattedErrorLog(error);
 
 	return { data, error };
 };
@@ -94,7 +95,7 @@ export const getAllPlayers = async (props: getAllPlayers) => {
 		.select('userId')
 		.eq('eventId', eventId);
 
-	if (error) throw `singlePlayers:getAllPlayers ${error}`;
+	if (error) throw throwFormattedErrorLog(error);
 
 	if (data)
 		for (const d of data!) {
@@ -120,7 +121,7 @@ export const getNumOfPlayers = async (props: getNumOfPlayers) => {
 		.select('id')
 		.eq('eventId', eventId);
 
-	if (error) throw `singlePlayers:getNumOfPlayers ${error}`;
+	if (error) throw throwFormattedErrorLog(error);
 
 	return data.length;
 };

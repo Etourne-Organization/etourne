@@ -6,6 +6,7 @@
 
 */
 
+import { throwFormattedErrorLog } from 'src/globalUtils/logErrorFormat';
 import { supabase } from '../supabase';
 
 interface checkServerExists {
@@ -34,7 +35,7 @@ export const checkServerExists = async (props: checkServerExists) => {
 		.select('id')
 		.eq('serverId', discordServerId);
 
-	if (error) throw `servers:checkServerExists ${error}`;
+	if (error) throw throwFormattedErrorLog(error);
 
 	if (data!.length > 0) {
 		return true;
@@ -51,7 +52,7 @@ export const addServer = async (props: addServer) => {
 		.insert([{ serverId: discordServerId, name: name }])
 		.select();
 
-	if (error) throw `servers:addServer ${error}`;
+	if (error) throw throwFormattedErrorLog(error);
 
 	return { data, error };
 };
@@ -65,7 +66,7 @@ export const checkAddServer = async (props: checkAddServer) => {
 			name: name,
 		});
 
-		if (error) throw `servers:checkAddServer ${error}`;
+		if (error) throw throwFormattedErrorLog(error);
 	}
 };
 
@@ -77,7 +78,7 @@ export const getServerId = async (props: getServer) => {
 		.select('id')
 		.eq('serverId', discordServerId);
 
-	if (error) throw `servers:getServerId ${error}`;
+	if (error) throw throwFormattedErrorLog(error);
 
 	return { data, error };
 };
