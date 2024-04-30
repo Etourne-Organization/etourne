@@ -1,77 +1,68 @@
-import fs from 'fs';
+import { Client, Intents } from "discord.js";
+import dotenv from "dotenv";
+import fs from "fs";
 
-require('dotenv').config();
-import { Client, Intents, Constants, Message } from 'discord.js';
+dotenv.config(); // ? must be above client events to ensure supabase works
 
-import commandHandler from './legacyCommands/commands';
-import interactionCreate from './listener/interactionCreate';
-import slashCommandsList from './slashCommands/slashCommandsList';
-import guildCreate from './listener/guildCreate';
+import legacyCommandHandler from "./interactionHandlers/legacyCommandHandler/commands";
+import slashCommandsList from "./interactionHandlers/slashCommandHandler/slashCommandList";
+import onNewGuild from "./listeners/guildCreate";
+import registerInteractionHandlers from "./listeners/interactionCreate";
 // import guildDelete from './listener/guildDelete';
 
+const startTime = new Date().getTime();
+
 const client = new Client({
-	partials: ['MESSAGE', 'REACTION'],
-	intents: [
-		Intents.FLAGS.GUILDS,
-		Intents.FLAGS.GUILD_MESSAGES,
-		Intents.FLAGS.DIRECT_MESSAGES,
-		Intents.FLAGS.GUILD_BANS,
-		Intents.FLAGS.GUILD_MESSAGE_TYPING,
-	],
+  partials: ["MESSAGE", "REACTION"],
+  intents: [
+    Intents.FLAGS.GUILDS,
+    Intents.FLAGS.GUILD_MESSAGES,
+    Intents.FLAGS.DIRECT_MESSAGES,
+    Intents.FLAGS.GUILD_BANS,
+    Intents.FLAGS.GUILD_MESSAGE_TYPING,
+  ],
 });
 
-client.on('ready', async () => {
-	if (!client.user || !client.application) {
-		return;
-	}
+client.once("ready", async () => {
+  if (!client.user || !client.application) return;
 
-	const guildId: string | any = process.env.GUILD_ID;
-	const guild = client.guilds.cache.get(guildId);
-	let commands;
+  const guildId = process.env.GUILD_ID || "";
+  const guild = client.guilds.cache.get(guildId);
+  const commands = guild ? guild.commands : client.application.commands;
 
-	if (guild && guildId != undefined) {
-		commands = guild.commands;
-	} else {
-		commands = client.application.commands;
-	}
+  const setupCommandsStart = new Date().getTime();
+  console.log(`[+${(setupCommandsStart - startTime) / 1000}s] Setting up slash commands 🤖`);
 
-	await commands.set(slashCommandsList);
+  await commands.set(slashCommandsList);
 
-	console.log(`${client.user!.tag} has logged in BEEP BEEP 🤖`);
+  const loginTime = new Date().getTime();
+  console.log(
+    `[+${(loginTime - setupCommandsStart) / 1000}s] ${client.user!.tag} has logged in BEEP BEEP 🤖`,
+  );
 
-	try {
-		fs.appendFile(
-			'logs/restart.txt',
-			`${new Date()} : Bot restarted \n`,
-			(err) => {
-				if (err) throw err;
-			},
-		);
-	} catch (err) {
-		console.log('Logging failed');
-	}
+  try {
+    fs.appendFileSync("logs/restart.txt", `${new Date()} : Bot restarted \n`);
+  } catch (err) {
+    console.log("Logging failed");
+  }
 
-	// set bot status
-	client.user.setPresence({
-		activities: [{ name: `/getstarted` }],
-	});
+  // Set bot status
+  const setBotPresence = () =>
+    client.user?.setPresence({
+      activities: [{ name: `/getstarted` }],
+    });
 
-	// run every 6 hours again to make sure it stays visible
-	setInterval(() => {
-		client.user?.setPresence({
-			activities: [{ name: `/getstarted` }],
-		});
-	}, 1000 * 60 * 360);
+  setBotPresence();
+
+  // Refresh presence every 6 hours
+  setInterval(setBotPresence, 21600000);
 });
 
-client.on('messageCreate', (message: Message) =>
-	commandHandler(message, client),
-);
+registerInteractionHandlers(client);
+onNewGuild(client);
 
-interactionCreate(client);
-guildCreate(client);
+legacyCommandHandler(client);
 // guildDelete(client);
 
+console.log("[+0.000s] Logging in 🤖");
 client.login(process.env.DISCORDJS_BOT_TOKEN);
-
-module.exports = { client };

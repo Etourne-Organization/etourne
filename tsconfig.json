@@ -25,6 +25,15 @@
 		"sourceMap": false,
 		"baseUrl": "./",
 		"paths": {
+			"botConfig": [
+				"./src/botConfig.ts"
+			],
+			"utils/*": [
+				"src/utils/*"
+			],
+			"supabaseDB/*": [
+				"./src/supabase/*"
+			],
 			"utilities/*": [
 				"./src/utilities/*"
 			],
