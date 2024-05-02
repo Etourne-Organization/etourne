@@ -1,10 +1,10 @@
-import { BaseCommandInteraction, Client, MessageEmbed } from "discord.js";
+import { BaseCommandInteraction, Client } from "discord.js";
 
-import { handleAsyncError } from "utils/logging/handleAsyncError";
 import InteractionHandler from "utils/interactions/interactionHandler";
 import CustomMessageEmbed from "utils/interactions/messageEmbed";
-import BOT_CONFIGS from "botConfig";
+import { handleAsyncError } from "utils/logging/handleAsyncError";
 import { Command } from "../type";
+import { createSupportEmbed } from "../utils/embeds";
 
 const requestSupport: Command = {
   name: "requestsupport",
@@ -13,13 +13,9 @@ const requestSupport: Command = {
   run: async (client: Client, interaction: BaseCommandInteraction) => {
     const interactionHandler = new InteractionHandler(interaction);
     try {
-      const embed = new MessageEmbed()
-        .setColor(BOT_CONFIGS.color.default)
-        .setTitle(":tools: Support")
-        .setDescription("Join the support server: https://discord.gg/vNe9QVrWNa")
-        .setTimestamp();
+      const supportEmbed = createSupportEmbed();
 
-      return interactionHandler.embeds(embed).reply();
+      return interactionHandler.embeds(supportEmbed).reply();
     } catch (err) {
       await handleAsyncError(err, () =>
         interactionHandler.embeds(new CustomMessageEmbed().defaultErrorTitle().Error).reply(),

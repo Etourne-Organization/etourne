@@ -42,14 +42,6 @@ const help: Command = {
             name: ":calendar_spiral:  Create event",
             value: `Create event, team or no team: </createevent:${COMMAND_IDS.CREATE_EVENT}>`,
           },
-          // {
-          // 	name: ':calendar_spiral:  Create event',
-          // 	value: `Create event (no-team): </createevent:${commandIds.CREATE_EVENT}>`,
-          // },
-          // {
-          // 	name: ':calendar_spiral:  Create team event',
-          // 	value: `Create team event: </createteamevent:${commandIds.CREATE_TEAM_EVENT}>`,
-          // },
           {
             name: ":mag_right:  Get event",
             value: `Get event from database: </getevent:${COMMAND_IDS.GET_EVENT}>`,

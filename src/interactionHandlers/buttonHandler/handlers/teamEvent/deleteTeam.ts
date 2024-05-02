@@ -1,14 +1,21 @@
-import { ButtonInteraction, Client, MessageActionRow, MessageButton } from "discord.js";
+import { ButtonInteraction, Client } from "discord.js";
 
-import { handleAsyncError } from "utils/logging/handleAsyncError";
+import { TEAM_FIELD_NAMES } from "src/interactionHandlers/modalSubmitHandler/utils/constants";
+import { findEmbedField } from "src/interactionHandlers/modalSubmitHandler/utils/utils";
+import {
+  collectorFilter,
+  createConfirmationBtns,
+  getButtonIds,
+} from "src/interactionHandlers/selectMenuHandler/utils/btnComponents";
+import { findFooterTeamId } from "src/interactionHandlers/utils";
+import { checkTeamExists, deleteTeam as deleteTeamSupabase } from "supabaseDB/methods/teams";
+import { getUserRole } from "supabaseDB/methods/users";
+import getMessageEmbed from "utils/getMessageEmbed";
 import InteractionHandler from "utils/interactions/interactionHandler";
 import CustomMessageEmbed from "utils/interactions/messageEmbed";
-import {
-  checkTeamExists,
-  deleteTeam as deleteTeamSupabase,
-} from "supabaseDB/methods/teams";
-import { getUserRole } from "supabaseDB/methods/users";
+import { handleAsyncError } from "utils/logging/handleAsyncError";
 import { ButtonFunction } from "../../type";
+import { createDeleteTeamConfirmationEmbed, createUnauthorizedRoleEmbed } from "../../utils/embeds";
 
 const deleteTeam: ButtonFunction = {
   customId: "deleteTeam",
@@ -18,48 +25,39 @@ const deleteTeam: ButtonFunction = {
     try {
       await interactionHandler.processing();
 
-      const teamLeader = interaction.message?.embeds[0].fields?.find(
-        (r) => r.name === "Team Leader",
-      );
+      const embed = getMessageEmbed(interaction, interactionHandler);
+      if (!embed) return;
 
-      // check user role in DB
+      const teamLeader = findEmbedField(embed.fields, TEAM_FIELD_NAMES.teamLeader);
+
       const userRoleDB = await getUserRole({
         discordUserId: interaction.user.id,
         discordServerId: interaction.guild!.id,
       });
 
       if (
-        interaction.user.username !== teamLeader?.value &&
-        (userRoleDB.length === 0 ||
-          (userRoleDB[0]["roleId"] !== 3 && userRoleDB[0]["roleId"] !== 2))
+        (interaction.user.username !== teamLeader && userRoleDB.length === 0) ||
+        (userRoleDB[0]["roleId"] !== 3 && userRoleDB[0]["roleId"] !== 2)
       ) {
-        return interactionHandler
-          .embeds(new CustomMessageEmbed().setTitle("You are not allowed to use this button!").Error)
-          .editReply();
+        const unauthorizedRoleEmbed = createUnauthorizedRoleEmbed();
+        return interactionHandler.embeds(unauthorizedRoleEmbed).editReply();
       }
 
-      const teamId: string = interaction.message.embeds[0].footer?.text.split(" ")[2] || "";
+      const teamId = findFooterTeamId(embed.footer);
 
       const fetchedMessage = await interaction.channel?.messages.fetch(interaction.message.id);
 
       if (fetchedMessage) {
-        const confirmationButtons = new MessageActionRow().addComponents(
-          new MessageButton().setCustomId("deleteYes").setLabel("✔").setStyle("SUCCESS"),
-          new MessageButton().setCustomId("deleteNo").setLabel("✖").setStyle("DANGER"),
-        );
+        const confirmationButtons = createConfirmationBtns();
 
-        await interactionHandler
-          .embeds(
-            new CustomMessageEmbed().setTitle("Are you sure you want to delete your team?").Question,
-          )
-          .editReply({
-            components: [confirmationButtons],
-          });
+        const removeTeamConfirmationEmbed = createDeleteTeamConfirmationEmbed();
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const filter = (btnInteraction: ButtonInteraction | any) =>
-          (btnInteraction.customId === "deleteYes" || btnInteraction.customId === "deleteNo") &&
-          btnInteraction.user.id === interaction.user.id;
+        await interactionHandler.embeds(removeTeamConfirmationEmbed).editReply({
+          components: [confirmationButtons],
+        });
+
+        const filter = (btnInteraction: ButtonInteraction | unknown) =>
+          collectorFilter(btnInteraction, interaction.user.id);
 
         const collector = interaction.channel?.createMessageComponentCollector({
           filter,
@@ -70,7 +68,9 @@ const deleteTeam: ButtonFunction = {
 
         collector?.on("collect", async (btnInteraction: ButtonInteraction) => {
           const btnInteractionHandler = new InteractionHandler(btnInteraction);
-          if (btnInteraction.customId === "deleteYes") {
+          const { deleteYesId, deleteNoId } = getButtonIds();
+
+          if (btnInteraction.customId === deleteYesId) {
             await fetchedMessage.delete();
             await interaction.deleteReply();
 
@@ -82,7 +82,7 @@ const deleteTeam: ButtonFunction = {
             await btnInteractionHandler
               .embeds(new CustomMessageEmbed().setTitle("Team deleted successfully!").Success)
               .editReply();
-          } else if (btnInteraction.customId === "deleteNo") {
+          } else if (btnInteraction.customId === deleteNoId) {
             await interaction.deleteReply();
 
             await btnInteractionHandler

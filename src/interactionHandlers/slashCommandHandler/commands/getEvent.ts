@@ -66,7 +66,9 @@ const getEvent: Command = {
         (userRoleDB[0]["roleId"] !== 3 && userRoleDB[0]["roleId"] !== 2)
       ) {
         return interactionHandler
-          .embeds(new CustomMessageEmbed().setTitle("You are not allowed to run this command!").Error)
+          .embeds(
+            new CustomMessageEmbed().setTitle("You are not allowed to run this command!").Error,
+          )
           .editReply();
       }
 
@@ -113,9 +115,7 @@ const getEvent: Command = {
 
         // check if the event is team or normal
         if (!eventInfo[0].isTeamEvent) {
-          const dbPlayers: [{ username: string; userId: string }?] = await getAllPlayers({
-            eventId: eventId?.value,
-          });
+          const dbPlayers = await getAllPlayers(eventId.value);
 
           let players: string = "";
 
@@ -129,7 +129,7 @@ const getEvent: Command = {
             .setColor(BOT_CONFIGS.color.default)
             .setTitle(eventInfo[0].eventName)
             .setDescription(
-              `**----------------------------------------** \n **Event description:** \n \n >>> ${eventInfo[0].description}  \n \n`,
+              `**----------------------------------------** \n **Event description:** \n \n ${eventInfo[0].description}  \n \n`,
             )
             .addFields([
               {
@@ -147,7 +147,7 @@ const getEvent: Command = {
                 name: `Registered players ${dbPlayers.length}/${
                   eventInfo[0].maxNumPlayers ? eventInfo[0].maxNumPlayers : "unlimited"
                 }`,
-                value: players.length > 0 ? `>>> ${players}` : " ",
+                value: players.length > 0 ? `${players}` : " ",
               },
             ])
             .setFooter({
@@ -216,7 +216,7 @@ const getEvent: Command = {
             .setColor(BOT_CONFIGS.color.default)
             .setTitle(eventInfo[0].eventName)
             .setDescription(
-              `**----------------------------------------** \n **Event description:** \n \n >>> ${eventInfo[0].description}  \n \n`,
+              `**----------------------------------------** \n **Event description:** \n \n ${eventInfo[0].description}  \n \n`,
             )
             .addFields([
               {

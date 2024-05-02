@@ -1,3 +1,5 @@
+const { rules } = require("eslint-config-prettier");
+
 module.exports = {
   parser: "@typescript-eslint/parser",
   plugins: ["@typescript-eslint"],

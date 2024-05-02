@@ -1,9 +1,9 @@
 import { BaseCommandInteraction, Client, MessageEmbed } from "discord.js";
 
-import { handleAsyncError } from "utils/logging/handleAsyncError";
+import BOT_CONFIGS from "botConfig";
 import InteractionHandler from "utils/interactions/interactionHandler";
 import CustomMessageEmbed from "utils/interactions/messageEmbed";
-import BOT_CONFIGS from "botConfig";
+import { handleAsyncError } from "utils/logging/handleAsyncError";
 import { Command } from "../type";
 
 const feedback: Command = {

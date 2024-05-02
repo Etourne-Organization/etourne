@@ -4,11 +4,11 @@ import { BaseCommandInteraction, Client, MessageEmbed } from "discord.js";
 import BOT_CONFIGS from "botConfig";
 import { getAllServerEvents } from "supabaseDB/methods/events";
 import { checkServerExists } from "supabaseDB/methods/servers";
-import { handleAsyncError } from "utils/logging/handleAsyncError";
 import InteractionHandler from "utils/interactions/interactionHandler";
 import CustomMessageEmbed from "utils/interactions/messageEmbed";
-import COMMAND_IDS from "../../../utils/commandIds";
+import { handleAsyncError } from "utils/logging/handleAsyncError";
 import { Command } from "../type";
+import { createServerNotRegisteredEmbed } from "../utils/embeds";
 
 const listServerEvents: Command = {
   name: "listserverevents",
@@ -24,25 +24,15 @@ const listServerEvents: Command = {
           discordServerId: interaction.guild!.id,
         }))
       ) {
-        const embed = new MessageEmbed()
-          .setColor(BOT_CONFIGS.color.red)
-          .setTitle(":x: Error: Server not registered!")
-          .setDescription(
-            `Use </registerserver:${COMMAND_IDS.REGISTER_SERVER}> command to register your server in Etourne database.`,
-          )
-          .setFooter({
-            text: "Use /support to seek support if required.",
-          })
-          .setTimestamp();
-
-        return interactionHandler.embeds(embed).editReply();
+        const notRegisteredEmbed = createServerNotRegisteredEmbed();
+        return interactionHandler.embeds(notRegisteredEmbed).editReply();
       }
 
       const allEvents = await getAllServerEvents({
         discordServerId: interaction.guild!.id,
       });
 
-      let eventString: string = allEvents.length > 0 ? "" : "No events";
+      let eventString = allEvents.length > 0 ? "" : "No events";
 
       allEvents.forEach((e) => {
         eventString += `## ${e.eventName}\n**ID:** ${

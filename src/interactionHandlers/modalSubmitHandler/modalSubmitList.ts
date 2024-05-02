@@ -1,14 +1,14 @@
 import { ModalSubmit } from "./type";
 
-import editEventInfoModal from "./handlers/normalEvent/editEventInfoModal";
-import normalEventModal from "./handlers/normalEvent/normalEventModal";
-import setMaxNumPlayersModal from "./handlers/normalEvent/setMaxNumPlayersModal";
-import editTeamEventInfoModal from "./handlers/teamEvent/editTeamEventInfoModal";
-import editTeamInfoModal from "./handlers/teamEvent/editTeamInfoModal";
-import setMaxNumTeamPlayersModal from "./handlers/teamEvent/setMaxNumTeamPlayersModal";
-import setMaxNumTeamsModal from "./handlers/teamEvent/setMaxNumTeamsModal";
-import teamEventModal from "./handlers/teamEvent/teamEventModal";
-import teamModal from "./handlers/teamEvent/teamModal";
+import editEventInfoModal from "./handlers/normalEvent/editModal";
+import normalEventModal from "./handlers/normalEvent/createModal";
+import setMaxNumPlayersModal from "./handlers/normalEvent/setMaxNumPlayers";
+import teamEventModal from "./handlers/teamEvent/teamCreator/createModal";
+import editTeamEventInfoModal from "./handlers/teamEvent/teamCreator/editModal";
+import editTeamInfoModal from "./handlers/teamEvent/team/editModal";
+import setMaxNumTeamPlayersModal from "./handlers/teamEvent/teamCreator/setMaxTeamPlayers";
+import setMaxNumTeamsModal from "./handlers/teamEvent/teamCreator/setMaxNumTeams";
+import teamModal from "./handlers/teamEvent/team/createModal";
 
 const modalSubmitFunctionList: ModalSubmit[] = [
   teamModal,

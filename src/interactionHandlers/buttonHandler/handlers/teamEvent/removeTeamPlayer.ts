@@ -1,19 +1,22 @@
-import {
-  ButtonInteraction,
-  Client,
-  MessageActionRow,
-  MessageEmbed,
-  MessageSelectMenu,
-} from "discord.js";
+import { ButtonInteraction, Client } from "discord.js";
 
-import { handleAsyncError } from "utils/logging/handleAsyncError";
-import InteractionHandler from "utils/interactions/interactionHandler";
-import CustomMessageEmbed from "utils/interactions/messageEmbed";
-import BOT_CONFIGS from "botConfig";
+import { TEAM_FIELD_NAMES } from "src/interactionHandlers/modalSubmitHandler/utils/constants";
+import { findEmbedField } from "src/interactionHandlers/modalSubmitHandler/utils/utils";
+import { findFooterTeamId } from "src/interactionHandlers/utils";
 import { getAllTeamPlayers } from "supabaseDB/methods/teamPlayers";
 import { checkTeamExists } from "supabaseDB/methods/teams";
 import { getUserRole } from "supabaseDB/methods/users";
+import getMessageEmbed from "utils/getMessageEmbed";
+import InteractionHandler from "utils/interactions/interactionHandler";
+import CustomMessageEmbed from "utils/interactions/messageEmbed";
+import { handleAsyncError } from "utils/logging/handleAsyncError";
 import { ButtonFunction } from "../../type";
+import {
+  createMissingTeamEmbed,
+  createNoPlayersToRemoveEmbed,
+  createUnauthorizedRoleEmbed,
+} from "../../utils/embeds";
+import { createTeamRemovePlayerComponents } from "../../utils/selectComponents";
 
 const removeTeamPlayer: ButtonFunction = {
   customId: "removeTeamPlayer",
@@ -22,22 +25,17 @@ const removeTeamPlayer: ButtonFunction = {
     try {
       await interactionHandler.processing();
 
-      const footer = interaction.message.embeds[0].footer?.text;
-      const teamId: string = interaction.message.embeds[0].footer?.text.split(" ")[2] || "";
+      const embed = getMessageEmbed(interaction, interactionHandler);
+      if (!embed) return;
+
+      const teamId = findFooterTeamId(embed.footer);
 
       if (!(await checkTeamExists({ teamId: parseInt(teamId) }))) {
-        return interactionHandler
-          .embeds(
-            new CustomMessageEmbed().setTitle(
-              "The team does not exist anymore, maybe it was deleted?",
-            ).Warning,
-          )
-          .editReply();
+        const missingTeamEmbed = createMissingTeamEmbed();
+        return interactionHandler.embeds(missingTeamEmbed).editReply();
       }
 
-      const teamLeader = interaction.message?.embeds[0].fields?.find(
-        (r) => r.name === "Team Leader",
-      );
+      const teamLeader = findEmbedField(embed.fields, TEAM_FIELD_NAMES.teamLeader);
 
       // check user role in DB
       const userRoleDB = await getUserRole({
@@ -46,54 +44,25 @@ const removeTeamPlayer: ButtonFunction = {
       });
 
       // Check if the user is the team leader or has an authorized role (e.g., admin or mod)
-      const isAuthorized =
-        interaction.user.username === teamLeader?.value ||
-        (userRoleDB.length > 0 && (userRoleDB[0]["roleId"] === 2 || userRoleDB[0]["roleId"] === 3));
-
-      if (!isAuthorized) {
-        // If the user isn't authorized, return an error message
-        return interactionHandler
-          .embeds(new CustomMessageEmbed().setTitle("You are not allowed to use this button!").Error)
-          .editReply();
+      if (
+        interaction.user.username === teamLeader ||
+        (userRoleDB.length > 0 && (userRoleDB[0]["roleId"] === 2 || userRoleDB[0]["roleId"] === 3))
+      ) {
+        const unauthorizedRoleEmbed = createUnauthorizedRoleEmbed();
+        return interactionHandler.embeds(unauthorizedRoleEmbed).editReply();
       }
 
-      const teamPlayers = await getAllTeamPlayers({
-        teamId: parseInt(teamId),
-      });
+      const teamPlayers = await getAllTeamPlayers(parseInt(teamId));
 
-      if (teamPlayers.length === 0)
-        return interactionHandler
-          .embeds(new CustomMessageEmbed().setTitle("There are no team players to remove!").Error)
-          .editReply();
-
-      const selectMenuOptions: Array<{
-        label: string;
-        description: string;
-        value: string;
-      }> = [];
-
-      for (const team of teamPlayers) {
-        if (team?.username === interaction.user.username) return;
-
-        selectMenuOptions.push({
-          label: team?.username || "",
-          description: `Remove ${team?.username}`,
-          value: `${team?.username}||${team?.userId}`,
-        });
+      if (teamPlayers.length === 0) {
+        const noPlayersEmbed = createNoPlayersToRemoveEmbed();
+        return interactionHandler.embeds(noPlayersEmbed).editReply();
       }
 
-      const selectMenu = new MessageActionRow().addComponents(
-        new MessageSelectMenu()
-          .setCustomId("removeTeamPlayer")
-          .setPlaceholder("Select a player to be removed")
-          .addOptions(selectMenuOptions),
+      const { selectMenu, selectMessageEmbed } = createTeamRemovePlayerComponents(
+        teamPlayers,
+        embed.footer!.text,
       );
-
-      const selectMessageEmbed = new MessageEmbed()
-        .setTitle("Select team player to be removed")
-        .setColor(BOT_CONFIGS.color.default)
-        .setFooter({ text: `${footer}` })
-        .setTimestamp();
 
       await interactionHandler.embeds(selectMessageEmbed).editReply({
         components: [selectMenu],

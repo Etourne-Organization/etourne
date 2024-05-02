@@ -1,16 +1,12 @@
-import { BaseCommandInteraction, Client, MessageEmbed, User } from "discord.js";
+import { BaseCommandInteraction, Client } from "discord.js";
 
-import { handleAsyncError } from "utils/logging/handleAsyncError";
+import { checkServerExists } from "supabaseDB/methods/servers";
+import { getUserRole, setUserRole as setUserRoleSupabase } from "supabaseDB/methods/users";
 import InteractionHandler from "utils/interactions/interactionHandler";
 import CustomMessageEmbed from "utils/interactions/messageEmbed";
-import BOT_CONFIGS from "botConfig";
-import COMMAND_IDS from "../../../utils/commandIds";
-import { checkServerExists } from "supabaseDB/methods/servers";
-import {
-  getUserRole,
-  setUserRole as setUserRoleSupabase,
-} from "supabaseDB/methods/users";
+import { handleAsyncError } from "utils/logging/handleAsyncError";
 import { Command } from "../type";
+import { createServerNotRegisteredEmbed } from "../utils/embeds";
 
 const setUserRole: Command = {
   name: "setuserrole",
@@ -54,47 +50,44 @@ const setUserRole: Command = {
           discordServerId: interaction.guild!.id,
         }))
       ) {
-        const embed = new MessageEmbed()
-          .setColor(BOT_CONFIGS.color.red)
-          .setTitle(":x: Error: Server not registered!")
-          .setDescription(
-            `Use </registerserver:${COMMAND_IDS.REGISTER_SERVER}> command to register your server in Etourne database.`,
-          )
-          .setFooter({
-            text: "Use /support to seek support if required.",
-          })
-          .setTimestamp();
-
-        return interactionHandler.embeds(embed).editReply();
+        const notRegisteredEmbed = createServerNotRegisteredEmbed();
+        return interactionHandler.embeds(notRegisteredEmbed).editReply();
       }
 
-      const user: User | null = interaction.options.getUser("user");
-      const role = interaction.options.get("role") as unknown as { value: string };
+      const user = interaction.options.getUser("user");
+      const role = interaction.options.get("role");
+
+      if (!role || !role.value || !user)
+        return interactionHandler
+          .embeds(new CustomMessageEmbed().defaultErrorTitle().SHORT.Error)
+          .editReply();
 
       const userRoleDB = await getUserRole({
         discordUserId: interaction.user.id,
         discordServerId: interaction.guild!.id,
       });
 
-      // only the creator of the bot can run this command with no restriction
-      /*
-				Checks:
-					- If the executor is admin or not: reject if not
-			*/
+      /**
+       * Only the creator of the bot can run this command with no restriction
+       * Checks if the executor is admin or not: reject if not
+       * */
       if (interaction.user.id !== "374230181889572876") {
         if (userRoleDB.length === 0 || userRoleDB[0]["roleId"] !== 3) {
           return interactionHandler
-            .embeds(new CustomMessageEmbed().setTitle("You are not allowed run this command!").Error)
+            .embeds(
+              new CustomMessageEmbed().setTitle("You are not allowed run this command!").Error,
+            )
             .editReply();
         }
       }
 
       await setUserRoleSupabase({
         discordServerId: interaction.guild!.id,
-        discordUserId: user!.id,
-        roleId: parseInt(role.value),
-        username: user!.username,
+        discordUserId: user.id,
+        roleId: parseInt(role.value as string),
+        username: user.username,
       });
+
       await interactionHandler
         .embeds(new CustomMessageEmbed().setTitle(`${user!.username}'s role has been set!`).Success)
         .editReply();

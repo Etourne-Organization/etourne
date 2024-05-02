@@ -1,12 +1,16 @@
-import { BaseCommandInteraction, Client, MessageEmbed } from "discord.js";
+import { BaseCommandInteraction, Client } from "discord.js";
 
-import { handleAsyncError } from "utils/logging/handleAsyncError";
-import InteractionHandler from "utils/interactions/interactionHandler";
-import CustomMessageEmbed from "utils/interactions/messageEmbed";
-import BOT_CONFIGS from "botConfig";
 import { addServer, checkServerExists } from "supabaseDB/methods/servers";
 import { checkAddUser } from "supabaseDB/methods/users";
+import InteractionHandler from "utils/interactions/interactionHandler";
+import CustomMessageEmbed from "utils/interactions/messageEmbed";
+import { handleAsyncError } from "utils/logging/handleAsyncError";
 import { Command } from "../type";
+import {
+  createNonAdminEmbed,
+  createRequiredBotPermissionsEmbed,
+  createServerAlreadyRegisteredEmbed,
+} from "../utils/embeds";
 
 const registerServer: Command = {
   name: "registerserver",
@@ -18,11 +22,13 @@ const registerServer: Command = {
     try {
       await interactionHandler.processing();
 
+      const hasAuditLogPermission =
+        interaction.guild!.members.me?.permissions.has("VIEW_AUDIT_LOG");
+
       if (await checkServerExists({ discordServerId: interaction.guild!.id })) {
-        return interactionHandler
-          .embeds(new CustomMessageEmbed().setTitle("Your server is already registered!").Warning)
-          .editReply();
-      } else if (interaction.guild!.members.me?.permissions.has("VIEW_AUDIT_LOG")) {
+        const alreadyRegisteredEmbed = createServerAlreadyRegisteredEmbed();
+        return interactionHandler.embeds(alreadyRegisteredEmbed).editReply();
+      } else if (hasAuditLogPermission) {
         const fetchedLog = await interaction.guild!.fetchAuditLogs({
           type: "BOT_ADD",
           limit: 1,
@@ -31,13 +37,8 @@ const registerServer: Command = {
         const log = fetchedLog.entries.first();
 
         if (log?.executor!.id !== interaction.user.id) {
-          return interactionHandler
-            .embeds(
-              new CustomMessageEmbed().setTitle(
-                "You are not the user who added the bot into this server!",
-              ).Error,
-            )
-            .editReply();
+          const nonAdminEmbed = createNonAdminEmbed();
+          return interactionHandler.embeds(nonAdminEmbed).editReply();
         }
 
         await addServer({
@@ -46,23 +47,18 @@ const registerServer: Command = {
         });
 
         await checkAddUser({
-          username: log!.executor!.username,
+          username: log.executor.username,
           discordServerId: interaction.guild!.id,
-          discordUserId: log!.executor!.id,
+          discordUserId: log.executor.id,
           roleId: 3,
         });
+
         return interactionHandler
           .embeds(new CustomMessageEmbed().setTitle("Discord server registered!").Success)
           .editReply();
       } else {
-        const embed = new MessageEmbed()
-          .setColor(BOT_CONFIGS.color.red)
-          .setTitle(":x: Error")
-          .setDescription(
-            "Please give the following permission to the bot: \n - `View Audit Log` \n \n## Why is this needed? \n This permission will allow the bot to retrieve the user who added the bot and make that user `Admin` (**NOT** server `Admin`) in Etourne software.",
-          )
-          .setTimestamp();
-        return interactionHandler.embeds(embed).editReply();
+        const requiredPermissionsEmbed = createRequiredBotPermissionsEmbed();
+        return interactionHandler.embeds(requiredPermissionsEmbed).editReply();
       }
     } catch (err) {
       await handleAsyncError(err, () =>

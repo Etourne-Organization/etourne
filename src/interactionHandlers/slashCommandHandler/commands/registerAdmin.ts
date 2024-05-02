@@ -2,12 +2,16 @@ import { BaseCommandInteraction, Client } from "discord.js";
 
 import { Command } from "../type";
 
-import { handleAsyncError } from "utils/logging/handleAsyncError";
-import InteractionHandler from "utils/interactions/interactionHandler";
-import CustomMessageEmbed from "utils/interactions/messageEmbed";
-import COMMAND_IDS from "../../../utils/commandIds";
 import { checkServerExists } from "supabaseDB/methods/servers";
 import { checkAddUser, checkUserExists } from "supabaseDB/methods/users";
+import InteractionHandler from "utils/interactions/interactionHandler";
+import CustomMessageEmbed from "utils/interactions/messageEmbed";
+import { handleAsyncError } from "utils/logging/handleAsyncError";
+import {
+  createNonAdminEmbed,
+  createServerNotRegisteredEmbed,
+  createUserAlreadyRegisteredEmbed,
+} from "../utils/embeds";
 
 const registerAdmin: Command = {
   name: "registeradmin",
@@ -19,34 +23,27 @@ const registerAdmin: Command = {
     try {
       await interactionHandler.processing();
 
+      const hasAuditLogPermission =
+        interaction.guild!.members.me?.permissions.has("VIEW_AUDIT_LOG");
+
       if (
         !(await checkServerExists({
           discordServerId: interaction.guild!.id,
         }))
       ) {
-        return interactionHandler
-          .embeds(
-            new CustomMessageEmbed()
-              .setTitle("Your server is not registered in Etourne Database!")
-              .setDescription(
-                `Please register your server by running </registerserver:${COMMAND_IDS.REGISTER_SERVER}>`,
-              ).Error,
-          )
-          .editReply();
+        const notRegisteredEmbed = createServerNotRegisteredEmbed();
+        return interactionHandler.embeds(notRegisteredEmbed).editReply();
       }
+
       if (
         await checkUserExists({
           discordServerId: interaction.guild!.id,
           discordUserId: interaction.user.id,
         })
       ) {
-        return interactionHandler
-          .embeds(
-            new CustomMessageEmbed().setTitle("You are already registered in Etourne database!")
-              .Warning,
-          )
-          .editReply();
-      } else if (interaction.guild!.members.me?.permissions.has("VIEW_AUDIT_LOG")) {
+        const alreadyRegisteredEmbed = createUserAlreadyRegisteredEmbed();
+        return interactionHandler.embeds(alreadyRegisteredEmbed).editReply();
+      } else if (hasAuditLogPermission) {
         const fetchedLog = await interaction.guild!.fetchAuditLogs({
           type: "BOT_ADD",
           limit: 1,
@@ -55,13 +52,8 @@ const registerAdmin: Command = {
         const log = fetchedLog.entries.first();
 
         if (log?.executor!.id !== interaction.user.id) {
-          return interactionHandler
-            .embeds(
-              new CustomMessageEmbed().setTitle(
-                "You are not the user who added the bot into this server!",
-              ).Error,
-            )
-            .editReply();
+          const nonAdminEmbed = createNonAdminEmbed();
+          return interactionHandler.embeds(nonAdminEmbed).editReply();
         }
 
         await checkAddUser({

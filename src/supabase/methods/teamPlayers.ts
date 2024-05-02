@@ -89,24 +89,22 @@ export const removePlayer = async (props: removePlayer) => {
 
   return { data, error };
 };
-
-export const getAllTeamPlayers = async (props: getAllTeamPlayers) => {
-  const { teamId } = props;
-
-  let players: [{ username: string; userId: string }?] = [];
-
+interface Player {
+  username: string;
+  userId: string;
+}
+export const getAllTeamPlayers = async (teamId: number): Promise<Player[]> => {
   const { data, error } = await supabase.from("TeamPlayers").select("userId").eq("teamId", teamId);
 
   if (error) throw throwFormattedErrorLog(error);
 
-  for (const d of data!) {
-    const us: [{ username: string }] | any = await getUsernameAndDiscordId({
-      userId: d.userId,
-    });
-    players.push({
-      username: us[0]["username"],
-      userId: us[0]["userId"].toString(),
-    });
+  const players: Player[] = [];
+
+  if (data) {
+    for (const { userId } of data) {
+      const [{ username, userId: discordId }] = await getUsernameAndDiscordId({ userId });
+      players.push({ username, userId: discordId.toString() });
+    }
   }
 
   return players;

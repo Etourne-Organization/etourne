@@ -1,19 +1,12 @@
-import {
-  BaseCommandInteraction,
-  Client,
-  MessageActionRow,
-  MessageEmbed,
-  MessageSelectMenu,
-} from "discord.js";
+import { BaseCommandInteraction, Client, MessageActionRow, MessageSelectMenu } from "discord.js";
 
-import { handleAsyncError } from "utils/logging/handleAsyncError";
-import InteractionHandler from "utils/interactions/interactionHandler";
-import CustomMessageEmbed from "utils/interactions/messageEmbed";
-import BOT_CONFIGS from "botConfig";
-import COMMAND_IDS from "../../../utils/commandIds";
 import { checkServerExists } from "supabaseDB/methods/servers";
 import { getUserRole } from "supabaseDB/methods/users";
+import InteractionHandler from "utils/interactions/interactionHandler";
+import CustomMessageEmbed from "utils/interactions/messageEmbed";
+import { handleAsyncError } from "utils/logging/handleAsyncError";
 import { Command } from "../type";
+import { createServerNotRegisteredEmbed } from "../utils/embeds";
 
 const createEvent: Command = {
   name: "createevent",
@@ -29,16 +22,8 @@ const createEvent: Command = {
           discordServerId: interaction.guild!.id,
         }))
       ) {
-        const embed = new MessageEmbed()
-          .setColor(BOT_CONFIGS.color.red)
-          .setTitle(":x: Error: Server not registered!")
-          .setDescription(
-            `Use </registerserver:${COMMAND_IDS.REGISTER_SERVER}> command to register your server in Etourne database.`,
-          )
-          .setFooter({ text: "Use /support to seek support if required." })
-          .setTimestamp();
-
-        return interactionHandler.embeds(embed).editReply();
+        const notRegisteredEmbed = createServerNotRegisteredEmbed();
+        return interactionHandler.embeds(notRegisteredEmbed).editReply();
       }
 
       const userRoleDB = await getUserRole({
@@ -51,7 +36,9 @@ const createEvent: Command = {
         (userRoleDB[0]["roleId"] !== 3 && userRoleDB[0]["roleId"] !== 2)
       ) {
         return interactionHandler
-          .embeds(new CustomMessageEmbed().setTitle("You are not allowed to run this command!").Error)
+          .embeds(
+            new CustomMessageEmbed().setTitle("You are not allowed to run this command!").Error,
+          )
           .editReply();
       }
 
@@ -79,7 +66,9 @@ const createEvent: Command = {
           .addOptions(selectMenuOptions),
       );
       return interactionHandler
-        .embeds(new CustomMessageEmbed().setTitle("Select event type you would like to create").Info)
+        .embeds(
+          new CustomMessageEmbed().setTitle("Select event type you would like to create").Info,
+        )
         .editReply({
           components: [selectMenu],
         });

@@ -1,47 +1,33 @@
-import {
-  ButtonInteraction,
-  Client,
-  MessageActionRow,
-  Modal,
-  ModalActionRowComponent,
-  TextInputComponent,
-} from "discord.js";
+import { ButtonInteraction, Client } from "discord.js";
 
-import { handleAsyncError } from "utils/logging/handleAsyncError";
+import { findFooterEventId } from "src/interactionHandlers/utils";
+import { getColumnValueById } from "supabaseDB/methods/events";
+import getMessageEmbed from "utils/getMessageEmbed";
 import InteractionHandler from "utils/interactions/interactionHandler";
 import CustomMessageEmbed from "utils/interactions/messageEmbed";
-import { getColumnValueById } from "supabaseDB/methods/events";
+import { handleAsyncError } from "utils/logging/handleAsyncError";
 import { ButtonFunction } from "../../type";
+import { createSetMaxNumUsersComponents } from "../../utils/modalComponents";
 
 const setMaxNumPlayers: ButtonFunction = {
   customId: "setMaxNumPlayers",
   run: async (client: Client, interaction: ButtonInteraction) => {
     const interactionHandler = new InteractionHandler(interaction);
     try {
-      const eventId: string = interaction.message.embeds[0].footer?.text.split(": ")[1] || "";
+      const embed = getMessageEmbed(interaction, interactionHandler);
+      if (!embed) return;
+
+      const eventId = findFooterEventId(embed.footer);
 
       const maxNumPlayers = await getColumnValueById({
         id: parseInt(eventId),
         columnName: "maxNumPlayers",
       });
 
-      const modal = new Modal()
-        .setCustomId(`maxNumPlayersModalSubmit-${interaction.id}`)
-        .setTitle("Set max number of players");
-
-      const input = new TextInputComponent()
-        .setCustomId("maxNumPlayersInput")
-        .setLabel("Num of players limit")
-        .setStyle("SHORT")
-        .setPlaceholder("Enter limit for num of players")
-        .setValue(
-          maxNumPlayers[0]["maxNumPlayers"] ? maxNumPlayers[0]["maxNumPlayers"].toString() : "",
-        );
-
-      const teamMemberLimitNumActionRow =
-        new MessageActionRow<ModalActionRowComponent>().addComponents(input);
-
-      modal.addComponents(teamMemberLimitNumActionRow);
+      const modal = createSetMaxNumUsersComponents({
+        interactionId: interaction.id,
+        currentMaxNum: maxNumPlayers[0].maxNumPlayers?.toString(),
+      });
 
       await interaction.showModal(modal);
     } catch (err) {

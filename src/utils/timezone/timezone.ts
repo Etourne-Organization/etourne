@@ -61,7 +61,7 @@ export const getSortedNormalizedTimezoneNames = (): string[] =>
     });
 
 /* Get the timezone value from a given label */
-export const getTimzeonValueFromLabel = (label: string) => {
+export const getTimezoneValueFromLabel = (label: string) => {
   // Maps timezone labels with values by creating an object
   const tzs = getSortedNormalizedTimezoneNames().map((tz) => getTimezoneValue(tz));
   return tzs.filter((tz) => tz.label === label.trim())[0]["value"];

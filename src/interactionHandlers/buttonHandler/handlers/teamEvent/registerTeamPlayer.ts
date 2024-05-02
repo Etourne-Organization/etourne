@@ -1,12 +1,26 @@
-import { ButtonInteraction, Client, MessageEmbed } from "discord.js";
-import { handleAsyncError } from "utils/logging/handleAsyncError";
-import InteractionHandler from "utils/interactions/interactionHandler";
-import CustomMessageEmbed from "utils/interactions/messageEmbed";
-import BOT_CONFIGS from "botConfig";
+import { ButtonInteraction, Client } from "discord.js";
+import { TEAM_FIELD_NAMES } from "src/interactionHandlers/modalSubmitHandler/utils/constants";
+import { findEmbedField } from "src/interactionHandlers/modalSubmitHandler/utils/utils";
+import {
+  findFooterEventId,
+  findFooterTeamId,
+  getRegisteredPlayersFromEmbedField,
+  updateEmbed,
+  updateEmbedField,
+} from "src/interactionHandlers/utils";
 import { getColumnValueById } from "supabaseDB/methods/events";
 import { addPlayer, getNumOfTeamPlayers } from "supabaseDB/methods/teamPlayers";
 import { checkTeamExists } from "supabaseDB/methods/teams";
+import getMessageEmbed from "utils/getMessageEmbed";
+import InteractionHandler from "utils/interactions/interactionHandler";
+import CustomMessageEmbed from "utils/interactions/messageEmbed";
+import { handleAsyncError } from "utils/logging/handleAsyncError";
 import { ButtonFunction } from "../../type";
+import {
+  createAlreadyRegisteredEmbed,
+  createMaxLimitEmbed,
+  createMissingTeamEmbed,
+} from "../../utils/embeds";
 
 const registerTeamPlayer: ButtonFunction = {
   customId: "registerTeamPlayer",
@@ -15,10 +29,11 @@ const registerTeamPlayer: ButtonFunction = {
     try {
       await interaction.deferUpdate();
 
-      const embed = interaction.message.embeds[0];
-      const splitFooter = embed.footer?.text.split(" ") || [];
-      const teamId = splitFooter[2] || "";
-      const eventId = splitFooter[5] || "";
+      const embed = getMessageEmbed(interaction, interactionHandler);
+      if (!embed) return;
+
+      const teamId = findFooterTeamId(embed.footer);
+      const eventId = findFooterEventId(embed.footer);
 
       const maxNumTeamPlayersData = await getColumnValueById({
         id: parseInt(eventId),
@@ -28,54 +43,38 @@ const registerTeamPlayer: ButtonFunction = {
       const maxNumTeamPlayers = maxNumTeamPlayersData[0]?.maxNumTeamPlayers || 0;
 
       if (!(await checkTeamExists({ teamId: parseInt(teamId) }))) {
-        return interactionHandler
-          .embeds(
-            new CustomMessageEmbed().setTitle(
-              "The team does not exist anymore, maybe it was deleted?",
-            ).Error,
-          )
-          .followUp();
+        const missingTeamEmbed = createMissingTeamEmbed();
+        return interactionHandler.embeds(missingTeamEmbed).followUp();
       }
 
       const currentNumPlayers = await getNumOfTeamPlayers({ teamId: parseInt(teamId) });
       if (currentNumPlayers >= maxNumTeamPlayers) {
-        return interactionHandler
-          .embeds(new CustomMessageEmbed().setTitle("Number of players has reached the limit!").Error)
-          .followUp();
+        const maxLimitEmbed = createMaxLimitEmbed();
+        return interactionHandler.embeds(maxLimitEmbed).followUp();
       }
 
-      const registeredPlayersField = embed.fields?.find((field) =>
-        field.name.includes("Registered players"),
+      const registeredPlayersField = findEmbedField(
+        embed.fields,
+        TEAM_FIELD_NAMES.registeredPlayers,
+        true,
       );
 
-      const registeredPlayers =
-        registeredPlayersField?.value.split(">>> ")[1]?.split("\n").filter(Boolean) || [];
+      const registeredPlayers = getRegisteredPlayersFromEmbedField(registeredPlayersField?.value);
 
       // ? Check if the current user is already registered
       if (registeredPlayers.includes(interaction.user.username)) {
-        return interactionHandler
-          .embeds(new CustomMessageEmbed().setTitle("You are already registered!").Error)
-          .followUp();
+        const alreadyRegisteredEmbed = createAlreadyRegisteredEmbed();
+        return interactionHandler.embeds(alreadyRegisteredEmbed).followUp();
       }
 
-      // ? If the user is not registered, add them to the existing list
-      const newPlayersList = [...registeredPlayers, interaction.user.username].join("\n");
+      const newPlayersList = [...registeredPlayers, interaction.user.username];
 
-      // ? Prepare updated player list to go back to the orignal embed field
-      const numRegisteredPlayers = registeredPlayers.length + 1;
-      const maxNumPlayersEmbedValue =
-        registeredPlayersField?.name.split(" ")[2].split("/")[1] || "";
+      const numRegisteredPlayers = newPlayersList.length;
 
-      const updatedField = {
-        name: `Registered players ${numRegisteredPlayers}/${maxNumPlayersEmbedValue}`,
-        value: `>>> ${newPlayersList}`,
-      };
-
-      // ? update embed field
-      const fields =
-        embed.fields?.map((field) =>
-          field.name.includes("Registered players") ? updatedField : field,
-        ) || [];
+      const fields = updateEmbedField(embed.fields, {
+        numRegisteredPlayers: numRegisteredPlayers.toString(),
+        registeredList: newPlayersList.join("\n"),
+      });
 
       await addPlayer({
         username: interaction.user.username,
@@ -84,12 +83,12 @@ const registerTeamPlayer: ButtonFunction = {
         discordServerId: interaction.guild!.id,
       });
 
-      const editedEmbed = new MessageEmbed()
-        .setColor(BOT_CONFIGS.color.default)
-        .setTitle(embed.title || "Undefined")
-        .setDescription(embed.description || "Undefined")
-        .addFields(fields)
-        .setFooter({ text: `${embed.footer?.text}` });
+      const editedEmbed = updateEmbed({
+        title: embed.title,
+        description: embed.description,
+        fields,
+        footer: embed.footer,
+      });
 
       await interactionHandler.embeds(editedEmbed).editReply();
 
@@ -100,7 +99,8 @@ const registerTeamPlayer: ButtonFunction = {
       await handleAsyncError(err, () =>
         interactionHandler
           .embeds(
-            new CustomMessageEmbed().defaultErrorTitle().SHORT.defaultErrorDescription().SHORT.Error,
+            new CustomMessageEmbed().defaultErrorTitle().SHORT.defaultErrorDescription().SHORT
+              .Error,
           )
           .followUp(),
       );

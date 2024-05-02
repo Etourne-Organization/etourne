@@ -1,18 +1,17 @@
-import {
-  ButtonInteraction,
-  Client,
-  MessageActionRow,
-  Modal,
-  ModalActionRowComponent,
-  TextInputComponent,
-} from "discord.js";
+import { ButtonInteraction, Client } from "discord.js";
 
-import { handleAsyncError } from "utils/logging/handleAsyncError";
-import InteractionHandler from "utils/interactions/interactionHandler";
-import CustomMessageEmbed from "utils/interactions/messageEmbed";
+import { TEAM_FIELD_NAMES } from "src/interactionHandlers/modalSubmitHandler/utils/constants";
+import { findEmbedField } from "src/interactionHandlers/modalSubmitHandler/utils/utils";
+import { findFooterTeamId } from "src/interactionHandlers/utils";
 import { checkTeamExists, getAllColumnValueById } from "supabaseDB/methods/teams";
 import { getUserRole } from "supabaseDB/methods/users";
+import getMessageEmbed from "utils/getMessageEmbed";
+import InteractionHandler from "utils/interactions/interactionHandler";
+import CustomMessageEmbed from "utils/interactions/messageEmbed";
+import { handleAsyncError } from "utils/logging/handleAsyncError";
 import { ButtonFunction } from "../../type";
+import { createMissingTeamEmbed, createUnauthorizedRoleEmbed } from "../../utils/embeds";
+import { createEditTeamEventComponents } from "../../utils/modalComponents";
 
 const editTeamInfo: ButtonFunction = {
   customId: "editTeamInfo",
@@ -20,21 +19,17 @@ const editTeamInfo: ButtonFunction = {
     const interactionHandler = new InteractionHandler(interaction);
 
     try {
-      const teamId: string = interaction.message.embeds[0].footer?.text.split(" ")[2] || "";
+      const embed = getMessageEmbed(interaction, interactionHandler);
+      if (!embed) return;
+
+      const teamId = findFooterTeamId(embed.footer);
 
       if (!(await checkTeamExists({ teamId: parseInt(teamId) }))) {
-        return interactionHandler
-          .embeds(
-            new CustomMessageEmbed().setTitle(
-              "The team does not exist anymore, maybe it was deleted?",
-            ).Warning,
-          )
-          .reply();
+        const missingTeamEmbed = createMissingTeamEmbed();
+        return interactionHandler.embeds(missingTeamEmbed).reply();
       }
 
-      const teamLeader = interaction.message?.embeds[0].fields?.find(
-        (r) => r.name === "Team Leader",
-      );
+      const teamLeader = findEmbedField(embed.fields, TEAM_FIELD_NAMES.teamLeader);
 
       const userRoleDB = await getUserRole({
         discordUserId: interaction.user.id,
@@ -42,45 +37,22 @@ const editTeamInfo: ButtonFunction = {
       });
 
       if (
-        interaction.user.username !== teamLeader?.value &&
-        (userRoleDB.length === 0 ||
-          (userRoleDB[0]["roleId"] !== 3 && userRoleDB[0]["roleId"] !== 2))
+        interaction.user.username === teamLeader ||
+        (userRoleDB.length > 0 && (userRoleDB[0]["roleId"] === 2 || userRoleDB[0]["roleId"] === 3))
       ) {
-        return interactionHandler
-          .embeds(new CustomMessageEmbed().setTitle("You are not allowed to use this button!").Error)
-          .reply();
+        const unauthorizedRoleEmbed = createUnauthorizedRoleEmbed();
+        return interactionHandler.embeds(unauthorizedRoleEmbed).reply();
       }
 
       const allColumnValue = await getAllColumnValueById({ id: parseInt(teamId) });
 
-      const teamFormModal = new Modal()
-        .setCustomId(`editTeamInfoModal-${interaction.id}`)
-        .setTitle("Create Team");
+      const modal = createEditTeamEventComponents({
+        interactionId: interaction.id,
+        name: allColumnValue[0].name,
+        description: allColumnValue[0].description,
+      });
 
-      const teamNameInput = new TextInputComponent()
-        .setCustomId("teamName")
-        .setLabel("Team Name")
-        .setStyle("SHORT")
-        .setPlaceholder("Enter team name")
-        .setValue(allColumnValue[0]["name"]);
-
-      const teamSmallDescriptionInput = new TextInputComponent()
-        .setCustomId("teamShortDescription")
-        .setLabel("Team Short Description")
-        .setStyle("SHORT")
-        .setPlaceholder("Enter short team description")
-        .setValue(allColumnValue[0]["description"]);
-
-      const teamNameActionRow = new MessageActionRow<ModalActionRowComponent>().addComponents(
-        teamNameInput,
-      );
-
-      const teamSmallDescriptionActionRow =
-        new MessageActionRow<ModalActionRowComponent>().addComponents(teamSmallDescriptionInput);
-
-      teamFormModal.addComponents(teamNameActionRow, teamSmallDescriptionActionRow);
-
-      await interaction.showModal(teamFormModal);
+      await interaction.showModal(modal);
     } catch (err) {
       await handleAsyncError(err, () =>
         interactionHandler

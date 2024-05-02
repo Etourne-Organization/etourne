@@ -1,12 +1,20 @@
-import { ButtonInteraction, Client, MessageEmbed } from "discord.js";
+import { ButtonInteraction, Client } from "discord.js";
 
-import { handleAsyncError } from "utils/logging/handleAsyncError";
-import InteractionHandler from "utils/interactions/interactionHandler";
-import CustomMessageEmbed from "utils/interactions/messageEmbed";
-import BOT_CONFIGS from "botConfig";
+import { NORMAL_CREATOR_FIELD_NAMES } from "src/interactionHandlers/modalSubmitHandler/utils/constants";
+import { findEmbedField } from "src/interactionHandlers/modalSubmitHandler/utils/utils";
+import {
+  findFooterEventId,
+  getRegisteredPlayersFromEmbedField,
+  updateEmbed,
+  updateEmbedField,
+} from "src/interactionHandlers/utils";
 import { getColumnValueById } from "supabaseDB/methods/events";
 import { addPlayer, getNumOfPlayers } from "supabaseDB/methods/singlePlayers";
+import InteractionHandler from "utils/interactions/interactionHandler";
+import CustomMessageEmbed from "utils/interactions/messageEmbed";
+import { handleAsyncError } from "utils/logging/handleAsyncError";
 import { ButtonFunction } from "../../type";
+import { createAlreadyRegisteredEmbed, createMaxLimitEmbed } from "../../utils/embeds";
 
 const register: ButtonFunction = {
   customId: "normalEventRegister",
@@ -16,7 +24,7 @@ const register: ButtonFunction = {
       await interaction.deferUpdate();
 
       const embed = interaction.message.embeds[0];
-      const eventId: string = embed.footer?.text.split(": ")[1] || "";
+      const eventId = findFooterEventId(embed.footer);
 
       const maxNumPlayers = await getColumnValueById({
         id: parseInt(eventId),
@@ -28,45 +36,32 @@ const register: ButtonFunction = {
         (await getNumOfPlayers({ eventId: parseInt(eventId) })) ===
           maxNumPlayers[0]["maxNumPlayers"]
       ) {
-        return interactionHandler
-          .embeds(
-            new CustomMessageEmbed().setTitle("Number of players has reached the limit!").Error,
-          )
-          .followUp();
+        const maxLimitEmbed = createMaxLimitEmbed();
+        return interactionHandler.embeds(maxLimitEmbed).followUp();
       }
 
-      const registeredPlayersField = embed.fields?.find((field) =>
-        field.name.includes("Registered players"),
+      const registeredPlayersField = findEmbedField(
+        embed.fields,
+        NORMAL_CREATOR_FIELD_NAMES.registeredPlayers,
       );
 
-      const registeredPlayers =
-        registeredPlayersField?.value.split(">>> ")[1]?.split("\n").filter(Boolean) || [];
+      const registeredPlayers = getRegisteredPlayersFromEmbedField(registeredPlayersField);
 
       // ? Check if the current user is already registered
       if (registeredPlayers.includes(interaction.user.username)) {
-        return interactionHandler
-          .embeds(new CustomMessageEmbed().setTitle("You are already registered!").Error)
-          .followUp();
+        const alreadyRegisteredEmbed = createAlreadyRegisteredEmbed();
+        return interactionHandler.embeds(alreadyRegisteredEmbed).followUp();
       }
 
       // ? If the user is not registered, add them to the existing list
-      const newPlayersList = [...registeredPlayers, interaction.user.username].join("\n");
+      const newPlayersList = [...registeredPlayers, interaction.user.username];
 
-      // ? Prepare updated player list to go back to the orignal embed field
-      const numRegisteredPlayers = registeredPlayers.length + 1;
-      const maxNumPlayersEmbedValue =
-        registeredPlayersField?.name.split(" ")[2].split("/")[1] || "";
+      const numRegisteredPlayers = newPlayersList.length;
 
-      const updatedField = {
-        name: `Registered players ${numRegisteredPlayers}/${maxNumPlayersEmbedValue}`,
-        value: `>>> ${newPlayersList}`,
-      };
-
-      // ? update embed field
-      const fields =
-        embed.fields?.map((field) =>
-          field.name.includes("Registered players") ? updatedField : field,
-        ) || [];
+      const fields = updateEmbedField(embed.fields!, {
+        numRegisteredPlayers: numRegisteredPlayers.toString(),
+        registeredList: newPlayersList.join("\n"),
+      });
 
       await addPlayer({
         username: interaction.user.username,
@@ -75,17 +70,17 @@ const register: ButtonFunction = {
         discordServerId: interaction.guild!.id,
       });
 
-      const editedEmbed = new MessageEmbed()
-        .setColor(BOT_CONFIGS.color.default)
-        .setTitle(embed.title || "Undefined")
-        .setDescription(embed.description || "Undefined")
-        .addFields(fields)
-        .setFooter({ text: `Event ID: ${eventId}` });
+      const editedEmbed = updateEmbed({
+        title: embed.title,
+        description: embed.description,
+        fields,
+        footer: embed.footer,
+      });
 
       await interactionHandler.embeds(editedEmbed).editReply();
 
       return interactionHandler
-        .embeds(editedEmbed, new CustomMessageEmbed().setTitle("Registered successfully!").Success)
+        .embeds(new CustomMessageEmbed().setTitle("Registered successfully!").Success)
         .followUp();
     } catch (err) {
       await handleAsyncError(err, () =>

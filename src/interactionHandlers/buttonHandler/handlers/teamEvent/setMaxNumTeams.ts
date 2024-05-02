@@ -1,16 +1,12 @@
-import {
-  ButtonInteraction,
-  Client,
-  MessageActionRow,
-  Modal,
-  ModalActionRowComponent,
-  TextInputComponent,
-} from "discord.js";
-import { handleAsyncError } from "utils/logging/handleAsyncError";
+import { ButtonInteraction, Client } from "discord.js";
+import { findFooterEventId } from "src/interactionHandlers/utils";
+import { getColumnValueById } from "supabaseDB/methods/events";
+import getMessageEmbed from "utils/getMessageEmbed";
 import InteractionHandler from "utils/interactions/interactionHandler";
 import CustomMessageEmbed from "utils/interactions/messageEmbed";
-import { getColumnValueById } from "supabaseDB/methods/events";
+import { handleAsyncError } from "utils/logging/handleAsyncError";
 import { ButtonFunction } from "../../type";
+import { createSetMaxNumTeamsComponents } from "../../utils/modalComponents";
 
 const setMaxNumTeams: ButtonFunction = {
   customId: "setMaxNumTeams",
@@ -18,30 +14,20 @@ const setMaxNumTeams: ButtonFunction = {
     const interactionHandler = new InteractionHandler(interaction);
 
     try {
-      const eventId = interaction.message?.embeds[0].footer?.text.split(": ")[1] || "";
+      const embed = getMessageEmbed(interaction, interactionHandler);
+      if (!embed) return;
+
+      const eventId = findFooterEventId(embed.footer);
 
       const maxNumTeamsData = await getColumnValueById({
         id: parseInt(eventId),
         columnName: "maxNumTeams",
       });
 
-      const modal = new Modal()
-        .setCustomId(`setMaxNumTeamsModalSubmit-${interaction.id}`)
-        .setTitle("Create Team");
-
-      const maxNumTeams = maxNumTeamsData[0].maxNumTeams || 0;
-
-      const maxNumTeamsInput = new TextInputComponent()
-        .setCustomId("maxNumTeams")
-        .setLabel("Max num of teams")
-        .setStyle("SHORT")
-        .setPlaceholder("Enter max num of teams")
-        .setValue(maxNumTeams.toString());
-
-      const maxNumTeamsLimitActionRow =
-        new MessageActionRow<ModalActionRowComponent>().addComponents(maxNumTeamsInput);
-
-      modal.addComponents(maxNumTeamsLimitActionRow);
+      const modal = createSetMaxNumTeamsComponents({
+        interactionId: interaction.id,
+        currentMaxNum: maxNumTeamsData[0].maxNumTeams?.toString(),
+      });
 
       await interaction.showModal(modal);
     } catch (err) {
