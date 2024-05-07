@@ -4,11 +4,8 @@ import fs from "fs";
 
 dotenv.config(); // ? must be above client events to ensure supabase works
 
-import legacyCommandHandler from "./interactionHandlers/legacyCommandHandler/commands";
+import generateListeners from "./bot.listeners";
 import slashCommandsList from "./interactionHandlers/slashCommandHandler/slashCommandList";
-import onNewGuild from "./listeners/guildCreate";
-import registerInteractionHandlers from "./listeners/interactionCreate";
-// import guildDelete from './listener/guildDelete';
 
 const startTime = new Date().getTime();
 
@@ -31,17 +28,17 @@ client.once("ready", async () => {
   const commands = guild ? guild.commands : client.application.commands;
 
   const setupCommandsStart = new Date().getTime();
-  console.log(`[+${(setupCommandsStart - startTime) / 1000}s] Setting up slash commands 🤖`);
+  const setupCommandsTime = ((setupCommandsStart - startTime) / 1000).toFixed(3);
+  console.log(`[+${setupCommandsTime}s] Setting up slash commands 🤖`);
 
   await commands.set(slashCommandsList);
 
   const loginTime = new Date().getTime();
-  console.log(
-    `[+${(loginTime - setupCommandsStart) / 1000}s] ${client.user!.tag} has logged in BEEP BEEP 🤖`,
-  );
+  const loginTimeDiff = ((loginTime - setupCommandsStart) / 1000).toFixed(3);
+  console.log(`[+${loginTimeDiff}s] ${client.user!.tag} has logged in BEEP BEEP 🤖`);
 
   try {
-    fs.appendFileSync("logs/restart.txt", `${new Date()} : Bot restarted \n`);
+    fs.appendFileSync("logs/restart.txt", `[${new Date()}] Bot restarted \n`);
   } catch (err) {
     console.log("Logging failed");
   }
@@ -58,11 +55,8 @@ client.once("ready", async () => {
   setInterval(setBotPresence, 21600000);
 });
 
-registerInteractionHandlers(client);
-onNewGuild(client);
-
-legacyCommandHandler(client);
-// guildDelete(client);
+generateListeners(client);
 
 console.log("[+0.000s] Logging in 🤖");
+
 client.login(process.env.DISCORDJS_BOT_TOKEN);

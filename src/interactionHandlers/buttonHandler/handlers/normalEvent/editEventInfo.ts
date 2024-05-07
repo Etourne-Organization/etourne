@@ -1,47 +1,52 @@
 import { ButtonInteraction, Client } from "discord.js";
 
 import { findFooterEventId } from "src/interactionHandlers/utils";
-import { getAllColumnValueById } from "supabaseDB/methods/events";
-import { getUserRole } from "supabaseDB/methods/users";
-import getMessageEmbed from "utils/getMessageEmbed";
+import { validateServerExists, validateUserPermission } from "src/interactionHandlers/validate";
+import { getEventColumnDB } from "supabaseDB/methods/columns";
+import getMessageEmbed from "utils/interactions/getInteractionEmbed";
 import InteractionHandler from "utils/interactions/interactionHandler";
-import CustomMessageEmbed from "utils/interactions/messageEmbed";
+import CustomMessageEmbed from "utils/interactions/customMessageEmbed";
 import { handleAsyncError } from "utils/logging/handleAsyncError";
 import { ButtonFunction } from "../../type";
-import { createUnauthorizedRoleEmbed } from "../../utils/embeds";
 import { createEditNormalEventComponents } from "../../utils/modalComponents";
+import { NORMAL_CREATOR_EVENT_TEXT_FIELD } from "../../utils/constants";
 
 const editEventInfo: ButtonFunction = {
-  customId: "editEventInfo",
+  customId: NORMAL_CREATOR_EVENT_TEXT_FIELD.EDIT_EVENT_INFO,
   run: async (client: Client, interaction: ButtonInteraction) => {
     const interactionHandler = new InteractionHandler(interaction);
     try {
       const embed = getMessageEmbed(interaction, interactionHandler);
       if (!embed) return;
 
-      const userRoleDB = await getUserRole({
-        discordUserId: interaction.user.id,
-        discordServerId: interaction.guild!.id,
-      });
+      const {
+        isValid: hasServer,
+        embed: notRegisteredEmbed,
+        value: serverId,
+      } = await validateServerExists(interaction.guildId);
+      if (!hasServer) return interactionHandler.embeds(notRegisteredEmbed).editReply();
 
-      if (
-        userRoleDB.length === 0 ||
-        (userRoleDB[0]["roleId"] !== 3 && userRoleDB[0]["roleId"] !== 2)
-      ) {
-        const unauthorizedRoleEmbed = createUnauthorizedRoleEmbed();
-        return interactionHandler.embeds(unauthorizedRoleEmbed).reply();
-      }
+      const { isValid: validPermission, embed: invalidEmbed } = await validateUserPermission(
+        serverId,
+        interaction.user.id,
+      );
+      if (!validPermission) return interactionHandler.embeds(invalidEmbed).editReply();
 
       const eventId = findFooterEventId(embed.footer);
 
-      const allColumnValue = await getAllColumnValueById({ id: parseInt(eventId) });
+      const eventObj = await getEventColumnDB(eventId, [
+        "description",
+        "eventName",
+        "gameName",
+        "timezone",
+      ]);
 
       const modal = createEditNormalEventComponents({
         interactionId: interaction.id,
-        description: allColumnValue[0].description,
-        eventName: allColumnValue[0].eventName,
-        gameName: allColumnValue[0].gameName,
-        timezone: allColumnValue[0].timezone,
+        description: eventObj.description!,
+        eventName: eventObj.eventName!,
+        gameName: eventObj.gameName!,
+        timezone: eventObj.timezone!,
       });
 
       await interaction.showModal(modal);

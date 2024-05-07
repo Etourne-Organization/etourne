@@ -26,7 +26,7 @@
 		"baseUrl": "./",
 		"paths": {
 			"botConfig": [
-				"./src/botConfig.ts"
+				"src/bot.config.ts"
 			],
 			"utils/*": [
 				"src/utils/*"
@@ -36,6 +36,9 @@
 			],
 			"utilities/*": [
 				"./src/utilities/*"
+			],
+			"constants/*": [
+				"./src/constants/*"
 			],
 			"src/*": [
 				"./src/*"

@@ -1,7 +1,7 @@
 import { BaseCommandInteraction, Client } from "discord.js";
 
 import InteractionHandler from "utils/interactions/interactionHandler";
-import CustomMessageEmbed from "utils/interactions/messageEmbed";
+import CustomMessageEmbed from "utils/interactions/customMessageEmbed";
 import { handleAsyncError } from "utils/logging/handleAsyncError";
 import { Command } from "../type";
 import { createSupportEmbed } from "../utils/embeds";

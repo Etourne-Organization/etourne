@@ -1,17 +1,17 @@
 import { Client, ModalSubmitInteraction } from "discord.js";
 
-import { findFooterEventId, updateEmbed } from "src/interactionHandlers/utils";
-import { setColumnValue } from "supabaseDB/methods/events";
-import getMessageEmbed from "utils/getMessageEmbed";
+import { findFooterEventId, updateEmbed, updateEmbedField } from "src/interactionHandlers/utils";
+import { updateEventColumnsDB } from "supabaseDB/methods/columns";
+import CustomMessageEmbed from "utils/interactions/customMessageEmbed";
+import getMessageEmbed from "utils/interactions/getInteractionEmbed";
 import InteractionHandler from "utils/interactions/interactionHandler";
-import CustomMessageEmbed from "utils/interactions/messageEmbed";
 import { handleAsyncError } from "utils/logging/handleAsyncError";
 import { ModalSubmit } from "../../../type";
-import { TEAM_CREATOR_FIELD_NAMES } from "../../../utils/constants";
-import updateAllTeamInfo from "./updateRelatedModals";
+import updateRelatedTeamModals from "./updateRelatedModals";
+import { TEAM_CREATOR_EVENT_TEXT_FIELD } from "src/interactionHandlers/buttonHandler/utils/constants";
 
 const setMaxNumTeamPlayersModal: ModalSubmit = {
-  customId: "setMaxNumTeamPlayersModalSubmit",
+  customId: TEAM_CREATOR_EVENT_TEXT_FIELD.SET_MAX_NUM_TEAM_PLAYERS_MODAL_SUBMIT,
   run: async (client: Client, interaction: ModalSubmitInteraction) => {
     const interactionHandler = new InteractionHandler(interaction);
     try {
@@ -24,30 +24,23 @@ const setMaxNumTeamPlayersModal: ModalSubmit = {
 
       const newMaxNumTeamPlayers = interaction.fields.getTextInputValue("maxNumTeamPlayers");
 
-      setColumnValue({
-        data: [
-          {
-            key: "maxNumTeamPlayers",
-            value: parseInt(newMaxNumTeamPlayers),
-            id: parseInt(eventId),
-          },
-        ],
-      });
+      await updateEventColumnsDB(eventId, [
+        { key: "maxNumTeamPlayers", value: parseInt(newMaxNumTeamPlayers) },
+      ]);
 
-      embed.fields?.find((field) => {
-        if (field.name === TEAM_CREATOR_FIELD_NAMES.maxNumOfTeamPlayers)
-          field.value = newMaxNumTeamPlayers;
+      const fields = updateEmbedField(embed.fields, {
+        maxNumTeamPlayers: newMaxNumTeamPlayers,
       });
 
       const editedEmbed = updateEmbed({
         title: embed.title,
         description: embed.description,
-        fields: embed.fields,
+        fields,
         footer: embed.footer,
       });
 
-      updateAllTeamInfo({
-        eventId: parseInt(eventId),
+      updateRelatedTeamModals({
+        eventId,
         interaction,
         changed: {
           maxNumTeamPlayers: newMaxNumTeamPlayers,

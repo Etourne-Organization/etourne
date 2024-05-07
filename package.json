@@ -36,6 +36,7 @@
 		"globals": "^15.1.0",
 		"nodemon": "^3.1.0",
 		"prettier": "^3.2.5",
+		"supabase": "^1.165.0",
 		"ts-node": "^10.9.2",
 		"tsc-alias": "^1.8.8",
 		"tsconfig-paths": "^4.2.0",

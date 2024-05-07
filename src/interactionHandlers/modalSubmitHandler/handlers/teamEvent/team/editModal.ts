@@ -1,18 +1,18 @@
 import { Client, ModalSubmitInteraction } from "discord.js";
 
-import { updateTeam } from "supabaseDB/methods/teams";
+import { findEmbedField, findFooterEventId, findFooterTeamId } from "src/interactionHandlers/utils";
+import { updateTeamDB } from "supabaseDB/methods/players";
+import CustomMessageEmbed from "utils/interactions/customMessageEmbed";
+import getMessageEmbed from "utils/interactions/getInteractionEmbed";
 import InteractionHandler from "utils/interactions/interactionHandler";
-import CustomMessageEmbed from "utils/interactions/messageEmbed";
 import { handleAsyncError } from "utils/logging/handleAsyncError";
 import { ModalSubmit } from "../../../type";
 import { TEAM_FIELD_NAMES } from "../../../utils/constants";
 import { createTeamEmbed } from "../../../utils/embeds";
-import { findEmbedField } from "../../../utils/utils";
-import getMessageEmbed from "utils/getMessageEmbed";
-import { findFooterEventId, findFooterTeamId } from "src/interactionHandlers/utils";
+import { TEAM_EVENT_TEXT_FIELD } from "src/interactionHandlers/buttonHandler/utils/constants";
 
 const editTeamInfoModal: ModalSubmit = {
-  customId: "editTeamInfoModal",
+  customId: TEAM_EVENT_TEXT_FIELD.EDIT_TEAM_INFO_MODAL,
   run: async (client: Client, interaction: ModalSubmitInteraction) => {
     const interactionHandler = new InteractionHandler(interaction);
     try {
@@ -38,9 +38,10 @@ const editTeamInfoModal: ModalSubmit = {
 
       const teamLeader = findEmbedField(embed.fields, TEAM_FIELD_NAMES.teamLeader);
 
-      const newTeamName: string = interaction.fields.getTextInputValue("teamName");
-      const newTeamShortDescription: string =
-        interaction.fields.getTextInputValue("teamShortDescription");
+      const newTeamName = interaction.fields.getTextInputValue("teamName");
+      const newTeamShortDescription = interaction.fields.getTextInputValue("teamShortDescription");
+
+      await updateTeamDB(teamId, newTeamName, newTeamShortDescription);
 
       const editedEmbed = createTeamEmbed({
         description: newTeamShortDescription,
@@ -54,12 +55,6 @@ const editTeamInfoModal: ModalSubmit = {
           name: registeredPlayers?.name,
           value: registeredPlayers?.value,
         },
-      });
-
-      await updateTeam({
-        id: parseInt(teamId),
-        teamName: newTeamName,
-        teamDescription: newTeamShortDescription,
       });
 
       await interactionHandler.embeds(editedEmbed).editReply();

@@ -1,18 +1,19 @@
 import { Client, ModalSubmitInteraction } from "discord.js";
 
-import { findFooterEventId } from "src/interactionHandlers/utils";
-import { updateEvent } from "supabaseDB/methods/events";
-import getMessageEmbed from "utils/getMessageEmbed";
+import { findEmbedField, findFooterEventId } from "src/interactionHandlers/utils";
+import { updateEventDB } from "supabaseDB/methods/events";
+import CustomMessageEmbed from "utils/interactions/customMessageEmbed";
+import getMessageEmbed from "utils/interactions/getInteractionEmbed";
 import InteractionHandler from "utils/interactions/interactionHandler";
-import CustomMessageEmbed from "utils/interactions/messageEmbed";
 import { handleAsyncError } from "utils/logging/handleAsyncError";
 import { ModalSubmit } from "../../type";
 import { NORMAL_CREATOR_FIELD_NAMES } from "../../utils/constants";
 import { createNormalCreatorEmbed } from "../../utils/embeds";
-import { findEmbedField, inputToTimezone } from "../../utils/utils";
+import { inputToTimezone } from "../../utils/utils";
+import { NORMAL_CREATOR_EVENT_TEXT_FIELD } from "src/interactionHandlers/buttonHandler/utils/constants";
 
 const editEventInfoModal: ModalSubmit = {
-  customId: "editEventInfoModal",
+  customId: NORMAL_CREATOR_EVENT_TEXT_FIELD.EDIT_EVENT_INFO_MODAL,
   run: async (client: Client, interaction: ModalSubmitInteraction) => {
     const interactionHandler = new InteractionHandler(interaction);
     try {
@@ -44,15 +45,15 @@ const editEventInfoModal: ModalSubmit = {
       const newEventDateTime = interaction.fields.getTextInputValue("date");
       const newDescription = interaction.fields.getTextInputValue("eventDescription");
 
-      await updateEvent({
-        eventId: parseInt(eventId),
+      await updateEventDB({
+        eventId,
         eventName: newEventName,
         gameName: newGameName,
         description: newDescription,
         dateTime: newEventDateTime ? inputToTimezone(newEventDateTime, timezone, true) : null,
         isTeamEvent: false,
-        discordServerId: interaction.guild.id,
-        timezone: timezone,
+        guildId: interaction.guild.id,
+        timezone,
       });
 
       const editedEmbed = createNormalCreatorEmbed({
@@ -63,7 +64,7 @@ const editEventInfoModal: ModalSubmit = {
         eventId,
         eventName: newEventName,
         gameName: newGameName,
-        eventHost: eventHost,
+        eventHost,
         replaceRegisteredPlayers: {
           name: registeredPlayers?.name,
           value: registeredPlayers?.value,

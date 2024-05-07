@@ -1,14 +1,12 @@
 import { ModalSubmitInteraction } from "discord.js";
 
-import { getRegisteredPlayersNumFromEmbed } from "src/interactionHandlers/utils";
-import { getColumnValueByEventId } from "supabaseDB/methods/teams";
-import { Teams } from "utils/dbTypes";
+import { findEmbedField, getRegisteredPlayersNumFromEmbed } from "src/interactionHandlers/utils";
+import { getTeamColumnDB } from "supabaseDB/methods/columns";
 import { logFormattedError } from "utils/logging/logError";
 import { TEAM_FIELD_NAMES } from "../../../utils/constants";
 import { createTeamEmbed, TeamEmbedType } from "../../../utils/embeds";
-import { findEmbedField } from "../../../utils/utils";
 
-interface updateAllTeamInfo {
+interface updateRelatedTeamModalsTypes {
   eventId: number;
   interaction: ModalSubmitInteraction;
   changed?: {
@@ -18,15 +16,21 @@ interface updateAllTeamInfo {
   };
 }
 
-const updateAllTeamInfo = async ({ eventId, interaction, changed }: updateAllTeamInfo) => {
+const updateRelatedTeamModals = async ({
+  eventId,
+  interaction,
+  changed,
+}: updateRelatedTeamModalsTypes) => {
   try {
-    const values = (await getColumnValueByEventId({
-      eventId: eventId,
-      columnName: "*",
-    })) as unknown as Teams[];
+    const teamObjs = await getTeamColumnDB(
+      eventId,
+      ["id", "name", "description", "messageId"],
+      true,
+      true,
+    );
 
-    for (const value of values) {
-      const fetchedMessage = await interaction.channel?.messages.fetch(value.messageId);
+    for (const value of teamObjs) {
+      const fetchedMessage = await interaction.channel?.messages.fetch(value.messageId || "");
 
       if (fetchedMessage) {
         const registeredPlayers = findEmbedField(
@@ -48,12 +52,12 @@ const updateAllTeamInfo = async ({ eventId, interaction, changed }: updateAllTea
         );
 
         const embedObj: TeamEmbedType = {
-          eventId: eventId.toString(),
-          teamId: value.id.toString(),
+          eventId,
+          teamId: value.id!,
           teamLeader: interaction.user.username,
-          teamName: value.name,
+          teamName: value.name || "",
+          description: value.description || "",
           eventName: changed?.eventName ? changed.eventName : eventName, // ? changeable
-          description: value.description,
           eventDateTime: changed?.eventDateTime ? changed.eventDateTime : eventDateTime, // ? changeable
         };
 
@@ -84,4 +88,4 @@ const updateAllTeamInfo = async ({ eventId, interaction, changed }: updateAllTea
   }
 };
 
-export default updateAllTeamInfo;
+export default updateRelatedTeamModals;

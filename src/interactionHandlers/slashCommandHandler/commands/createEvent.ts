@@ -1,12 +1,11 @@
-import { BaseCommandInteraction, Client, MessageActionRow, MessageSelectMenu } from "discord.js";
+import { BaseCommandInteraction, Client } from "discord.js";
 
-import { checkServerExists } from "supabaseDB/methods/servers";
-import { getUserRole } from "supabaseDB/methods/users";
+import { validateServerExists, validateUserPermission } from "src/interactionHandlers/validate";
 import InteractionHandler from "utils/interactions/interactionHandler";
-import CustomMessageEmbed from "utils/interactions/messageEmbed";
+import CustomMessageEmbed from "utils/interactions/customMessageEmbed";
 import { handleAsyncError } from "utils/logging/handleAsyncError";
 import { Command } from "../type";
-import { createServerNotRegisteredEmbed } from "../utils/embeds";
+import { createNormalCreatorSelectComponents } from "../utils/selectComponents";
 
 const createEvent: Command = {
   name: "createevent",
@@ -17,54 +16,18 @@ const createEvent: Command = {
     try {
       interactionHandler.processing();
 
-      if (
-        !(await checkServerExists({
-          discordServerId: interaction.guild!.id,
-        }))
-      ) {
-        const notRegisteredEmbed = createServerNotRegisteredEmbed();
-        return interactionHandler.embeds(notRegisteredEmbed).editReply();
-      }
+      const {
+        isValid: hasServer,
+        embed: notRegisteredEmbed,
+        value: serverId,
+      } = await validateServerExists(interaction.guildId);
+      if (!hasServer) return interactionHandler.embeds(notRegisteredEmbed).editReply();
 
-      const userRoleDB = await getUserRole({
-        discordUserId: interaction.user.id,
-        discordServerId: interaction.guild!.id,
-      });
+      const { isValid, embed } = await validateUserPermission(serverId, interaction.user.id);
+      if (!isValid) return interactionHandler.embeds(embed).editReply();
 
-      if (
-        userRoleDB.length === 0 ||
-        (userRoleDB[0]["roleId"] !== 3 && userRoleDB[0]["roleId"] !== 2)
-      ) {
-        return interactionHandler
-          .embeds(
-            new CustomMessageEmbed().setTitle("You are not allowed to run this command!").Error,
-          )
-          .editReply();
-      }
+      const selectMenu = createNormalCreatorSelectComponents();
 
-      const selectMenuOptions: Array<{
-        label: string;
-        description: string;
-        value: string;
-      }> = [
-        {
-          label: "Create normal event",
-          description: "Create normal event with no team feature",
-          value: "createEvent",
-        },
-        {
-          label: "Create team event",
-          description: "Create team event with team creation feature",
-          value: "createTeamEvent",
-        },
-      ];
-
-      const selectMenu = new MessageActionRow().addComponents(
-        new MessageSelectMenu()
-          .setCustomId("selectEventType")
-          .setPlaceholder("Select event type you would like to create")
-          .addOptions(selectMenuOptions),
-      );
       return interactionHandler
         .embeds(
           new CustomMessageEmbed().setTitle("Select event type you would like to create").Info,

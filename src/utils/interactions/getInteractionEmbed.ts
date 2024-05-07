@@ -1,7 +1,12 @@
 import { APIEmbed } from "discord-api-types/v10";
-import { ButtonInteraction, MessageEmbed, ModalSubmitInteraction, SelectMenuInteraction } from "discord.js"; // Import the necessary types
-import InteractionHandler from "./interactions/interactionHandler";
-import CustomMessageEmbed from "./interactions/messageEmbed";
+import {
+  ButtonInteraction,
+  MessageEmbed,
+  ModalSubmitInteraction,
+  SelectMenuInteraction,
+} from "discord.js";
+import InteractionHandler from "./interactionHandler";
+import CustomMessageEmbed from "./customMessageEmbed";
 
 const getMessageEmbed = <
   T extends ModalSubmitInteraction | SelectMenuInteraction | ButtonInteraction,

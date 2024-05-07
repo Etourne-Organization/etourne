@@ -1,16 +1,17 @@
 import { ButtonInteraction, Client } from "discord.js";
 
 import { findFooterEventId } from "src/interactionHandlers/utils";
-import { getColumnValueById } from "supabaseDB/methods/events";
-import getMessageEmbed from "utils/getMessageEmbed";
+import { getEventColumnDB } from "supabaseDB/methods/columns";
+import getMessageEmbed from "utils/interactions/getInteractionEmbed";
 import InteractionHandler from "utils/interactions/interactionHandler";
-import CustomMessageEmbed from "utils/interactions/messageEmbed";
+import CustomMessageEmbed from "utils/interactions/customMessageEmbed";
 import { handleAsyncError } from "utils/logging/handleAsyncError";
 import { ButtonFunction } from "../../type";
 import { createSetMaxNumUsersComponents } from "../../utils/modalComponents";
+import { NORMAL_CREATOR_EVENT_TEXT_FIELD } from "../../utils/constants";
 
 const setMaxNumPlayers: ButtonFunction = {
-  customId: "setMaxNumPlayers",
+  customId: NORMAL_CREATOR_EVENT_TEXT_FIELD.SET_MAX_NUM_PLAYERS,
   run: async (client: Client, interaction: ButtonInteraction) => {
     const interactionHandler = new InteractionHandler(interaction);
     try {
@@ -19,15 +20,9 @@ const setMaxNumPlayers: ButtonFunction = {
 
       const eventId = findFooterEventId(embed.footer);
 
-      const maxNumPlayers = await getColumnValueById({
-        id: parseInt(eventId),
-        columnName: "maxNumPlayers",
-      });
+      const maxNumPlayers = await getEventColumnDB(eventId, "maxNumPlayers");
 
-      const modal = createSetMaxNumUsersComponents({
-        interactionId: interaction.id,
-        currentMaxNum: maxNumPlayers[0].maxNumPlayers?.toString(),
-      });
+      const modal = createSetMaxNumUsersComponents(interaction.id, maxNumPlayers?.toString());
 
       await interaction.showModal(modal);
     } catch (err) {

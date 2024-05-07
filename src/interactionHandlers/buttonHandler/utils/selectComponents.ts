@@ -1,8 +1,9 @@
-import BOT_CONFIGS from "botConfig";
-import { MessageActionRow, MessageSelectMenu, MessageEmbed } from "discord.js";
+import { MessageActionRow, MessageSelectMenu } from "discord.js";
+import CustomMessageEmbed from "utils/interactions/customMessageEmbed";
+import { NORMAL_CREATOR_EVENT_TEXT_FIELD, TEAM_EVENT_TEXT_FIELD } from "./constants";
 
 export function createNormalRemovePlayerComponents(
-  players: { username: string; userId: string }[],
+  players: { userId: number; Users: { username: string } }[],
   footerText: string = "",
 ) {
   const selectMenuOptions: {
@@ -14,31 +15,30 @@ export function createNormalRemovePlayerComponents(
   for (const player of players) {
     // if (player?.username !== interaction.user.username) {
     selectMenuOptions.push({
-      label: player?.username || "",
-      description: `Remove ${player?.username}`,
-      value: `${player?.username}||${player?.userId}`,
+      label: player?.Users.username || "",
+      description: `Remove ${player?.Users.username}`,
+      value: `${player?.Users.username}||${player?.userId}`,
     });
     // }
   }
 
   const selectMenu = new MessageActionRow().addComponents(
     new MessageSelectMenu()
-      .setCustomId("removePlayer")
+      .setCustomId(NORMAL_CREATOR_EVENT_TEXT_FIELD.REMOVE_PLAYER)
       .setPlaceholder("Select a player to be removed")
       .addOptions(selectMenuOptions),
   );
 
-  const selectMessageEmbed = new MessageEmbed()
+  const selectMessageEmbed = new CustomMessageEmbed()
     .setTitle("Select player to be removed")
-    .setColor(BOT_CONFIGS.color.default)
     .setFooter({ text: footerText })
-    .setTimestamp();
+    .setTimestamp().Info;
 
   return { selectMenu, selectMessageEmbed };
 }
 
 export function createTeamRemovePlayerComponents(
-  teamPlayers: { username: string; userId: string }[],
+  teamPlayers: { userId: number; Users: { username: string } }[],
   footerText: string = "",
 ) {
   const selectMenuOptions: {
@@ -48,27 +48,28 @@ export function createTeamRemovePlayerComponents(
   }[] = [];
 
   for (const player of teamPlayers) {
+    const username = player.Users.username || "";
+
     // if (player?.username !== interaction.user.username) {
     selectMenuOptions.push({
-      label: player?.username || "",
-      description: `Remove ${player?.username}`,
-      value: `${player?.username}||${player?.userId}`,
+      label: username,
+      description: `Remove ${username}`,
+      value: `${username}||${player?.userId}`,
     });
     // }
   }
 
   const selectMenu = new MessageActionRow().addComponents(
     new MessageSelectMenu()
-      .setCustomId("removeTeamPlayer")
+      .setCustomId(TEAM_EVENT_TEXT_FIELD.REMOVE_TEAM_PLAYER)
       .setPlaceholder("Select a player to be removed")
       .addOptions(selectMenuOptions),
   );
 
-  const selectMessageEmbed = new MessageEmbed()
+  const selectMessageEmbed = new CustomMessageEmbed()
     .setTitle("Select team player to be removed")
-    .setColor(BOT_CONFIGS.color.default)
     .setFooter({ text: footerText })
-    .setTimestamp();
+    .setTimestamp().Info;
 
   return { selectMenu, selectMessageEmbed };
 }

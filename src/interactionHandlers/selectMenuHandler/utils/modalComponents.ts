@@ -1,44 +1,51 @@
-import { Modal, TextInputComponent, MessageActionRow, ModalActionRowComponent } from "discord.js";
+import { MessageActionRow, Modal, ModalActionRowComponent, TextInputComponent } from "discord.js";
+import {
+  EVENT_TYPE_TEXT_FIELD,
+  NORMAL_CREATOR_EVENT_TEXT_FIELD,
+  TEAM_CREATOR_EVENT_TEXT_FIELD,
+} from "src/interactionHandlers/buttonHandler/utils/constants";
 
 export function createEventTypeModal(eventType: string, interactionId: string) {
   const modal = new Modal()
     .setCustomId(
       `${
-        eventType === "createEvent" ? "normalEventModalSubmit" : "teamEventModalSubmit"
+        eventType === "createEvent"
+          ? NORMAL_CREATOR_EVENT_TEXT_FIELD.NORMAL_EVENT_MODAL_SUBMIT
+          : TEAM_CREATOR_EVENT_TEXT_FIELD.TEAM_EVENT_MODAL_SUBMIT
       }-${interactionId}`,
     )
     .setTitle("Create Event");
 
   const eventNameInput = new TextInputComponent()
-    .setCustomId("eventName")
+    .setCustomId(EVENT_TYPE_TEXT_FIELD.EVENT_NAME)
     .setLabel("Event name")
     .setStyle("SHORT")
     .setPlaceholder("Event name")
     .setRequired(true);
 
   const gameNameInput = new TextInputComponent()
-    .setCustomId("gameName")
+    .setCustomId(EVENT_TYPE_TEXT_FIELD.GAME_NAME)
     .setLabel("Game name")
     .setStyle("SHORT")
     .setPlaceholder("Game name")
     .setRequired(true);
 
   const eventDateTimeInput = new TextInputComponent()
-    .setCustomId("dateTime")
+    .setCustomId(EVENT_TYPE_TEXT_FIELD.DATETIME)
     .setLabel("Date (format: DD/MM/YYYY HH:mm)")
     .setStyle("SHORT")
     .setPlaceholder("Event date and time")
     .setRequired(true);
 
   const eventTimezoneInput = new TextInputComponent()
-    .setCustomId("timezone")
+    .setCustomId(EVENT_TYPE_TEXT_FIELD.TIMEZONE)
     .setLabel("Your timezone: timezones.etourne.com")
     .setStyle("SHORT")
     .setPlaceholder("Your timezone")
     .setRequired(true);
 
   const eventDescriptionInput = new TextInputComponent()
-    .setCustomId("eventDescription")
+    .setCustomId(EVENT_TYPE_TEXT_FIELD.EVENT_DESCRIPTION)
     .setLabel("Event description")
     .setStyle("PARAGRAPH")
     .setPlaceholder("Event description")

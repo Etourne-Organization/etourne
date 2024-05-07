@@ -1,42 +1,40 @@
 import { ButtonInteraction, Client } from "discord.js";
 
-import { NORMAL_CREATOR_FIELD_NAMES } from "src/interactionHandlers/modalSubmitHandler/utils/constants";
-import { findEmbedField } from "src/interactionHandlers/modalSubmitHandler/utils/utils";
+import { addPlayer } from "src/interactionHandlers/create";
 import {
   findFooterEventId,
   getRegisteredPlayersFromEmbedField,
   updateEmbed,
   updateEmbedField,
 } from "src/interactionHandlers/utils";
-import { getColumnValueById } from "supabaseDB/methods/events";
-import { addPlayer, getNumOfPlayers } from "supabaseDB/methods/singlePlayers";
+import { NORMAL_CREATOR_FIELD_NAMES } from "src/interactionHandlers/modalSubmitHandler/utils/constants";
+import { findEmbedField } from "src/interactionHandlers/utils";
+import { getTeamEventPlayerCountDB } from "supabaseDB/methods/players";
+import { getEventColumnDB } from "supabaseDB/methods/columns";
 import InteractionHandler from "utils/interactions/interactionHandler";
-import CustomMessageEmbed from "utils/interactions/messageEmbed";
+import CustomMessageEmbed from "utils/interactions/customMessageEmbed";
 import { handleAsyncError } from "utils/logging/handleAsyncError";
 import { ButtonFunction } from "../../type";
-import { createAlreadyRegisteredEmbed, createMaxLimitEmbed } from "../../utils/embeds";
+import { createAlreadyRegisteredEmbed, createMaxPlayerLimitEmbed } from "../../utils/embeds";
+import { NORMAL_CREATOR_EVENT_TEXT_FIELD } from "../../utils/constants";
 
 const register: ButtonFunction = {
-  customId: "normalEventRegister",
+  customId: NORMAL_CREATOR_EVENT_TEXT_FIELD.REGISTER_PLAYER,
   run: async (client: Client, interaction: ButtonInteraction) => {
     const interactionHandler = new InteractionHandler(interaction);
     try {
       await interaction.deferUpdate();
 
       const embed = interaction.message.embeds[0];
+
       const eventId = findFooterEventId(embed.footer);
 
-      const maxNumPlayers = await getColumnValueById({
-        id: parseInt(eventId),
-        columnName: "maxNumPlayers",
-      });
+      const maxNumPlayers = (await getEventColumnDB(eventId, "maxNumPlayers")) || 0;
 
-      if (
-        maxNumPlayers.length > 0 &&
-        (await getNumOfPlayers({ eventId: parseInt(eventId) })) ===
-          maxNumPlayers[0]["maxNumPlayers"]
-      ) {
-        const maxLimitEmbed = createMaxLimitEmbed();
+      const currentNumPlayers = (await getTeamEventPlayerCountDB(eventId)) || 0;
+
+      if (currentNumPlayers >= maxNumPlayers) {
+        const maxLimitEmbed = createMaxPlayerLimitEmbed();
         return interactionHandler.embeds(maxLimitEmbed).followUp();
       }
 
@@ -65,9 +63,9 @@ const register: ButtonFunction = {
 
       await addPlayer({
         username: interaction.user.username,
-        discordUserId: interaction.user.id,
-        eventId: parseInt(eventId),
-        discordServerId: interaction.guild!.id,
+        userId: interaction.user.id,
+        eventId,
+        guildId: interaction.guildId,
       });
 
       const editedEmbed = updateEmbed({

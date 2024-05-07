@@ -1,29 +1,27 @@
 import { ButtonInteraction, Client } from "discord.js";
+import { addTeamPlayer } from "src/interactionHandlers/create";
 import { TEAM_FIELD_NAMES } from "src/interactionHandlers/modalSubmitHandler/utils/constants";
-import { findEmbedField } from "src/interactionHandlers/modalSubmitHandler/utils/utils";
 import {
+  findEmbedField,
   findFooterEventId,
   findFooterTeamId,
   getRegisteredPlayersFromEmbedField,
   updateEmbed,
   updateEmbedField,
 } from "src/interactionHandlers/utils";
-import { getColumnValueById } from "supabaseDB/methods/events";
-import { addPlayer, getNumOfTeamPlayers } from "supabaseDB/methods/teamPlayers";
-import { checkTeamExists } from "supabaseDB/methods/teams";
-import getMessageEmbed from "utils/getMessageEmbed";
+import { validateTeamExists } from "src/interactionHandlers/validate";
+import { getEventColumnDB } from "supabaseDB/methods/columns";
+import { getTeamEventPlayerCountDB } from "supabaseDB/methods/players";
+import CustomMessageEmbed from "utils/interactions/customMessageEmbed";
+import getMessageEmbed from "utils/interactions/getInteractionEmbed";
 import InteractionHandler from "utils/interactions/interactionHandler";
-import CustomMessageEmbed from "utils/interactions/messageEmbed";
 import { handleAsyncError } from "utils/logging/handleAsyncError";
-import { ButtonFunction } from "../../type";
-import {
-  createAlreadyRegisteredEmbed,
-  createMaxLimitEmbed,
-  createMissingTeamEmbed,
-} from "../../utils/embeds";
+import { ButtonFunction } from "../../../type";
+import { createAlreadyRegisteredEmbed, createMaxPlayerLimitEmbed } from "../../../utils/embeds";
+import { TEAM_EVENT_TEXT_FIELD } from "../../../utils/constants";
 
 const registerTeamPlayer: ButtonFunction = {
-  customId: "registerTeamPlayer",
+  customId: TEAM_EVENT_TEXT_FIELD.REGISTER_TEAM_PLAYER,
   run: async (client: Client, interaction: ButtonInteraction) => {
     const interactionHandler = new InteractionHandler(interaction);
     try {
@@ -35,21 +33,15 @@ const registerTeamPlayer: ButtonFunction = {
       const teamId = findFooterTeamId(embed.footer);
       const eventId = findFooterEventId(embed.footer);
 
-      const maxNumTeamPlayersData = await getColumnValueById({
-        id: parseInt(eventId),
-        columnName: "maxNumTeamPlayers",
-      });
+      const maxNumTeamPlayers = (await getEventColumnDB(eventId, "maxNumTeamPlayers")) || 0;
 
-      const maxNumTeamPlayers = maxNumTeamPlayersData[0]?.maxNumTeamPlayers || 0;
+      const { isValid, embed: missingTeamEmbed } = await validateTeamExists(teamId);
+      if (!isValid) return interactionHandler.embeds(missingTeamEmbed).followUp();
 
-      if (!(await checkTeamExists({ teamId: parseInt(teamId) }))) {
-        const missingTeamEmbed = createMissingTeamEmbed();
-        return interactionHandler.embeds(missingTeamEmbed).followUp();
-      }
+      const currentNumPlayers = (await getTeamEventPlayerCountDB(teamId)) || 0;
 
-      const currentNumPlayers = await getNumOfTeamPlayers({ teamId: parseInt(teamId) });
       if (currentNumPlayers >= maxNumTeamPlayers) {
-        const maxLimitEmbed = createMaxLimitEmbed();
+        const maxLimitEmbed = createMaxPlayerLimitEmbed();
         return interactionHandler.embeds(maxLimitEmbed).followUp();
       }
 
@@ -76,11 +68,11 @@ const registerTeamPlayer: ButtonFunction = {
         registeredList: newPlayersList.join("\n"),
       });
 
-      await addPlayer({
+      await addTeamPlayer({
         username: interaction.user.username,
-        discordUserId: interaction.user.id,
-        teamId: parseInt(teamId),
-        discordServerId: interaction.guild!.id,
+        userId: interaction.user.id,
+        teamId,
+        guildId: interaction.guildId,
       });
 
       const editedEmbed = updateEmbed({

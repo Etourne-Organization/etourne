@@ -1,221 +1,131 @@
-/*
- * This file contains all the 'events' table related functions
- */
-
+import { validateServerExists } from "src/interactionHandlers/validate";
 import { supabase } from "supabaseDB/index";
-import { Events } from "utils/dbTypes";
+import { Events } from "supabaseDB/types";
 import { throwFormattedErrorLog } from "utils/logging/errorFormats";
-import { getServerId } from "./servers";
 
-interface addEvent {
-  eventId?: number;
+export const getEventDB = async (eventIdPK: number): Promise<Events | null> => {
+  const { data, error } = await supabase.from("Events").select().eq("id", eventIdPK).single();
+
+  if (error)
+    if (error) {
+      throwFormattedErrorLog(error);
+      return null;
+    }
+
+  return data;
+};
+
+export const getAllServerEventColumnsDB = async (serverId: number): Promise<Events[] | null> => {
+  const { data, error } = await supabase.from("Events").select("*").eq("serverId", serverId);
+
+  if (error) {
+    // ? No server events found
+    throwFormattedErrorLog(error);
+    return null;
+  }
+
+  return data;
+};
+
+type CreateEventTypes = {
   eventName: string;
   gameName: string;
   eventHost: string;
   description: string;
   dateTime: string;
   isTeamEvent: boolean;
-  discordServerId: string;
+  serverId: number;
   timezone: string;
   channelId: string;
-  discordServerName: string;
-}
+};
 
-interface setColumnValue {
-  data: { key: string; value: string | number; id: number }[];
-}
-
-interface getColumnValueById {
-  columnName: keyof Events;
-  id: number;
-}
-
-interface deletEvent {
-  eventId: number;
-}
-
-interface getAllColumnValueById {
-  id: number;
-}
-
-interface updateEvent {
-  eventId: number;
-  eventName: string;
-  gameName: string;
-  description: string;
-  dateTime: string | null;
-  isTeamEvent: boolean;
-  discordServerId: string;
-  timezone: string;
-}
-
-interface getAllServerEvents {
-  discordServerId: string;
-}
-
-export const addEvent = async ({
+export const createEventDB = async ({
   eventName,
   gameName,
   eventHost,
   description,
   dateTime,
   isTeamEvent,
-  discordServerId,
+  serverId,
   timezone,
   channelId,
-  // discordServerName,
-}: addEvent) => {
-  const { data: getServerIdData, error: getServerIdError } = await getServerId({
-    discordServerId: discordServerId,
-  });
-
-  const dbServerId = getServerIdData![0]["id"];
-
+}: CreateEventTypes) => {
   const { data, error } = await supabase
     .from("Events")
-    .insert([
-      {
-        eventName: eventName,
-        eventHost: eventHost,
-        gameName: gameName,
-        description: description,
-        dateTime: dateTime,
-        isTeamEvent: isTeamEvent,
-        serverId: dbServerId,
-        timezone: timezone,
-        channelId: channelId,
-      },
-    ])
-    .select();
+    .insert({
+      eventName,
+      eventHost,
+      gameName,
+      description,
+      dateTime,
+      isTeamEvent,
+      serverId,
+      timezone,
+      channelId,
+    })
+    .select()
+    .single();
 
   if (error) throw throwFormattedErrorLog(error);
 
-  return data[0]["id"];
+  return data.id;
 };
 
-export const updateEvent = async (props: updateEvent) => {
-  const {
+type UpdateEventTypes = {
+  eventName: string;
+  gameName: string;
+  eventId: number;
+  description: string;
+  dateTime: string | null;
+  isTeamEvent: boolean;
+  guildId: string;
+  timezone: string;
+};
+
+export const updateEventDB = async ({
+  guildId, // ? TODO: possibly no need for guildId validation
+  eventId,
+  eventName,
+  gameName,
+  description,
+  dateTime,
+  isTeamEvent = false,
+  timezone,
+}: UpdateEventTypes) => {
+  const { isValid, value: serverId } = await validateServerExists(guildId);
+  if (!isValid) throw throwFormattedErrorLog("Guild does not exist!");
+
+  const newObj: Partial<Events> = {
     eventName,
-    eventId,
     gameName,
     description,
-    dateTime,
     isTeamEvent,
-    discordServerId,
+    serverId,
     timezone,
-  } = props;
+  };
 
-  const { data: getServerIdData, error: getServerIdError } = await getServerId({
-    discordServerId: discordServerId,
-  });
+  if (dateTime) newObj.dateTime = dateTime;
 
-  const { data, error } = await supabase
-    .from("Events")
-    .update([
-      {
-        eventName: eventName,
-        gameName: gameName,
-        description: description,
-        isTeamEvent: isTeamEvent,
-        serverId: getServerIdData![0]["id"],
-        timezone: timezone,
-      },
-    ])
-    .eq("id", eventId)
-    .select();
-
-  if (dateTime) {
-    const { data, error } = await supabase
-      .from("Events")
-      .update([
-        {
-          dateTime: dateTime,
-        },
-      ])
-      .eq("id", eventId);
-
-    if (error) throw throwFormattedErrorLog(error);
-  }
-
-  if (error) throw throwFormattedErrorLog(error);
-
-  return data[0]["id"];
-};
-
-export const setColumnValue = async (props: setColumnValue) => {
-  const { data } = props;
-
-  const errorList = [];
-
-  for (const d of data) {
-    const { data, error } = await supabase
-      .from("Events")
-      .update({
-        [d.key]: d.value,
-      })
-      .eq("id", d.id);
-
-    if (error) errorList.push(error);
-  }
-
-  if (errorList.length > 0) throw throwFormattedErrorLog(errorList);
-};
-
-type ColumnResult<T extends keyof Events> = { [K in T]?: Events[K] };
-
-export const getColumnValueById = async <T extends keyof Events>(props: {
-  columnName: T | T[];
-  id: number;
-}): Promise<ColumnResult<T>[]> => {
-  const { columnName, id } = props;
-
-  const isColumnArray = Array.isArray(columnName);
-
-  const { data, error } = await supabase
-    .from("Events")
-    .select(isColumnArray ? columnName.join(",") : columnName)
-    .eq("id", id);
-
-  if (error) throwFormattedErrorLog(error);
-
-  return data as unknown as ColumnResult<T>[];
-};
-
-export const deleteEvent = async (props: deletEvent) => {
-  const { eventId } = props;
-
-  const { data, error } = await supabase.from("Events").delete().eq("id", eventId);
-
-  if (error) throw throwFormattedErrorLog(error);
-
-  return { data, error };
-};
-
-export const getAllColumnValueById = async (props: getAllColumnValueById) => {
-  const { id } = props;
-
-  const { data, error } = await supabase.from("Events").select().eq("id", id);
-
-  if (error) throw throwFormattedErrorLog(error);
+  const data = await performEventUpdateDB(eventId, newObj);
 
   return data;
 };
 
-export const getAllServerEvents = async (props: getAllServerEvents) => {
-  const { discordServerId } = props;
+export const deleteEventDB = async (eventId: number) => {
+  const { error } = await supabase.from("Events").delete().eq("id", eventId);
 
-  const { data: getServerIdData, error: getServerIdError } = await getServerId({
-    discordServerId,
-  });
+  if (error) throw throwFormattedErrorLog(error);
+};
 
-  if (getServerIdError) throw throwFormattedErrorLog(getServerIdError);
-
+export const performEventUpdateDB = async (id: number, newData: Partial<Events>) => {
   const { data, error } = await supabase
     .from("Events")
-    .select("*")
-    .eq("serverId", getServerIdData![0]["id"]);
+    .update(newData)
+    .eq("id", id)
+    .select()
+    .single();
 
   if (error) throw throwFormattedErrorLog(error);
 
-  return data;
+  return data.id;
 };

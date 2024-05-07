@@ -1,15 +1,16 @@
 import { Client, ModalSubmitInteraction } from "discord.js";
 
 import { findFooterEventId, updateEmbed, updateEmbedField } from "src/interactionHandlers/utils";
-import { setColumnValue } from "supabaseDB/methods/events";
-import getMessageEmbed from "utils/getMessageEmbed";
+import { updateEventColumnsDB } from "supabaseDB/methods/columns";
+import getMessageEmbed from "utils/interactions/getInteractionEmbed";
 import InteractionHandler from "utils/interactions/interactionHandler";
-import CustomMessageEmbed from "utils/interactions/messageEmbed";
+import CustomMessageEmbed from "utils/interactions/customMessageEmbed";
 import { handleAsyncError } from "utils/logging/handleAsyncError";
 import { ModalSubmit } from "../../type";
+import { NORMAL_CREATOR_EVENT_TEXT_FIELD } from "src/interactionHandlers/buttonHandler/utils/constants";
 
 const setMaxNumPlayersModal: ModalSubmit = {
-  customId: "maxNumPlayersModalSubmit",
+  customId: NORMAL_CREATOR_EVENT_TEXT_FIELD.MAX_NUM_PLAYERS_MODAL_SUBMIT,
   run: async (client: Client, interaction: ModalSubmitInteraction) => {
     const interactionHandler = new InteractionHandler(interaction);
     try {
@@ -22,15 +23,9 @@ const setMaxNumPlayersModal: ModalSubmit = {
 
       const newMaxNumPlayers = interaction.fields.getTextInputValue("maxNumPlayersInput");
 
-      setColumnValue({
-        data: [
-          {
-            key: "maxNumPlayers",
-            value: parseInt(newMaxNumPlayers),
-            id: parseInt(eventId),
-          },
-        ],
-      });
+      await updateEventColumnsDB(eventId, [
+        { key: "maxNumPlayers", value: parseInt(newMaxNumPlayers) },
+      ]);
 
       const fields = updateEmbedField(embed.fields, {
         numMaxPlayers: newMaxNumPlayers,

@@ -6,10 +6,10 @@
 
 */
 
-import { throwFormattedErrorLog } from "utils/logging/errorFormats";
 import { supabase } from "supabaseDB/index";
+import { throwFormattedErrorLog } from "utils/logging/errorFormats";
 
-import { Teams } from "utils/dbTypes";
+import { Teams } from "supabaseDB/types";
 import { checkAddUser, getUserId, getUsernameAndDiscordId } from "./users";
 
 interface addTeam {
@@ -73,7 +73,7 @@ export const addTeam = async (props: addTeam) => {
 
   await checkAddUser({
     discordUserId: teamLeaderDiscordUserId,
-    discordServerId: discordServerId,
+    discordServerId,
     username: teamLeaderUsername,
   });
 
@@ -85,14 +85,12 @@ export const addTeam = async (props: addTeam) => {
 
   const { data, error } = await supabase
     .from("Teams")
-    .insert([
-      {
-        name: teamName,
-        description: teamDescription,
-        eventId: eventId,
-        teamLeader: getUserIdData![0]["id"],
-      },
-    ])
+    .insert({
+      name: teamName,
+      description: teamDescription,
+      eventId,
+      teamLeader: getUserIdData![0]["id"],
+    })
     .select();
 
   if (error) throw throwFormattedErrorLog(error);
@@ -106,12 +104,10 @@ export const updateTeam = async (props: updateTeam) => {
 
   const { data, error } = await supabase
     .from("Teams")
-    .update([
-      {
-        name: teamName,
-        description: teamDescription,
-      },
-    ])
+    .update({
+      name: teamName,
+      description: teamDescription,
+    })
     .eq("id", id)
     .select();
 
@@ -140,9 +136,9 @@ export const checkTeamExists = async (props: checkTeamExists) => {
 
   if (data.length > 0) {
     return true;
-  } else {
+  } 
     return false;
-  }
+  
 };
 
 export const setColumnValue = async (props: setColumnValue) => {
@@ -225,7 +221,7 @@ export const getTeamLeaderUsernameDiscordId = async (props: getTeamLeader) => {
   if (error) throw throwFormattedErrorLog(error);
 
   const discordId = await getUsernameAndDiscordId({
-    userId: teamLeaderIdData![0]["teamLeader"],
+    userId: teamLeaderIdData![0]?.teamLeader as number,
   });
 
   return discordId;

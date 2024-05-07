@@ -2,34 +2,36 @@ import { ButtonInteraction, Client, SelectMenuInteraction } from "discord.js";
 
 import { createRemoveUserConfirmationEmbed } from "src/interactionHandlers/buttonHandler/utils/embeds";
 import { TEAM_FIELD_NAMES } from "src/interactionHandlers/modalSubmitHandler/utils/constants";
-import { findEmbedField } from "src/interactionHandlers/modalSubmitHandler/utils/utils";
+import { findEmbedField } from "src/interactionHandlers/utils";
 import {
   findFooterTeamId,
   getRegisteredPlayersFromEmbedField,
   updateEmbed,
   updateEmbedField,
 } from "src/interactionHandlers/utils";
-import { removePlayer } from "supabaseDB/methods/teamPlayers";
-import { checkTeamExists, getColumnValueById } from "supabaseDB/methods/teams";
-import getMessageEmbed from "utils/getMessageEmbed";
+import { validateTeamExists } from "src/interactionHandlers/validate";
+import { getTeamColumnDB } from "supabaseDB/methods/columns";
+import { removeTeamPlayerDB } from "supabaseDB/methods/players";
+import CustomMessageEmbed from "utils/interactions/customMessageEmbed";
+import getMessageEmbed from "utils/interactions/getInteractionEmbed";
 import InteractionHandler from "utils/interactions/interactionHandler";
-import CustomMessageEmbed from "utils/interactions/messageEmbed";
 import logError, { logFormattedError } from "utils/logging/logError";
 import { SelectMenu } from "../type";
-import { collectorFilter, createConfirmationBtns, getButtonIds } from "../utils/btnComponents";
+import { collectorFilter, createConfirmationBtns } from "../utils/btnComponents";
+import { TEAM_EVENT_TEXT_FIELD } from "src/interactionHandlers/buttonHandler/utils/constants";
 
 const removeTeamPlayer: SelectMenu = {
-  customId: "removeTeamPlayer",
+  customId: TEAM_EVENT_TEXT_FIELD.REMOVE_TEAM_PLAYER,
   run: async (client: Client, interaction: SelectMenuInteraction) => {
     try {
       const embed = getMessageEmbed(interaction);
       if (!embed) return;
 
       const username = interaction.values[0].split("||")[0];
-      const userId = interaction.values[0].split("||")[1];
+      const userIdPK = interaction.values[0].split("||")[1];
       const teamId = findFooterTeamId(embed.footer);
 
-      const confirmationButtons = createConfirmationBtns();
+      const { confirmationButtons, deleteYesId, deleteNoId } = createConfirmationBtns();
 
       const removeUserConfirmationEmbed = createRemoveUserConfirmationEmbed(username);
       await interaction.update({
@@ -46,75 +48,73 @@ const removeTeamPlayer: SelectMenu = {
         max: 1,
         maxComponents: 1,
       });
+
       collector?.on("collect", async (btnInteraction: ButtonInteraction) => {
-        const btnInteractionHandler = new InteractionHandler(btnInteraction);
-        const { deleteYesId, deleteNoId } = getButtonIds();
+        try {
+          const btnInteractionHandler = new InteractionHandler(btnInteraction);
 
-        if (btnInteraction.customId === deleteYesId) {
-          await interaction.deleteReply();
+          if (btnInteraction.customId === deleteYesId) {
+            await interaction.deleteReply();
 
-          await btnInteractionHandler.processing();
+            await btnInteractionHandler.processing();
 
-          if (await checkTeamExists({ teamId: parseInt(teamId) }))
-            await removePlayer({
-              discordUserId: userId,
-              teamId: parseInt(teamId),
-            });
+            const { isValid } = await validateTeamExists(teamId);
+            if (isValid) await removeTeamPlayerDB(interaction.guildId, userIdPK, teamId);
 
-          const messageIdInfo = await getColumnValueById({
-            id: parseInt(teamId),
-            columnName: "messageId",
-          });
+            const messageId = (await getTeamColumnDB(teamId, "messageId")) || "";
 
-          const messageId = messageIdInfo[0]?.messageId || "";
+            const fetchedMessage = await interaction.channel?.messages.fetch(messageId);
 
-          const fetchedMessage = await interaction.channel?.messages.fetch(messageId);
+            if (fetchedMessage) {
+              const embed = fetchedMessage.embeds[0];
 
-          if (fetchedMessage) {
-            const embed = fetchedMessage.embeds[0];
+              const registeredPlayersField = findEmbedField(
+                embed.fields,
+                TEAM_FIELD_NAMES.registeredPlayers,
+              );
 
-            const registeredPlayersField = findEmbedField(
-              embed.fields,
-              TEAM_FIELD_NAMES.registeredPlayers,
-            );
+              const registeredPlayers = getRegisteredPlayersFromEmbedField(registeredPlayersField);
 
-            const registeredPlayers = getRegisteredPlayersFromEmbedField(registeredPlayersField);
+              const registeredIndex = registeredPlayers.indexOf(username);
 
-            const registeredIndex = registeredPlayers.indexOf(username);
+              // ? Check if the current user is not registered
+              if (registeredIndex === -1) return logError("bruh, what?  - removeTeamPlayer");
 
-            // ? Check if the current user is not registered
-            if (registeredIndex === -1) return logError("bruh, what?  - removeTeamPlayer");
+              registeredPlayers.splice(registeredIndex, 1);
+              const newPlayersList = registeredPlayers.join("\n");
 
-            registeredPlayers.splice(registeredIndex, 1);
-            const newPlayersList = registeredPlayers.join("\n");
+              const numRegisteredPlayers = registeredPlayers.length.toString();
 
-            const numRegisteredPlayers = registeredPlayers.length.toString();
+              const fields = updateEmbedField(embed.fields, {
+                numRegisteredPlayers,
+                registeredList: newPlayersList,
+              });
 
-            const fields = updateEmbedField(embed.fields, {
-              numRegisteredPlayers,
-              registeredList: newPlayersList,
-            });
+              const editedEmbed = updateEmbed({
+                title: embed.title,
+                description: embed.description,
+                fields,
+                footer: embed.footer,
+              });
 
-            const editedEmbed = updateEmbed({
-              title: embed.title,
-              description: embed.description,
-              fields,
-              footer: embed.footer,
-            });
+              await fetchedMessage.edit({
+                embeds: [editedEmbed],
+              });
+            }
+            await btnInteractionHandler
+              .embeds(
+                new CustomMessageEmbed().setTitle(`Removed ${username} successfully!`).Success,
+              )
+              .editReply();
+          } else if (btnInteraction.customId === deleteNoId) {
+            await interaction.deleteReply();
 
-            await fetchedMessage.edit({
-              embeds: [editedEmbed],
-            });
+            await btnInteractionHandler
+              .embeds(new CustomMessageEmbed().setTitle(`Player ${username} was not removed`).Error)
+              .reply();
           }
-          await btnInteractionHandler
-            .embeds(new CustomMessageEmbed().setTitle(`Removed ${username} successfully!`).Success)
-            .editReply();
-        } else if (btnInteraction.customId === deleteNoId) {
-          await interaction.deleteReply();
-
-          await btnInteractionHandler
-            .embeds(new CustomMessageEmbed().setTitle(`Player ${username} was not removed`).Error)
-            .reply();
+        } catch (error) {
+          logFormattedError(error);
         }
       });
     } catch (err) {

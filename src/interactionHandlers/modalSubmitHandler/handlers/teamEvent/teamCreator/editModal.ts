@@ -1,19 +1,20 @@
 import { Client, ModalSubmitInteraction } from "discord.js";
 
-import { findFooterEventId } from "src/interactionHandlers/utils";
-import { updateEvent } from "supabaseDB/methods/events";
-import getMessageEmbed from "utils/getMessageEmbed";
+import { findEmbedField, findFooterEventId } from "src/interactionHandlers/utils";
+import { updateEventDB } from "supabaseDB/methods/events";
+import CustomMessageEmbed from "utils/interactions/customMessageEmbed";
+import getMessageEmbed from "utils/interactions/getInteractionEmbed";
 import InteractionHandler from "utils/interactions/interactionHandler";
-import CustomMessageEmbed from "utils/interactions/messageEmbed";
 import { handleAsyncError } from "utils/logging/handleAsyncError";
 import { ModalSubmit } from "../../../type";
 import { TEAM_CREATOR_FIELD_NAMES } from "../../../utils/constants";
 import { createTeamCreatorEmbed } from "../../../utils/embeds";
-import { findEmbedField, inputToTimezone } from "../../../utils/utils";
-import updateAllTeamInfo from "./updateRelatedModals";
+import { inputToTimezone } from "../../../utils/utils";
+import updateRelatedTeamModals from "./updateRelatedModals";
+import { TEAM_CREATOR_EVENT_TEXT_FIELD } from "src/interactionHandlers/buttonHandler/utils/constants";
 
 const editTeamEventInfoModal: ModalSubmit = {
-  customId: "editTeamEventInfoModal",
+  customId: TEAM_CREATOR_EVENT_TEXT_FIELD.EDIT_TEAM_EVENT_INFO_MODAL,
   run: async (client: Client, interaction: ModalSubmitInteraction) => {
     const interactionHandler = new InteractionHandler(interaction);
     try {
@@ -39,46 +40,46 @@ const editTeamEventInfoModal: ModalSubmit = {
         TEAM_CREATOR_FIELD_NAMES.dateTime,
       );
 
-      const eventNameInput = interaction.fields.getTextInputValue("eventName");
-      const gameNameInput = interaction.fields.getTextInputValue("gameName");
+      const newEventName = interaction.fields.getTextInputValue("eventName");
+      const newGameName = interaction.fields.getTextInputValue("gameName");
+      const newDescription = interaction.fields.getTextInputValue("eventDescription");
       const timezone = interaction.fields.getTextInputValue("timezone");
-      const eventDateTimeInput = interaction.fields.getTextInputValue("date");
-      const descriptionInput = interaction.fields.getTextInputValue("eventDescription");
+      const newEventDateTime = interaction.fields.getTextInputValue("date");
+
+      await updateEventDB({
+        eventId,
+        eventName: newEventName,
+        gameName: newGameName,
+        description: newDescription,
+        dateTime: newEventDateTime ? inputToTimezone(newEventDateTime, timezone, true) : null,
+        guildId: interaction.guild.id,
+        timezone,
+        isTeamEvent: true,
+      });
+
+      updateRelatedTeamModals({
+        eventId,
+        interaction,
+        changed: {
+          eventName: newEventName,
+          maxNumTeamPlayers,
+          eventDateTime: newEventDateTime
+            ? inputToTimezone(newEventDateTime, timezone)
+            : eventDateTimeEmbedValue,
+        },
+      });
 
       const editedEmbed = createTeamCreatorEmbed({
-        description: descriptionInput,
+        description: newDescription,
         eventHost,
         eventId,
-        eventName: eventNameInput,
-        gameName: gameNameInput,
-        eventDateTime: eventDateTimeInput
-          ? inputToTimezone(eventDateTimeInput, timezone)
+        eventName: newEventName,
+        gameName: newGameName,
+        eventDateTime: newEventDateTime
+          ? inputToTimezone(newEventDateTime, timezone)
           : eventDateTimeEmbedValue,
         maxNumTeamPlayers,
         maxNumTeams,
-      });
-
-      await updateEvent({
-        eventId: parseInt(eventId),
-        eventName: eventNameInput,
-        gameName: gameNameInput,
-        description: descriptionInput,
-        dateTime: eventDateTimeInput ? inputToTimezone(eventDateTimeInput, timezone, true) : null,
-        isTeamEvent: false,
-        discordServerId: interaction.guild.id,
-        timezone: timezone,
-      });
-
-      updateAllTeamInfo({
-        eventId: parseInt(eventId),
-        interaction: interaction,
-        changed: {
-          eventName: eventNameInput,
-          maxNumTeamPlayers,
-          eventDateTime: eventDateTimeInput
-            ? inputToTimezone(eventDateTimeInput, timezone)
-            : eventDateTimeEmbedValue,
-        },
       });
 
       await interactionHandler.embeds(editedEmbed).editReply();

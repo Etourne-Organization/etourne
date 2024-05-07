@@ -1,16 +1,19 @@
 import { Client, ModalSubmitInteraction } from "discord.js";
 
-import { addEvent, setColumnValue } from "supabaseDB/methods/events";
+import { validateServerExists } from "src/interactionHandlers/validate";
+import { updateEventColumnsDB } from "supabaseDB/methods/columns";
+import { createEventDB } from "supabaseDB/methods/events";
+import CustomMessageEmbed from "utils/interactions/customMessageEmbed";
 import InteractionHandler from "utils/interactions/interactionHandler";
-import CustomMessageEmbed from "utils/interactions/messageEmbed";
 import { handleAsyncError } from "utils/logging/handleAsyncError";
 import { ModalSubmit } from "../../../type";
+import { createTeamCreatorButtonComponents } from "../../../utils/btnComponents";
 import { createTeamCreatorEmbed } from "../../../utils/embeds";
 import { inputToTimezone } from "../../../utils/utils";
-import { createTeamCreatorButtonComponents } from "../../../utils/btnComponents";
+import { TEAM_CREATOR_EVENT_TEXT_FIELD } from "src/interactionHandlers/buttonHandler/utils/constants";
 
 const teamEventModal: ModalSubmit = {
-  customId: "teamEventModalSubmit",
+  customId: TEAM_CREATOR_EVENT_TEXT_FIELD.TEAM_EVENT_MODAL_SUBMIT,
   run: async (client: Client, interaction: ModalSubmitInteraction) => {
     const interactionHandler = new InteractionHandler(interaction);
 
@@ -25,17 +28,19 @@ const teamEventModal: ModalSubmit = {
       const eventDateTime = interaction.fields.getTextInputValue("dateTime");
       const description = interaction.fields.getTextInputValue("eventDescription");
 
-      const eventId = await addEvent({
-        eventName: eventName,
-        eventHost: interaction.user.username,
-        gameName: gameName,
-        description: description,
+      const { isValid, embed, value: serverId } = await validateServerExists(interaction.guildId);
+      if (!isValid) return interactionHandler.embeds(embed).editReply();
+
+      const eventId = await createEventDB({
+        eventName,
+        gameName,
+        description,
         dateTime: inputToTimezone(eventDateTime, timezone, true),
         isTeamEvent: true,
-        discordServerId: interaction.guild.id,
-        timezone: timezone,
+        serverId,
+        timezone,
+        eventHost: interaction.user.username,
         channelId: interaction.channel!.id,
-        discordServerName: interaction.guild.name,
       });
 
       const eventEmbed = createTeamCreatorEmbed({
@@ -49,20 +54,22 @@ const teamEventModal: ModalSubmit = {
 
       const messageComponents = createTeamCreatorButtonComponents();
 
+      // ? messageId from `reply.id` is required in order to fetch the embed later
+      // ? e.g. used in removeTeamPlayer
       const reply = await interaction.channel?.send({
         embeds: [eventEmbed],
         components: messageComponents,
       });
 
-      await setColumnValue({
-        data: [
-          {
-            id: eventId,
-            key: "messageId",
-            value: reply!.id,
-          },
-        ],
-      });
+      if (!reply)
+        return interactionHandler
+          .embeds(
+            new CustomMessageEmbed().setDescription("Failed to get messageId").defaultErrorTitle()
+              .SHORT.Error,
+          )
+          .editReply();
+
+      await updateEventColumnsDB(eventId, [{ key: "messageId", value: reply.id }]);
 
       await interactionHandler
         .embeds(new CustomMessageEmbed().setTitle("Team event created successfully!").Success)

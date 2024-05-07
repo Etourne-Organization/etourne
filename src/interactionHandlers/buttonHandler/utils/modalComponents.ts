@@ -1,4 +1,9 @@
 import { MessageActionRow, Modal, ModalActionRowComponent, TextInputComponent } from "discord.js";
+import {
+  NORMAL_CREATOR_EVENT_TEXT_FIELD,
+  TEAM_CREATOR_EVENT_TEXT_FIELD,
+  TEAM_EVENT_TEXT_FIELD,
+} from "./constants";
 
 type EditNormalEventTypes = {
   interactionId: string;
@@ -22,38 +27,38 @@ export function createEditNormalEventComponents({
   timezone,
 }: EditNormalEventTypes) {
   const modal = new Modal()
-    .setCustomId(`editEventInfoModal-${interactionId}`)
+    .setCustomId(`${NORMAL_CREATOR_EVENT_TEXT_FIELD.EDIT_EVENT_INFO_MODAL}-${interactionId}`)
     .setTitle("Edit event");
 
   const eventNameInput = new TextInputComponent()
-    .setCustomId("eventName")
+    .setCustomId(NORMAL_CREATOR_EVENT_TEXT_FIELD.EVENT_NAME)
     .setLabel("Event name")
     .setStyle("SHORT")
     .setPlaceholder("Event name")
     .setValue(eventName);
 
   const gameNameInput = new TextInputComponent()
-    .setCustomId("gameName")
+    .setCustomId(NORMAL_CREATOR_EVENT_TEXT_FIELD.GAME_NAME)
     .setLabel("Game name")
     .setStyle("SHORT")
     .setPlaceholder("Game name")
     .setValue(gameName);
 
   const eventDateTimeInput = new TextInputComponent()
-    .setCustomId("date")
+    .setCustomId(NORMAL_CREATOR_EVENT_TEXT_FIELD.DATE)
     .setLabel("Date (format: DD/MM/YYYY hour:minute)")
     .setStyle("SHORT")
     .setPlaceholder("Leave empty if changing not required");
 
   const eventTimezoneInput = new TextInputComponent()
-    .setCustomId("timezone")
+    .setCustomId(NORMAL_CREATOR_EVENT_TEXT_FIELD.TIMEZONE)
     .setLabel("Your timezone: timezones.etourne.com")
     .setStyle("SHORT")
     .setPlaceholder("Your timezone")
     .setValue(timezone);
 
   const eventDescriptionInput = new TextInputComponent()
-    .setCustomId("eventDescription")
+    .setCustomId(NORMAL_CREATOR_EVENT_TEXT_FIELD.EVENT_DESCRIPTION)
     .setLabel("Event description")
     .setStyle("PARAGRAPH")
     .setPlaceholder("Event description")
@@ -90,19 +95,13 @@ export function createEditNormalEventComponents({
   return modal;
 }
 
-export function createSetMaxNumUsersComponents({
-  interactionId,
-  currentMaxNum,
-}: {
-  interactionId: string;
-  currentMaxNum?: string;
-}) {
+export function createSetMaxNumUsersComponents(interactionId: string, currentMaxNum?: string) {
   const modal = new Modal()
-    .setCustomId(`maxNumPlayersModalSubmit-${interactionId}`)
+    .setCustomId(`${NORMAL_CREATOR_EVENT_TEXT_FIELD.MAX_NUM_PLAYERS_MODAL_SUBMIT}-${interactionId}`)
     .setTitle("Set max number of players");
 
   const input = new TextInputComponent()
-    .setCustomId("maxNumPlayersInput")
+    .setCustomId(NORMAL_CREATOR_EVENT_TEXT_FIELD.MAX_NUM_PLAYERS)
     .setLabel("Num of players limit")
     .setStyle("SHORT")
     .setPlaceholder("Enter limit for num of players")
@@ -116,19 +115,13 @@ export function createSetMaxNumUsersComponents({
   return modal;
 }
 
-export function createSetMaxNumTeamsComponents({
-  interactionId,
-  currentMaxNum,
-}: {
-  interactionId: string;
-  currentMaxNum?: string;
-}) {
+export function createSetMaxNumTeamsComponents(interactionId: string, currentMaxNum?: string) {
   const modal = new Modal()
-    .setCustomId(`setMaxNumTeamsModalSubmit-${interactionId}`)
+    .setCustomId(`${TEAM_CREATOR_EVENT_TEXT_FIELD.SET_MAX_NUM_TEAMS_MODAL_SUBMIT}-${interactionId}`)
     .setTitle("Set max number of teams");
 
   const maxNumTeamsInput = new TextInputComponent()
-    .setCustomId("maxNumTeams")
+    .setCustomId(TEAM_CREATOR_EVENT_TEXT_FIELD.MAX_NUM_TEAMS)
     .setLabel("Max num of teams")
     .setStyle("SHORT")
     .setPlaceholder("Enter max num of teams")
@@ -142,19 +135,18 @@ export function createSetMaxNumTeamsComponents({
   return modal;
 }
 
-export function createSetMaxNumTeamPlayersComponents({
-  interactionId,
-  currentMaxNum,
-}: {
-  interactionId: string;
-  currentMaxNum?: string;
-}) {
+export function createSetMaxNumTeamPlayersComponents(
+  interactionId: string,
+  currentMaxNum?: string,
+) {
   const modal = new Modal()
-    .setCustomId(`setMaxNumTeamPlayersModalSubmit-${interactionId}`)
+    .setCustomId(
+      `${TEAM_CREATOR_EVENT_TEXT_FIELD.SET_MAX_NUM_TEAM_PLAYERS_MODAL_SUBMIT}-${interactionId}`,
+    )
     .setTitle("Set max number of team players");
 
   const maxNumTeamPlayersInput = new TextInputComponent()
-    .setCustomId("maxNumTeamPlayers")
+    .setCustomId(TEAM_CREATOR_EVENT_TEXT_FIELD.MAX_NUM_TEAM_PLAYERS)
     .setLabel("Max num of team players")
     .setStyle("SHORT")
     .setPlaceholder("Enter max num of team players in each team")
@@ -176,38 +168,38 @@ export function createEditTeamCreatorEventComponents({
   timezone,
 }: EditNormalEventTypes) {
   const modal = new Modal()
-    .setCustomId(`editTeamEventInfoModal-${interactionId}`)
+    .setCustomId(`${TEAM_CREATOR_EVENT_TEXT_FIELD.EDIT_TEAM_EVENT_INFO_MODAL}-${interactionId}`)
     .setTitle("Edit event");
 
   const eventNameInput = new TextInputComponent()
-    .setCustomId("eventName")
+    .setCustomId(TEAM_CREATOR_EVENT_TEXT_FIELD.EVENT_NAME)
     .setLabel("Event name")
     .setStyle("SHORT")
     .setPlaceholder("Event name")
     .setValue(eventName);
 
   const gameNameInput = new TextInputComponent()
-    .setCustomId("gameName")
+    .setCustomId(TEAM_CREATOR_EVENT_TEXT_FIELD.GAME_NAME)
     .setLabel("Game name")
     .setStyle("SHORT")
     .setPlaceholder("Game name")
     .setValue(gameName);
 
   const eventDateTimeInput = new TextInputComponent()
-    .setCustomId("date")
+    .setCustomId(TEAM_CREATOR_EVENT_TEXT_FIELD.DATE)
     .setLabel("Date (format: DD/MM/YYYY hour:minute)")
     .setStyle("SHORT")
     .setPlaceholder("Leave empty if changing not required");
 
   const eventTimezoneInput = new TextInputComponent()
-    .setCustomId("timezone")
+    .setCustomId(TEAM_CREATOR_EVENT_TEXT_FIELD.TIMEZONE)
     .setLabel("Your timezone: timezones.etourne.com")
     .setStyle("SHORT")
     .setPlaceholder("Your timezone")
     .setValue(timezone);
 
   const eventDescriptionInput = new TextInputComponent()
-    .setCustomId("eventDescription")
+    .setCustomId(TEAM_CREATOR_EVENT_TEXT_FIELD.EVENT_DESCRIPTION)
     .setLabel("Event description")
     .setStyle("PARAGRAPH")
     .setPlaceholder("Event description")
@@ -250,18 +242,18 @@ export function createEditTeamEventComponents({
   description,
 }: EditTeamEventTypes) {
   const teamFormModal = new Modal()
-    .setCustomId(`editTeamInfoModal-${interactionId}`)
+    .setCustomId(`${TEAM_EVENT_TEXT_FIELD.EDIT_TEAM_INFO_MODAL}-${interactionId}`)
     .setTitle("Create Team");
 
   const teamNameInput = new TextInputComponent()
-    .setCustomId("teamName")
+    .setCustomId(TEAM_EVENT_TEXT_FIELD.TEAM_NAME)
     .setLabel("Team Name")
     .setStyle("SHORT")
     .setPlaceholder("Enter team name")
     .setValue(name);
 
   const teamSmallDescriptionInput = new TextInputComponent()
-    .setCustomId("teamShortDescription")
+    .setCustomId(TEAM_EVENT_TEXT_FIELD.TEAM_SHORT_DESCRIPTION)
     .setLabel("Team Short Description")
     .setStyle("SHORT")
     .setPlaceholder("Enter short team description")
@@ -281,18 +273,18 @@ export function createEditTeamEventComponents({
 
 export function createTeamComponents(interactionId: string) {
   const teamFormModal = new Modal()
-    .setCustomId(`teamModalSubmit-${interactionId}`)
+    .setCustomId(`${TEAM_EVENT_TEXT_FIELD.TEAM_MODAL_SUBMIT}-${interactionId}`)
     .setTitle("Create Team");
 
   const teamNameInput = new TextInputComponent()
-    .setCustomId("teamName")
+    .setCustomId(TEAM_EVENT_TEXT_FIELD.TEAM_NAME)
     .setLabel("Team Name")
     .setStyle("SHORT")
     .setPlaceholder("Enter team name")
     .setRequired(true);
 
   const teamSmallDescriptionInput = new TextInputComponent()
-    .setCustomId("teamShortDescription")
+    .setCustomId(TEAM_EVENT_TEXT_FIELD.TEAM_SHORT_DESCRIPTION)
     .setLabel("Team Short Description")
     .setStyle("SHORT")
     .setPlaceholder("Enter short team description")

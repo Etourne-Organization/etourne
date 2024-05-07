@@ -1,6 +1,6 @@
 import { ButtonInteraction, MessageActionRow, MessageButton } from "discord.js";
 
-export function getButtonIds(alias?: string) {
+function getButtonIds(alias?: string) {
   const deleteYesId = `deleteYes${alias ? `-${alias}` : ""}`;
   const deleteNoId = `deleteNo${alias ? `-${alias}` : ""}`;
   return { deleteYesId, deleteNoId };
@@ -9,10 +9,12 @@ export function getButtonIds(alias?: string) {
 export function createConfirmationBtns(alias?: string) {
   const { deleteYesId, deleteNoId } = getButtonIds(alias);
 
-  return new MessageActionRow().addComponents(
+  const component = new MessageActionRow().addComponents(
     new MessageButton().setCustomId(deleteYesId).setLabel("✔").setStyle("SUCCESS"),
     new MessageButton().setCustomId(deleteNoId).setLabel("✖").setStyle("DANGER"),
   );
+
+  return { deleteYesId, deleteNoId, confirmationButtons: component };
 }
 
 export function collectorFilter(

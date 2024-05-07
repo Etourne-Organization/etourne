@@ -1,5 +1,5 @@
 import BOT_CONFIGS from "botConfig";
-import { ColorResolvable, MessageEmbed } from "discord.js";
+import { ColorResolvable, EmbedFooterData, MessageEmbed } from "discord.js";
 import errorMessageTemplate, { MessageType } from "./errorMessageTemplate";
 
 class DefaultErrorBase {
@@ -99,6 +99,21 @@ export class CustomMessageEmbed extends DefaultErrorBase {
 
   setDescription(description: string) {
     this.embed.setDescription(description);
+    return this;
+  }
+
+  setTimestamp(timestamp?: Date | number | null) {
+    this.embed.setTimestamp(timestamp);
+    return this;
+  }
+
+  setThumbnail(thumbnailUrl: string) {
+    this.embed.setThumbnail(thumbnailUrl);
+    return this;
+  }
+
+  setFooter(options: EmbedFooterData | null) {
+    this.embed.setFooter(options);
     return this;
   }
 

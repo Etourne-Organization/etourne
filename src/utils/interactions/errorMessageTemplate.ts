@@ -1,4 +1,4 @@
-import COMMAND_IDS from "../commandIds";
+import COMMAND_IDS from "../../constants/commandIds";
 
 export enum MessageType {
   LONG,

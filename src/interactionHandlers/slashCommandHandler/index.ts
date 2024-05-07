@@ -1,7 +1,7 @@
 import { BaseCommandInteraction, Client } from "discord.js";
 
 import slashCommandsList from "./slashCommandList";
-import CustomMessageEmbed from "utils/interactions/messageEmbed";
+import CustomMessageEmbed from "utils/interactions/customMessageEmbed";
 
 const slashCommandHandler = async (
   client: Client,

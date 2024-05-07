@@ -1,29 +1,32 @@
 import { ButtonInteraction, Client } from "discord.js";
 
-import { NORMAL_CREATOR_FIELD_NAMES } from "src/interactionHandlers/modalSubmitHandler/utils/constants";
-import { findEmbedField } from "src/interactionHandlers/modalSubmitHandler/utils/utils";
 import {
   findFooterEventId,
   getRegisteredPlayersFromEmbedField,
   updateEmbed,
   updateEmbedField,
 } from "src/interactionHandlers/utils";
-import { removePlayer } from "supabaseDB/methods/singlePlayers";
+import { NORMAL_CREATOR_FIELD_NAMES } from "src/interactionHandlers/modalSubmitHandler/utils/constants";
+import { findEmbedField } from "src/interactionHandlers/utils";
+import { removePlayerDB } from "supabaseDB/methods/players";
+import getMessageEmbed from "utils/interactions/getInteractionEmbed";
 import InteractionHandler from "utils/interactions/interactionHandler";
-import CustomMessageEmbed from "utils/interactions/messageEmbed";
+import CustomMessageEmbed from "utils/interactions/customMessageEmbed";
 import { handleAsyncError } from "utils/logging/handleAsyncError";
 import { ButtonFunction } from "../../type";
 import { createEmptyRegistrationListEmbed, createNotRegisteredEmbed } from "../../utils/embeds";
+import { NORMAL_CREATOR_EVENT_TEXT_FIELD } from "../../utils/constants";
 
 const unregister: ButtonFunction = {
-  customId: "normalEventUnregister",
+  customId: NORMAL_CREATOR_EVENT_TEXT_FIELD.UNREGISTER_PLAYER,
   run: async (client: Client, interaction: ButtonInteraction) => {
     const interactionHandler = new InteractionHandler(interaction);
 
     try {
       await interaction.deferUpdate();
 
-      const embed = interaction.message.embeds[0];
+      const embed = getMessageEmbed(interaction, interactionHandler);
+      if (!embed) return;
 
       const eventId = findFooterEventId(embed.footer);
 
@@ -59,10 +62,7 @@ const unregister: ButtonFunction = {
         registeredList: newPlayersList,
       });
 
-      await removePlayer({
-        discordUserId: interaction.user.id,
-        eventId: parseInt(eventId),
-      });
+      await removePlayerDB(interaction.guildId, interaction.user.id, eventId, true);
 
       const editedEmbed = updateEmbed({
         title: embed.title,

@@ -1,5 +1,4 @@
-import BOT_CONFIGS from "botConfig";
-import { MessageEmbed } from "discord.js";
+import CustomMessageEmbed from "utils/interactions/customMessageEmbed";
 import {
   NORMAL_CREATOR_FIELD_NAMES,
   TEAM_CREATOR_FIELD_NAMES,
@@ -11,7 +10,7 @@ type TeamCreatorEmbedType = {
   description: string;
   gameName: string;
   eventHost: string;
-  eventId: string;
+  eventId: number;
   eventDateTime: string;
   maxNumTeamPlayers?: string;
   maxNumTeams?: string;
@@ -27,8 +26,7 @@ export function createTeamCreatorEmbed({
   maxNumTeamPlayers,
   maxNumTeams,
 }: TeamCreatorEmbedType) {
-  return new MessageEmbed()
-    .setColor(BOT_CONFIGS.color.default)
+  return new CustomMessageEmbed()
     .setTitle(eventName)
     .setDescription(
       `**----------------------------------------** \n **${TEAM_CREATOR_FIELD_NAMES.description}:** \n \n ${description}  \n \n`,
@@ -52,12 +50,12 @@ export function createTeamCreatorEmbed({
     ])
     .setFooter({
       text: `${TEAM_CREATOR_FIELD_NAMES.eventId}: ${eventId}`,
-    });
+    }).Info;
 }
 
 export type TeamEmbedType = {
-  teamId: string;
-  eventId: string;
+  teamId: string | number;
+  eventId: string | number;
   teamName: string;
   description: string;
   teamLeader: string;
@@ -84,8 +82,7 @@ export function createTeamEmbed({
   teamPlayers,
   replaceRegisteredPlayers,
 }: TeamEmbedType) {
-  return new MessageEmbed()
-    .setColor(BOT_CONFIGS.color.default)
+  return new CustomMessageEmbed()
     .setTitle(teamName)
     .setDescription(`${description}`)
     .addFields([
@@ -118,7 +115,7 @@ export function createTeamEmbed({
     ])
     .setFooter({
       text: `${TEAM_FIELD_NAMES.teamId}: ${teamId} ${TEAM_FIELD_NAMES.eventId}: ${eventId}`,
-    });
+    }).Info;
 }
 
 type NormalCreatorEmbedType = {
@@ -126,7 +123,7 @@ type NormalCreatorEmbedType = {
   description: string;
   gameName: string;
   eventHost: string;
-  eventId: string;
+  eventId: string | number;
   eventDateTime: string;
   teamPlayers?: {
     registered?: string;
@@ -148,8 +145,7 @@ export function createNormalCreatorEmbed({
   replaceRegisteredPlayers,
   teamPlayers,
 }: NormalCreatorEmbedType) {
-  return new MessageEmbed()
-    .setColor(BOT_CONFIGS.color.default)
+  return new CustomMessageEmbed()
     .setTitle(eventName)
     .setDescription(
       `**----------------------------------------** \n **${NORMAL_CREATOR_FIELD_NAMES.description}:** \n \n ${description}  \n \n`,
@@ -179,5 +175,5 @@ export function createNormalCreatorEmbed({
     ])
     .setFooter({
       text: `${NORMAL_CREATOR_FIELD_NAMES.eventId}: ${eventId}`,
-    });
+    }).Info;
 }

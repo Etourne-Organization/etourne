@@ -1,19 +1,21 @@
 import { Client, ModalSubmitInteraction } from "discord.js";
 
-import { findFooterEventId } from "src/interactionHandlers/utils";
-import { addTeam, setColumnValue } from "supabaseDB/methods/teams";
-import getMessageEmbed from "utils/getMessageEmbed";
+import { createTeam } from "src/interactionHandlers/create";
+import { findEmbedField, findFooterEventId } from "src/interactionHandlers/utils";
+import { validateServerExists } from "src/interactionHandlers/validate";
+import { updateTeamColumnsDB } from "supabaseDB/methods/columns";
+import CustomMessageEmbed from "utils/interactions/customMessageEmbed";
+import getMessageEmbed from "utils/interactions/getInteractionEmbed";
 import InteractionHandler from "utils/interactions/interactionHandler";
-import CustomMessageEmbed from "utils/interactions/messageEmbed";
 import { handleAsyncError } from "utils/logging/handleAsyncError";
 import { ModalSubmit } from "../../../type";
 import { createTeamButtonComponents } from "../../../utils/btnComponents";
 import { TEAM_CREATOR_FIELD_NAMES } from "../../../utils/constants";
 import { createTeamEmbed } from "../../../utils/embeds";
-import { findEmbedField } from "../../../utils/utils";
+import { TEAM_EVENT_TEXT_FIELD } from "src/interactionHandlers/buttonHandler/utils/constants";
 
 const teamModal: ModalSubmit = {
-  customId: "teamModalSubmit",
+  customId: TEAM_EVENT_TEXT_FIELD.TEAM_MODAL_SUBMIT,
   run: async (client: Client, interaction: ModalSubmitInteraction) => {
     const interactionHandler = new InteractionHandler(interaction);
 
@@ -23,25 +25,34 @@ const teamModal: ModalSubmit = {
       const embed = getMessageEmbed(interaction, interactionHandler);
       if (!embed) return;
 
-      const eventName = embed?.title || "";
+      const eventName = embed.title || "";
+
       const eventId = findFooterEventId(embed?.footer);
+
       const maxNumTeamPlayers = findEmbedField(
         embed?.fields,
         TEAM_CREATOR_FIELD_NAMES.maxNumOfTeamPlayers,
       );
+
       const eventDateTime = findEmbedField(embed?.fields, TEAM_CREATOR_FIELD_NAMES.dateTime);
 
-      const newTeamName: string = interaction.fields.getTextInputValue("teamName");
-      const newTeamDescription: string =
-        interaction.fields.getTextInputValue("teamShortDescription");
+      const newTeamName = interaction.fields.getTextInputValue("teamName");
+      const newTeamDescription = interaction.fields.getTextInputValue("teamShortDescription");
 
-      const teamId = await addTeam({
-        eventId: parseInt(eventId),
+      const {
+        isValid,
+        embed: invalidEmbed,
+        value: serverId,
+      } = await validateServerExists(interaction.guildId);
+      if (!isValid) return interactionHandler.embeds(invalidEmbed).editReply();
+
+      const teamId = await createTeam({
+        eventId,
         teamName: newTeamName,
         teamDescription: newTeamDescription,
-        teamLeaderDiscordUserId: interaction.user.id,
+        teamLeaderUserId: interaction.user.id,
         teamLeaderUsername: interaction.user.username,
-        discordServerId: interaction.guild!.id,
+        serverId,
       });
 
       const messageComponents = createTeamButtonComponents();
@@ -64,15 +75,15 @@ const teamModal: ModalSubmit = {
         components: messageComponents,
       });
 
-      await setColumnValue({
-        data: [
-          {
-            id: teamId,
-            key: "messageId",
-            value: reply!.id,
-          },
-        ],
-      });
+      if (!reply)
+        return interactionHandler
+          .embeds(
+            new CustomMessageEmbed().setDescription("Failed to get messageId").defaultErrorTitle()
+              .SHORT.Error,
+          )
+          .editReply();
+
+      await updateTeamColumnsDB(teamId, [{ key: "messageId", value: reply.id }]);
 
       await interactionHandler
         .embeds(new CustomMessageEmbed().setTitle("Team created successfully!").Success)

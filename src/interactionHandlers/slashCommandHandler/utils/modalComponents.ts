@@ -1,41 +1,42 @@
 import { MessageActionRow, Modal, ModalActionRowComponent, TextInputComponent } from "discord.js";
+import { TEAM_CREATOR_EVENT_TEXT_FIELD } from "src/interactionHandlers/buttonHandler/utils/constants";
 
-export function createEventInfoComponents(interactionId: string) {
+export function createTeamCreatorComponents(interactionId: string) {
   /* modal */
   const modal = new Modal()
-    .setCustomId(`teamEventModalSubmit-${interactionId}`)
+    .setCustomId(`${TEAM_CREATOR_EVENT_TEXT_FIELD.TEAM_EVENT_MODAL_SUBMIT}-${interactionId}`)
     .setTitle("Create Team Event");
 
   const eventNameInput = new TextInputComponent()
-    .setCustomId("eventName")
+    .setCustomId(TEAM_CREATOR_EVENT_TEXT_FIELD.EVENT_NAME)
     .setLabel("Event name")
     .setStyle("SHORT")
     .setPlaceholder("Event name")
     .setRequired(true);
 
   const gameNameInput = new TextInputComponent()
-    .setCustomId("gameName")
+    .setCustomId(TEAM_CREATOR_EVENT_TEXT_FIELD.GAME_NAME)
     .setLabel("Game name")
     .setStyle("SHORT")
     .setPlaceholder("Game name")
     .setRequired(true);
 
   const eventDateTimeInput = new TextInputComponent()
-    .setCustomId("date")
+    .setCustomId(TEAM_CREATOR_EVENT_TEXT_FIELD.DATE)
     .setLabel("Date (format: DD/MM/YYYY hour:minute)")
     .setStyle("SHORT")
     .setPlaceholder("Event date and time")
     .setRequired(true);
 
   const eventTimezoneInput = new TextInputComponent()
-    .setCustomId("timezone")
+    .setCustomId(TEAM_CREATOR_EVENT_TEXT_FIELD.TIMEZONE)
     .setLabel("Your timezone: timezones.etourne.com")
     .setStyle("SHORT")
     .setPlaceholder("Your timezone")
     .setRequired(true);
 
   const eventDescriptionInput = new TextInputComponent()
-    .setCustomId("eventDescription")
+    .setCustomId(TEAM_CREATOR_EVENT_TEXT_FIELD.EVENT_DESCRIPTION)
     .setLabel("Event description")
     .setStyle("PARAGRAPH")
     .setPlaceholder("Event description")

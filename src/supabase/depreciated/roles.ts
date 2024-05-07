@@ -7,7 +7,7 @@
 */
 
 import { throwFormattedErrorLog } from 'utils/logging/errorFormats';
-import { supabase } from 'supabaseDB/index';
+import { supabase } from 'src/supabase2/index';
 
 interface getRole {
 	roleName: string;

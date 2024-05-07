@@ -1,10 +1,9 @@
-import { BaseCommandInteraction, Client, MessageEmbed } from "discord.js";
+import { BaseCommandInteraction, Client } from "discord.js";
 
-import { handleAsyncError } from "utils/logging/handleAsyncError";
+import CustomMessageEmbed from "utils/interactions/customMessageEmbed";
 import InteractionHandler from "utils/interactions/interactionHandler";
-import CustomMessageEmbed from "utils/interactions/messageEmbed";
-import BOT_CONFIGS from "botConfig";
-import COMMAND_IDS from "../../../utils/commandIds";
+import { handleAsyncError } from "utils/logging/handleAsyncError";
+import COMMAND_IDS from "../../../constants/commandIds";
 import { Command } from "../type";
 
 const help: Command = {
@@ -16,12 +15,11 @@ const help: Command = {
     try {
       const member: string = interaction.user.username;
 
-      const helpEmbed = new MessageEmbed()
-        .setColor(BOT_CONFIGS.color.default)
-        .setTitle(`:question: Help`)
-        .setDescription("Here is the list of commands you can use")
+      const helpEmbed = new CustomMessageEmbed()
+        .setTitle("Help")
+        .setDescription("Here's a list of commands you can use")
         .setThumbnail(`${client.user?.displayAvatarURL()}`)
-        .addFields(
+        .addFields([
           {
             name: ":information_source:  Bot Info",
             value: `Get more information about the bot: </botinfo:${COMMAND_IDS.BOT_INFO}>`,
@@ -62,9 +60,9 @@ const help: Command = {
             name: ":tools:  Request Support",
             value: `Request for support whenever you are facing issues: </requestsupport:${COMMAND_IDS.REQUEST_SUPPORT}>`,
           },
-        )
+        ])
         .setTimestamp()
-        .setFooter({ text: `Requested by: ${member}` });
+        .setFooter({ text: `Requested by: ${member}` }).Question;
 
       await interactionHandler.embeds(helpEmbed).reply();
     } catch (err) {

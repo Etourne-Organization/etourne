@@ -14,9 +14,18 @@ type InteractionTypes =
   | ModalSubmitInteraction
   | BaseCommandInteraction
   | SelectMenuInteraction;
+
 type EmbedTypes = NonNullable<MessageOptions["embeds"]>;
 
-export default class InteractionHandler {
+export interface InteractionHandlerInterface {
+  embeds(...embeds: EmbedTypes | EmbedTypes[]): InteractionHandlerInterface;
+  processing(customText?: string | null, options?: InteractionReplyOptions): Promise<void>;
+  followUp(options?: InteractionReplyOptions): Promise<GuildCacheMessage<CacheType>>;
+  reply(options?: InteractionReplyOptions): Promise<void>;
+  editReply(options?: InteractionReplyOptions): Promise<GuildCacheMessage<CacheType>>;
+}
+
+export default class InteractionHandler implements InteractionHandlerInterface {
   private interaction: InteractionTypes;
   private _embeds: EmbedTypes = [];
 

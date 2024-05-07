@@ -2,7 +2,7 @@ import { BaseCommandInteraction, Client, MessageEmbed } from "discord.js";
 
 import BOT_CONFIGS from "botConfig";
 import InteractionHandler from "utils/interactions/interactionHandler";
-import CustomMessageEmbed from "utils/interactions/messageEmbed";
+import CustomMessageEmbed from "utils/interactions/customMessageEmbed";
 import { handleAsyncError } from "utils/logging/handleAsyncError";
 import { Command } from "../type";
 import formatProcessUptime from "../utils/formatProcessUptime";
@@ -14,12 +14,14 @@ const botInfo: Command = {
   run: async (client: Client, interaction: BaseCommandInteraction) => {
     const interactionHandler = new InteractionHandler(interaction);
     try {
+      const avatar = client.user!.displayAvatarURL();
+
       const botInfoEmbed = new MessageEmbed()
         .setColor(BOT_CONFIGS.color.default)
-        .setThumbnail(client.user!.displayAvatarURL())
+        .setThumbnail(avatar)
         .setAuthor({
           name: `${client.user!.username}`,
-          iconURL: `${client.user!.displayAvatarURL()}`,
+          iconURL: `${avatar}`,
         })
         .addFields(
           { name: "Bot Tag", value: `${client.user!.username}` },

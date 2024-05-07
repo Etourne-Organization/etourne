@@ -1,8 +1,7 @@
-import { BaseCommandInteraction, Client, MessageEmbed } from "discord.js";
+import { BaseCommandInteraction, Client } from "discord.js";
 
-import BOT_CONFIGS from "botConfig";
+import CustomMessageEmbed from "utils/interactions/customMessageEmbed";
 import InteractionHandler from "utils/interactions/interactionHandler";
-import CustomMessageEmbed from "utils/interactions/messageEmbed";
 import { handleAsyncError } from "utils/logging/handleAsyncError";
 import { Command } from "../type";
 
@@ -12,10 +11,9 @@ const feedback: Command = {
   run: async (client: Client, interaction: BaseCommandInteraction) => {
     const interactionHandler = new InteractionHandler(interaction);
     try {
-      const embed = new MessageEmbed()
-        .setColor(BOT_CONFIGS.color.default)
+      const embed = new CustomMessageEmbed()
         .setTitle(":thought_balloon: Feedback")
-        .setFields([
+        .addFields([
           {
             name: ":plunger: Report bug",
             value: "https://etourne.canny.io/bugs",
@@ -26,7 +24,7 @@ const feedback: Command = {
           },
         ])
         .setFooter({ text: "Etourne" })
-        .setTimestamp();
+        .setTimestamp().Info;
 
       return interactionHandler.embeds(embed).reply();
     } catch (err) {

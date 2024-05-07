@@ -1,25 +1,22 @@
 import { ButtonInteraction, Client } from "discord.js";
 
+import { findFooterEventId } from "src/interactionHandlers/utils";
 import {
   collectorFilter,
   createConfirmationBtns,
-  getButtonIds,
 } from "src/interactionHandlers/selectMenuHandler/utils/btnComponents";
-import { findFooterEventId } from "src/interactionHandlers/utils";
-import { deleteEvent as deleteEventSupabase } from "supabaseDB/methods/events";
-import { getUserRole } from "supabaseDB/methods/users";
-import getMessageEmbed from "utils/getMessageEmbed";
+import { validateServerExists, validateUserPermission } from "src/interactionHandlers/validate";
+import { deleteEventDB } from "supabaseDB/methods/events";
+import getMessageEmbed from "utils/interactions/getInteractionEmbed";
 import InteractionHandler from "utils/interactions/interactionHandler";
-import CustomMessageEmbed from "utils/interactions/messageEmbed";
+import CustomMessageEmbed from "utils/interactions/customMessageEmbed";
 import { handleAsyncError } from "utils/logging/handleAsyncError";
 import { ButtonFunction } from "../../type";
-import {
-  createDeleteEventConfirmationEmbed,
-  createUnauthorizedRoleEmbed,
-} from "../../utils/embeds";
+import { createDeleteEventConfirmationEmbed } from "../../utils/embeds";
+import { NORMAL_CREATOR_EVENT_TEXT_FIELD } from "../../utils/constants";
 
 const deleteEvent: ButtonFunction = {
-  customId: "deleteEvent",
+  customId: NORMAL_CREATOR_EVENT_TEXT_FIELD.DELETE_EVENT,
   run: async (client: Client, interaction: ButtonInteraction) => {
     const interactionHandler = new InteractionHandler(interaction);
     try {
@@ -32,24 +29,24 @@ const deleteEvent: ButtonFunction = {
 
       const buttonAlias = interaction.id;
 
-      // check user role in DB
-      const userRoleDB = await getUserRole({
-        discordUserId: interaction.user.id,
-        discordServerId: interaction.guild!.id,
-      });
+      const {
+        isValid: hasServer,
+        embed: notRegisteredEmbed,
+        value: serverId,
+      } = await validateServerExists(interaction.guildId);
+      if (!hasServer) return interactionHandler.embeds(notRegisteredEmbed).editReply();
 
-      if (
-        userRoleDB.length === 0 ||
-        (userRoleDB[0]["roleId"] !== 3 && userRoleDB[0]["roleId"] !== 2)
-      ) {
-        const unauthorizedRoleEmbed = createUnauthorizedRoleEmbed();
-        return interactionHandler.embeds(unauthorizedRoleEmbed).reply();
-      }
+      const { isValid: validPermission, embed: invalidEmbed } = await validateUserPermission(
+        serverId,
+        interaction.user.id,
+      );
+      if (!validPermission) return interactionHandler.embeds(invalidEmbed).editReply();
 
       const fetchedMessage = await interaction.channel?.messages.fetch(interaction.message.id);
 
       if (fetchedMessage) {
-        const confirmationButtons = createConfirmationBtns(buttonAlias);
+        const { confirmationButtons, deleteNoId, deleteYesId } =
+          createConfirmationBtns(buttonAlias);
 
         const removeEventConfirmationEmbed = createDeleteEventConfirmationEmbed();
 
@@ -68,27 +65,36 @@ const deleteEvent: ButtonFunction = {
         });
 
         collector?.on("collect", async (btnInteraction: ButtonInteraction) => {
-          const btnInteractionHandler = new InteractionHandler(btnInteraction);
-          const { deleteYesId, deleteNoId } = getButtonIds(buttonAlias);
+          try {
+            const btnInteractionHandler = new InteractionHandler(btnInteraction);
 
-          if (btnInteraction.customId === deleteYesId) {
-            await fetchedMessage.delete();
+            if (btnInteraction.customId === deleteYesId) {
+              await fetchedMessage.delete();
 
-            btnInteractionHandler.processing();
+              btnInteractionHandler.processing();
 
-            await deleteEventSupabase({ eventId: parseInt(eventId) });
+              await deleteEventDB(eventId);
 
-            await interaction.deleteReply();
+              await interaction.deleteReply();
 
-            await btnInteractionHandler
-              .embeds(new CustomMessageEmbed().setTitle("Event deleted successfully!").Success)
-              .editReply();
-          } else if (btnInteraction.customId === deleteNoId) {
-            await interaction.deleteReply();
+              await btnInteractionHandler
+                .embeds(new CustomMessageEmbed().setTitle("Event deleted successfully!").Success)
+                .editReply();
+            } else if (btnInteraction.customId === deleteNoId) {
+              await interaction.deleteReply();
 
-            await btnInteractionHandler
-              .embeds(new CustomMessageEmbed().setTitle("Event not deleted").Info)
-              .reply();
+              await btnInteractionHandler
+                .embeds(new CustomMessageEmbed().setTitle("Event not deleted").Info)
+                .reply();
+            }
+          } catch (error) {
+            await handleAsyncError(error, () =>
+              interactionHandler
+                .embeds(
+                  new CustomMessageEmbed().defaultErrorTitle().defaultErrorDescription().Error,
+                )
+                .editReply(),
+            );
           }
         });
       } else {

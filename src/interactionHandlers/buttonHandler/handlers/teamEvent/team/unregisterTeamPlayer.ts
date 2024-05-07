@@ -1,28 +1,25 @@
 import { ButtonInteraction, Client } from "discord.js";
 
-import { TEAM_FIELD_NAMES } from "src/interactionHandlers/modalSubmitHandler/utils/constants";
-import { findEmbedField } from "src/interactionHandlers/modalSubmitHandler/utils/utils";
 import {
   findFooterTeamId,
   getRegisteredPlayersFromEmbedField,
   updateEmbed,
   updateEmbedField,
 } from "src/interactionHandlers/utils";
-import { removePlayer } from "supabaseDB/methods/teamPlayers";
-import { checkTeamExists } from "supabaseDB/methods/teams";
-import getMessageEmbed from "utils/getMessageEmbed";
+import { TEAM_FIELD_NAMES } from "src/interactionHandlers/modalSubmitHandler/utils/constants";
+import { findEmbedField } from "src/interactionHandlers/utils";
+import { validateTeamExists } from "src/interactionHandlers/validate";
+import { removeTeamPlayerDB } from "supabaseDB/methods/players";
+import getMessageEmbed from "utils/interactions/getInteractionEmbed";
 import InteractionHandler from "utils/interactions/interactionHandler";
-import CustomMessageEmbed from "utils/interactions/messageEmbed";
+import CustomMessageEmbed from "utils/interactions/customMessageEmbed";
 import { handleAsyncError } from "utils/logging/handleAsyncError";
-import { ButtonFunction } from "../../type";
-import {
-  createEmptyRegistrationListEmbed,
-  createMissingTeamEmbed,
-  createNotRegisteredEmbed,
-} from "../../utils/embeds";
+import { ButtonFunction } from "../../../type";
+import { createEmptyRegistrationListEmbed, createNotRegisteredEmbed } from "../../../utils/embeds";
+import { TEAM_EVENT_TEXT_FIELD } from "../../../utils/constants";
 
 const unregisterTeamPlayer: ButtonFunction = {
-  customId: "unregisterTeamPlayer",
+  customId: TEAM_EVENT_TEXT_FIELD.UNREGISTER_TEAM_PLAYER,
   run: async (client: Client, interaction: ButtonInteraction) => {
     const interactionHandler = new InteractionHandler(interaction);
     try {
@@ -33,10 +30,8 @@ const unregisterTeamPlayer: ButtonFunction = {
 
       const teamId = findFooterTeamId(embed.footer);
 
-      if (!(await checkTeamExists({ teamId: parseInt(teamId) }))) {
-        const missingTeamEmbed = createMissingTeamEmbed();
-        return interactionHandler.embeds(missingTeamEmbed).followUp();
-      }
+      const { isValid, embed: missingTeamEmbed } = await validateTeamExists(teamId);
+      if (!isValid) return interactionHandler.embeds(missingTeamEmbed).followUp();
 
       const registeredPlayersField = findEmbedField(
         embed.fields,
@@ -70,10 +65,7 @@ const unregisterTeamPlayer: ButtonFunction = {
         registeredList: newPlayersList,
       });
 
-      await removePlayer({
-        discordUserId: interaction.user.id,
-        teamId: parseInt(teamId),
-      });
+      await removeTeamPlayerDB(interaction.guildId, interaction.user.id, teamId, true);
 
       const editedEmbed = updateEmbed({
         title: embed.title,

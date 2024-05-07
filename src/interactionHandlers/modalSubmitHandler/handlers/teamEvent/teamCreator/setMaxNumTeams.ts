@@ -1,18 +1,17 @@
-import { Client, MessageEmbed, ModalSubmitInteraction } from "discord.js";
+import { Client, ModalSubmitInteraction } from "discord.js";
 
-import BOT_CONFIGS from "botConfig";
-import { findFooterEventId, updateEmbed } from "src/interactionHandlers/utils";
-import { setColumnValue } from "supabaseDB/methods/events";
-import { getNumOfTeams } from "supabaseDB/methods/teams";
-import getMessageEmbed from "utils/getMessageEmbed";
+import { findFooterEventId, updateEmbed, updateEmbedField } from "src/interactionHandlers/utils";
+import { getTeamEventCountDB } from "supabaseDB/methods/players";
+import { updateEventColumnsDB } from "supabaseDB/methods/columns";
+import CustomMessageEmbed from "utils/interactions/customMessageEmbed";
+import getMessageEmbed from "utils/interactions/getInteractionEmbed";
 import InteractionHandler from "utils/interactions/interactionHandler";
-import CustomMessageEmbed from "utils/interactions/messageEmbed";
 import { handleAsyncError } from "utils/logging/handleAsyncError";
 import { ModalSubmit } from "../../../type";
-import { TEAM_CREATOR_FIELD_NAMES } from "../../../utils/constants";
+import { TEAM_CREATOR_EVENT_TEXT_FIELD } from "src/interactionHandlers/buttonHandler/utils/constants";
 
 const setMaxNumTeamsModal: ModalSubmit = {
-  customId: "setMaxNumTeamsModalSubmit",
+  customId: TEAM_CREATOR_EVENT_TEXT_FIELD.SET_MAX_NUM_TEAMS_MODAL_SUBMIT,
   run: async (client: Client, interaction: ModalSubmitInteraction) => {
     const interactionHandler = new InteractionHandler(interaction);
     try {
@@ -23,40 +22,33 @@ const setMaxNumTeamsModal: ModalSubmit = {
 
       const eventId = findFooterEventId(embed?.footer);
 
-      const newMaxNumTeams = interaction.fields.getTextInputValue("maxNumTeams"); // ? Modal value
+      const newMaxNumTeams = interaction.fields.getTextInputValue("maxNumTeams");
 
-      const currentNumOfTeams = await getNumOfTeams({ eventId: parseInt(eventId) });
+      const currentNumOfTeams = await getTeamEventCountDB(eventId);
 
-      if (currentNumOfTeams > parseInt(newMaxNumTeams)) {
-        const replyEmbed: MessageEmbed = new MessageEmbed()
-          .setColor(BOT_CONFIGS.color.red)
-          .setTitle(":x: Number of registered teams is more than the new limit")
+      if (currentNumOfTeams && currentNumOfTeams > parseInt(newMaxNumTeams)) {
+        const replyEmbed = new CustomMessageEmbed()
+          .setTitle("Number of registered teams is more than the new limit")
           .setDescription(
             "Decrease the number of registered teams to set a lower limit than the present value",
           )
-          .setTimestamp();
+          .setTimestamp().Error;
 
         return interactionHandler.embeds(replyEmbed).followUp();
       }
 
-      setColumnValue({
-        data: [
-          {
-            key: "maxNumTeams",
-            value: parseInt(newMaxNumTeams),
-            id: parseInt(eventId),
-          },
-        ],
-      });
+      await updateEventColumnsDB(eventId, [
+        { key: "maxNumTeams", value: parseInt(newMaxNumTeams) },
+      ]);
 
-      embed.fields?.find((field) => {
-        if (field.name === TEAM_CREATOR_FIELD_NAMES.maxNumOfTeams) field.value = newMaxNumTeams;
+      const fields = updateEmbedField(embed.fields, {
+        maxNumTeams: newMaxNumTeams,
       });
 
       const editedEmbed = updateEmbed({
         title: embed.title,
         description: embed.description,
-        fields: embed.fields,
+        fields,
         footer: embed.footer,
       });
 

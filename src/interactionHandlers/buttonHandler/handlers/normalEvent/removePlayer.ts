@@ -1,18 +1,19 @@
 import { ButtonInteraction, Client } from "discord.js";
 
 import { findFooterEventId } from "src/interactionHandlers/utils";
-import { getAllPlayers } from "supabaseDB/methods/singlePlayers";
-import { getUserRole } from "supabaseDB/methods/users";
-import getMessageEmbed from "utils/getMessageEmbed";
+import { validateServerExists, validateUserPermission } from "src/interactionHandlers/validate";
+import { getPlayersDB } from "supabaseDB/methods/players";
+import CustomMessageEmbed from "utils/interactions/customMessageEmbed";
+import getMessageEmbed from "utils/interactions/getInteractionEmbed";
 import InteractionHandler from "utils/interactions/interactionHandler";
-import CustomMessageEmbed from "utils/interactions/messageEmbed";
 import { handleAsyncError } from "utils/logging/handleAsyncError";
 import { ButtonFunction } from "../../type";
-import { createNoPlayersToRemoveEmbed, createUnauthorizedRoleEmbed } from "../../utils/embeds";
+import { NORMAL_CREATOR_EVENT_TEXT_FIELD } from "../../utils/constants";
+import { createNoPlayersToRemoveEmbed } from "../../utils/embeds";
 import { createNormalRemovePlayerComponents } from "../../utils/selectComponents";
 
 const removePlayer: ButtonFunction = {
-  customId: "removePlayer",
+  customId: NORMAL_CREATOR_EVENT_TEXT_FIELD.REMOVE_PLAYER,
   run: async (client: Client, interaction: ButtonInteraction) => {
     const interactionHandler = new InteractionHandler(interaction);
     try {
@@ -21,31 +22,30 @@ const removePlayer: ButtonFunction = {
       const embed = getMessageEmbed(interaction, interactionHandler);
       if (!embed) return;
 
-      // check user role in DB
-      const userRoleDB = await getUserRole({
-        discordUserId: interaction.user.id,
-        discordServerId: interaction.guild!.id,
-      });
+      const {
+        isValid: hasServer,
+        embed: notRegisteredEmbed,
+        value: serverId,
+      } = await validateServerExists(interaction.guildId);
+      if (!hasServer) return interactionHandler.embeds(notRegisteredEmbed).editReply();
 
-      if (
-        userRoleDB.length === 0 ||
-        (userRoleDB[0]["roleId"] !== 3 && userRoleDB[0]["roleId"] !== 2)
-      ) {
-        const unauthorizedRoleEmbed = createUnauthorizedRoleEmbed();
-        return interactionHandler.embeds(unauthorizedRoleEmbed).editReply();
-      }
+      const { isValid: validPermission, embed: invalidEmbed } = await validateUserPermission(
+        serverId,
+        interaction.user.id,
+      );
+      if (!validPermission) return interactionHandler.embeds(invalidEmbed).editReply();
 
       const eventId = findFooterEventId(embed.footer);
 
-      const players = await getAllPlayers(parseInt(eventId));
-
-      if (players.length === 0) {
+      const players = await getPlayersDB(eventId);
+      
+      if (!players) {
         const noPlayersEmbed = createNoPlayersToRemoveEmbed();
         return interactionHandler.embeds(noPlayersEmbed).editReply();
       }
 
       const { selectMenu, selectMessageEmbed } = createNormalRemovePlayerComponents(
-        players,
+        players as never,
         embed.footer?.text,
       );
 
